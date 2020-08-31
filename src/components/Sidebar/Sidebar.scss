@@ -1,0 +1,15 @@
+.sidebar {
+  padding: 8px;
+
+  & > div {
+    width: 100%;
+
+    & + div {
+      margin-top: 8px;
+    }
+  }
+
+  .ant-select {
+    width: 100%;
+  }
+}
