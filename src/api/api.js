@@ -30,4 +30,25 @@ export const API = {
     deleteEvent(eventId) {
         return instance.delete( `event/${eventId}` ).then( response => response.data );
     },
+
+    getOrganizers() {
+        return instance.get( `organizers` ).then( response => response.data );
+    },
+
+    addNewOrganizer(id, name) {
+        return instance.post( `organizer`, {id, name} ).then( response => response.data );
+    },
+
+    findOrganizerById(organizerId) {
+        return instance.get( `organizer/${organizerId}` ).then( response => response.data );
+    },
+
+    updateOrganizer(organizerId) {
+        return instance.put( `organizer/${organizerId}`, {} ).then( response => response.data );
+    },
+
+    deleteOrganizer(organizerId) {
+        return instance.delete( `organizer/${organizerId}` ).then( response => response.data );
+    }
+
 }
