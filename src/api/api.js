@@ -23,8 +23,8 @@ export const API = {
         return instance.get( `event/${eventId}` ).then( response => response.data );
     },
 
-    updateEvent(eventId) {
-        return instance.post( `event/${eventId}`, {} ).then( response => response.data );
+    updateEvent(eventId, changes) {
+        return instance.post( `event/${eventId}`, {changes} ).then( response => response.data );
     },
 
     deleteEvent(eventId) {
@@ -43,8 +43,8 @@ export const API = {
         return instance.get( `organizer/${organizerId}` ).then( response => response.data );
     },
 
-    updateOrganizer(organizerId) {
-        return instance.put( `organizer/${organizerId}`, {} ).then( response => response.data );
+    updateOrganizer(organizerId, changes) {
+        return instance.put( `organizer/${organizerId}`, {changes} ).then( response => response.data );
     },
 
     deleteOrganizer(organizerId) {
