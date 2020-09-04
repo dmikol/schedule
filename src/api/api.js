@@ -11,7 +11,7 @@ export const API = {
     return instance.get(`events`).then((response) => response.data)
   },
 
-  addNewEvent(
+  addNewEvent({
     id,
     name,
     description,
@@ -21,7 +21,7 @@ export const API = {
     dateTime,
     place,
     comment,
-  ) {
+  }) {
     return instance
       .post(`event`, {
         id,
