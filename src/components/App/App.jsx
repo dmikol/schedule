@@ -38,7 +38,7 @@ const App = () => {
           />
         </Col>
 
-        <Col span={16}>
+        <Col span={24}>
           {mode === 'calendar' && <CalendarView />}
 
           {mode === 'list' && <ListView events={events} />}
