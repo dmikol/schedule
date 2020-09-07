@@ -43,7 +43,7 @@ const App = () => {
 
           {mode === 'list' && <ListView events={events} />}
 
-          {mode === 'table' && <TableView events={events} />}
+          {mode === 'table' && <TableView />}
         </Col>
       </Row>
     </div>
