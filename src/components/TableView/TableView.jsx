@@ -40,9 +40,7 @@ class TableView extends React.Component {
         {
           title: 'Comment',
           dataIndex: 'comment',
-        }
-        
-        
+        },
       ],
       events: [],
     }
@@ -68,9 +66,9 @@ class TableView extends React.Component {
             time: item.dateTime ? item.dateTime.slice(0, 5) : '',
             type: item.type,
             organizer: item.organizer ? item.organizer : 'Not assigned',
-            place: item.place? item.place : "",
-            descriptionUrl: item.descriptionUrl? item.descriptionUrl: "",
-            comment: item.comment? item.comment: "No comments yet",
+            place: item.place ? item.place : '',
+            descriptionUrl: item.descriptionUrl ? item.descriptionUrl : '',
+            comment: item.comment ? item.comment : 'No comments yet',
           }))}
           pagination={false}
         />
