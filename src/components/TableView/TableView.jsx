@@ -6,12 +6,12 @@ import './TableView.scss'
 const TableView = ({ events = [] }) => {
   const columns = [
     {
-      title: 'Title',
-      dataIndex: 'title',
+      title: 'Date',
+      dataIndex: 'date',
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
+      title: 'Time',
+      dataIndex: 'time',
     },
   ]
 
