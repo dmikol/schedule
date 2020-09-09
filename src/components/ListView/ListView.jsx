@@ -36,7 +36,23 @@ class ListView extends React.Component {
             comment: item.comment ? item.comment : 'No comments yet',
           }))}
           renderItem={(item) => (
-            <List.Item>
+            <List.Item
+              className={
+                item.type === 'Факультатив'
+                  ? 'facultativeStyle'
+                  : item.type === 'YouTube Live'
+                  ? 'youtubeLiveStyle'
+                  : item.type === 'Выдача таска'
+                  ? 'taskStyle '
+                  : item.type === 'Self education'
+                  ? 'selfEducationStyle'
+                  : item.type === 'Митап в Минске'
+                  ? 'meetUpStyle'
+                  : item.type === 'Deadline'
+                  ? 'deadlineStyle'
+                  : 'noTypeStyle'
+              }
+            >
               <List.Item.Meta
                 avatar={<Avatar src="https://picsum.photos/128" />}
                 title={item.title}

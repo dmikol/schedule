@@ -11,10 +11,11 @@ import TableView from '../TableView'
 
 const App = () => {
   const [events] = useState(['Event 1', 'Event 2', 'Event 3'])
-  const [mode, setMode] = useState('table')
+  const [mode, setMode] = useState('list')
   const [timezone, setTimezone] = useState('timezone1')
 
   const [mentorMode, setMentorMode] = useState(true)
+  const [customColors, setCustomColors] = useState('true')
 
   const handleModeChange = (selectedMode) => {
     console.log(`${selectedMode} mode has been selected`)
