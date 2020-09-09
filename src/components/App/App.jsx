@@ -39,12 +39,14 @@ const App = () => {
             onTimezoneChange={handleTimezoneChange}
           />
         </Col>
-        <Col span={24} offset={22}>
-          <Button>
-            Edit schedule
-            <EditOutlined />
-          </Button>
-        </Col>
+        {mentorMode && (
+          <Col span={24} offset={22}>
+            <Button>
+              Edit schedule
+              <EditOutlined />
+            </Button>
+          </Col>
+        )}
         <Col span={24}>
           {mode === 'calendar' && <CalendarView />}
 
