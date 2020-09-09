@@ -14,7 +14,7 @@ const App = () => {
   const [mode, setMode] = useState('list')
   const [timezone, setTimezone] = useState('timezone1')
 
-  const [mentorMode, setMentorMode] = useState(false);
+  const [mentorMode, setMentorMode] = useState(true);
 
   const handleModeChange = (selectedMode) => {
     console.log(`${selectedMode} mode has been selected`)
@@ -28,7 +28,7 @@ const App = () => {
 
   return (
     <div className="app">
-      <Header />
+      <Header mentorMode={mentorMode}/>
 
       <Row>
         <Col span={8}>
@@ -45,7 +45,7 @@ const App = () => {
 
           {mode === 'list' && <ListView />}
 
-          {mode === 'table' && <TableView />}
+          {mode === 'table' && <TableView mentorMode={mentorMode}/>}
         </Col>
       </Row>
     </div>
