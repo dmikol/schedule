@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Col, Row, Button } from 'antd'
-import { EditOutlined } from '@ant-design/icons'
+import { EditOutlined, SettingOutlined } from '@ant-design/icons'
 import './App.scss'
 
 import CalendarView from '../CalendarView'
@@ -40,10 +40,21 @@ const App = () => {
           />
         </Col>
         {mentorMode && (
-          <Col span={24} offset={22}>
-            <Button>
+          <Col span={24} offset={21}>
+            <Button className="editScheduleButtonStyle">
               Edit schedule
               <EditOutlined />
+            </Button>
+
+            <Button>
+              <SettingOutlined />
+            </Button>
+          </Col>
+        )}
+        {!mentorMode && (
+          <Col span={24} offset={23}>
+            <Button>
+              <SettingOutlined />
             </Button>
           </Col>
         )}
