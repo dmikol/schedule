@@ -57,7 +57,6 @@ class TableView extends React.Component {
     return (
       <div className="table-view">
         <h3>Table view</h3>
-
         <Table
           columns={this.state.columns}
           dataSource={this.state.events.map((item, i) => ({
@@ -71,6 +70,21 @@ class TableView extends React.Component {
             descriptionUrl: item.descriptionUrl ? item.descriptionUrl : '',
             comment: item.comment ? item.comment : 'No comments yet',
           }))}
+          rowClassName={(record, index) => {
+            return record.type === 'Факультатив'
+              ? 'facultativeStyle'
+              : record.type === 'YouTube Live'
+              ? 'youtubeLiveStyle'
+              : record.type === 'Выдача таска'
+              ? 'taskStyle '
+              : record.type === 'Self education'
+              ? 'selfEducationStyle'
+              : record.type === 'Митап в Минске'
+              ? 'meetUpStyle'
+              : record.type === 'Deadline'
+              ? 'deadlineStyle'
+              : 'noTypeStyle'
+          }}
           pagination={false}
         />
       </div>
@@ -79,3 +93,19 @@ class TableView extends React.Component {
 }
 
 export default TableView
+
+/*
+item.type === 'Факультатив'
+                ? 'facultativeStyle'
+                : item.type === 'YouTube Live'
+                ? 'youtubeLiveStyle'
+                : item.type === 'Выдача таска'
+                ? 'taskStyle '
+                : item.type === '	Self education'
+                ? 'selfEducationStyle'
+                : item.type === 'Митап в Минске'
+                ? 'meetUpStyle'
+                : item.type === 'Deadline'
+                ? 'deadlineStyle'
+                : null
+*/

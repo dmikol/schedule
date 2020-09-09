@@ -1,10 +1,16 @@
 import React from 'react'
 import { Button, Dropdown, Menu } from 'antd'
-import { EditOutlined, EyeOutlined, LogoutOutlined } from '@ant-design/icons'
+import {
+  EditOutlined,
+  EyeOutlined,
+  LogoutOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 
 import './Header.scss'
 
 import logo from './assets/logo.png'
+import { useState } from 'react'
 
 const menu = (
   <Menu>
@@ -24,7 +30,33 @@ const menu = (
   </Menu>
 )
 
-const Header = () => {
+const Header = (props) => {
+  const activeModeStyle = {
+    fontWeight: 'bold',
+  }
+  const mode = (
+    <Menu>
+      <Menu.Item
+        key="0"
+        style={!props.mentorMode && activeModeStyle}
+        onClick={() => {
+          props.setMentorMode(false)
+        }}
+      >
+        <UserOutlined /> Student
+      </Menu.Item>
+      <Menu.Item
+        key="1"
+        style={props.mentorMode && activeModeStyle}
+        onClick={() => {
+          props.setMentorMode(true)
+        }}
+      >
+        <UserOutlined /> Mentor
+      </Menu.Item>
+    </Menu>
+  )
+
   return (
     <div className="header">
       <div>
@@ -36,6 +68,11 @@ const Header = () => {
       </div>
 
       <div>
+        <Dropdown overlay={mode} trigger={['click']}>
+          <Button type="dashed" className="modeButton">
+            Mode
+          </Button>
+        </Dropdown>
         <Dropdown overlay={menu} trigger={['click']}>
           <Button type="dashed">My Profile</Button>
         </Dropdown>
