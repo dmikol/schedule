@@ -8,6 +8,7 @@ import Header from '../Header'
 import ListView from '../ListView'
 import Sidebar from '../Sidebar'
 import TableView from '../TableView'
+import TaskDescription from '../TaskDescription'
 
 const App = () => {
   const [events] = useState(['Event 1', 'Event 2', 'Event 3'])
@@ -22,6 +23,10 @@ const App = () => {
   const handleTimezoneChange = (selectedTimezone) => {
     console.log(`${selectedTimezone} timezone has been selected`)
     setTimezone(selectedTimezone)
+  }
+
+  const onTaskNameClick = () => {
+    setMode('description');
   }
 
   return (
@@ -43,7 +48,12 @@ const App = () => {
 
           {mode === 'list' && <ListView />}
 
-          {mode === 'table' && <TableView />}
+
+          {mode === 'table' && <TableView mentorMode={mentorMode} 
+                                          onTaskNameClick={onTaskNameClick}/>}
+                                          
+          {mode === 'description' && <TaskDescription />}
+
         </Col>
       </Row>
     </div>

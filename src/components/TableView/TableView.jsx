@@ -28,6 +28,7 @@ class TableView extends React.Component {
         {
           title: 'Name',
           dataIndex: 'title',
+          render: (text) => <h3 onClick={() => props.onTaskNameClick()}>{text}</h3>
         },
         {
           title: 'Details Url',
