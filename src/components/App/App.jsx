@@ -11,11 +11,11 @@ import TableView from '../TableView'
 
 const App = () => {
   const [events] = useState(['Event 1', 'Event 2', 'Event 3'])
-  const [mode, setMode] = useState('list')
+  const [mode, setMode] = useState('table')
   const [timezone, setTimezone] = useState('timezone1')
 
   const [mentorMode, setMentorMode] = useState(true)
-  const [customColors, setCustomColors] = useState('true')
+  const [customColors, setCustomColors] = useState(false)
 
   const handleModeChange = (selectedMode) => {
     console.log(`${selectedMode} mode has been selected`)
@@ -47,18 +47,25 @@ const App = () => {
               <EditOutlined />
             </Button>
 
-            <Button>
+            <Button
+              onClick={() => setCustomColors(true)}
+              onBlur={() => setCustomColors(false)}
+            >
               <SettingOutlined />
             </Button>
           </Col>
         )}
         {!mentorMode && (
           <Col span={24} offset={23}>
-            <Button>
+            <Button
+              onClick={() => setCustomColors(true)}
+              onBlur={() => setCustomColors(false)}
+            >
               <SettingOutlined />
             </Button>
           </Col>
         )}
+        {customColors && <div className="customColorsStyle">colors</div>}
         <Col span={24}>
           {mode === 'calendar' && <CalendarView />}
 
