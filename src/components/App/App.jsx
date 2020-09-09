@@ -76,16 +76,11 @@ const App = () => {
 
           {mode === 'list' && <ListView />}
 
-<<<<<<< HEAD
-
           {mode === 'table' && <TableView mentorMode={mentorMode} 
                                           onTaskNameClick={onTaskNameClick}/>}
                                           
           {mode === 'description' && <TaskDescription />}
 
-=======
-          {mode === 'table' && <TableView mentorMode={mentorMode} />}
->>>>>>> origin/develop
         </Col>
       </Row>
     </div>
