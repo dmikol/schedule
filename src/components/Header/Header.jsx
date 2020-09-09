@@ -36,10 +36,22 @@ const Header = (props) => {
   }
   const mode = (
     <Menu>
-      <Menu.Item key="0" style={!props.mentorMode && activeModeStyle} >
+      <Menu.Item
+        key="0"
+        style={!props.mentorMode && activeModeStyle}
+        onClick={() => {
+          props.setMentorMode(false)
+        }}
+      >
         <UserOutlined /> Student
       </Menu.Item>
-      <Menu.Item key="1" style={props.mentorMode && activeModeStyle}>
+      <Menu.Item
+        key="1"
+        style={props.mentorMode && activeModeStyle}
+        onClick={() => {
+          props.setMentorMode(true)
+        }}
+      >
         <UserOutlined /> Mentor
       </Menu.Item>
     </Menu>
@@ -57,7 +69,9 @@ const Header = (props) => {
 
       <div>
         <Dropdown overlay={mode} trigger={['click']}>
-          <Button type="dashed" className="modeButton">Mode</Button>
+          <Button type="dashed" className="modeButton">
+            Mode
+          </Button>
         </Dropdown>
         <Dropdown overlay={menu} trigger={['click']}>
           <Button type="dashed">My Profile</Button>
