@@ -17,6 +17,7 @@ const App = () => {
 
   const [mentorMode, setMentorMode] = useState(true)
   const [customColors, setCustomColors] = useState(false)
+  const [clickedTask, setClickedTask] = useState(null)
 
   const handleModeChange = (selectedMode) => {
     console.log(`${selectedMode} mode has been selected`)
@@ -28,8 +29,9 @@ const App = () => {
     setTimezone(selectedTimezone)
   }
 
-  const onTaskNameClick = () => {
-    setMode('description');
+  const onTaskNameClick = (task) => {
+    setMode('description')
+    setClickedTask(task)
   }
 
   return (
@@ -79,7 +81,7 @@ const App = () => {
           {mode === 'table' && <TableView mentorMode={mentorMode} 
                                           onTaskNameClick={onTaskNameClick}/>}
                                           
-          {mode === 'description' && <TaskDescription />}
+          {mode === 'description' && <TaskDescription task={clickedTask}/>}
 
         </Col>
       </Row>

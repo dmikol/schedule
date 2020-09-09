@@ -28,7 +28,10 @@ class TableView extends React.Component {
         {
           title: 'Name',
           dataIndex: 'title',
-          render: (text) => <h3 onClick={() => props.onTaskNameClick()}>{text}</h3>
+          render: (text, record) => <h3 onClick={(title) => {
+            const clickedEvent = this.findTaskByKey(record.key);
+            props.onTaskNameClick(clickedEvent)
+          }}>{text}</h3>
         },
         {
           title: 'Details Url',
@@ -45,6 +48,11 @@ class TableView extends React.Component {
       ],
       events: [],
     }
+  }
+
+  findTaskByKey(key) {
+    const { events } = this.state
+    return events.find((item, i) => i === key)
   }
 
   componentDidMount() {
