@@ -2,3 +2,9 @@
   padding: 8px;
 }
 
+.tableView__task-name {
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}

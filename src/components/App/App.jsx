@@ -76,7 +76,7 @@ const App = () => {
         <Col span={24}>
           {mode === 'calendar' && <CalendarView />}
 
-          {mode === 'list' && <ListView />}
+          {mode === 'list' && <ListView onTaskNameClick={onTaskNameClick}/>}
 
           {mode === 'table' && <TableView mentorMode={mentorMode} 
                                           onTaskNameClick={onTaskNameClick}/>}

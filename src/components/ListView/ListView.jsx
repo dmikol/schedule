@@ -26,7 +26,10 @@ class ListView extends React.Component {
           itemLayout="horizontal"
           dataSource={this.state.events.map((item, i) => ({
             key: i,
-            title: item.name,
+            title: <p className="tableView__task-name"
+                      onClick={() => this.props.onTaskNameClick(item)}>
+                      {item.name}
+                    </p>,
             date: item.dateTime ? item.dateTime.slice(6) : '',
             time: item.dateTime ? item.dateTime.slice(0, 5) : '',
             type: item.type,
