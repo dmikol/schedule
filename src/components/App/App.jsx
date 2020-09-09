@@ -14,6 +14,8 @@ const App = () => {
   const [mode, setMode] = useState('list')
   const [timezone, setTimezone] = useState('timezone1')
 
+  const [mentorMode, setMentorMode] = useState(false);
+
   const handleModeChange = (selectedMode) => {
     console.log(`${selectedMode} mode has been selected`)
     setMode(selectedMode)
