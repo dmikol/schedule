@@ -1,7 +1,9 @@
 import React from 'react';
 import { Descriptions, Row, Col } from 'antd';
+import FeedbackOnTask from '../FeedbackOnTask';
 
 const TaskDescription = ({ task }) => {
+
 
     const { name, type, dateTime, description, descriptionUrl, place, week } = task
     let link;
@@ -10,6 +12,7 @@ const TaskDescription = ({ task }) => {
     }
 
     return (
+        <>
         <Row>
             <Col span={20} offset={2}>
             <Descriptions title={name} bordered>
@@ -34,6 +37,13 @@ const TaskDescription = ({ task }) => {
             </Descriptions>
             </Col>
         </Row>
+
+        <Row>
+            <Col span={20} offset={2}>
+                {<FeedbackOnTask feedback={task.feedback && task.feedback}/>}
+            </Col>
+        </Row>
+        </>
     )
 };
 

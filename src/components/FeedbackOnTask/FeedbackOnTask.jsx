@@ -1,5 +1,7 @@
 import React from 'react'
-const {  Card  } = antd;
+import {  Card  } from 'antd'
+
+import './FeedbackOnTask.scss'
 
 const FeedbackOnTask = ({ feedback }) => {
 
@@ -13,12 +15,15 @@ const FeedbackOnTask = ({ feedback }) => {
         })
     }
 
-    if (feedback.data.length) {
+    if (feedback && feedback.data.length) {
         feedBackContent = generateFeedbackCard(feedback.data)
+    } else {
+        feedBackContent = <h4>Пока еще никто не оставил свой отзыв...</h4>
     }
 
     return (
-        <div className="site-card-border-less-wrapper">
+        <div className="site-card-border-less-wrapper feedbackOnTask">
+            <h2>Отзывы о задании: </h2>
             {feedBackContent}
         </div>
 
