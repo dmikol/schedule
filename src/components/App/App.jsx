@@ -8,6 +8,7 @@ import Header from '../Header'
 import ListView from '../ListView'
 import Sidebar from '../Sidebar'
 import TableView from '../TableView'
+import TaskDescription from '../TaskDescription'
 
 const App = () => {
   const [events] = useState(['Event 1', 'Event 2', 'Event 3'])
@@ -16,6 +17,7 @@ const App = () => {
 
   const [mentorMode, setMentorMode] = useState(true)
   const [customColors, setCustomColors] = useState(false)
+  const [clickedTask, setClickedTask] = useState(null)
 
   const handleModeChange = (selectedMode) => {
     console.log(`${selectedMode} mode has been selected`)
@@ -25,6 +27,11 @@ const App = () => {
   const handleTimezoneChange = (selectedTimezone) => {
     console.log(`${selectedTimezone} timezone has been selected`)
     setTimezone(selectedTimezone)
+  }
+
+  const handleTaskNameClick = (task) => {
+    setMode('description')
+    setClickedTask(task)
   }
 
   return (
@@ -69,9 +76,13 @@ const App = () => {
         <Col span={24}>
           {mode === 'calendar' && <CalendarView />}
 
-          {mode === 'list' && <ListView />}
+          {mode === 'list' && <ListView onTaskNameClick={handleTaskNameClick}/>}
 
-          {mode === 'table' && <TableView mentorMode={mentorMode} />}
+          {mode === 'table' && <TableView mentorMode={mentorMode} 
+                                          onTaskNameClick={handleTaskNameClick}/>}
+                                          
+          {mode === 'description' && <TaskDescription task={clickedTask}/>}
+
         </Col>
       </Row>
     </div>
