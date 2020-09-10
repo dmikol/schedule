@@ -81,7 +81,8 @@ const App = () => {
           {mode === 'table' && <TableView mentorMode={mentorMode} 
                                           onTaskNameClick={handleTaskNameClick}/>}
                                           
-          {mode === 'description' && <TaskDescription task={clickedTask}/>}
+          {mode === 'description' && <TaskDescription task={clickedTask}
+                                                      setClickedTask={setClickedTask}/>}
 
         </Col>
       </Row>

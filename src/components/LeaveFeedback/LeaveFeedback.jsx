@@ -4,7 +4,7 @@ import { API } from '../../api/api'
 
 import './LeaveFeedback.scss'
 
-const LeaveFeedback = ({ task }) => {
+const LeaveFeedback = ({ task, setClickedTask }) => {
 
     const layout = {
         labelCol: {
@@ -32,6 +32,7 @@ const LeaveFeedback = ({ task }) => {
             task.id,
             eventToUpdate
         )
+        setClickedTask(eventToUpdate)
       };
 
     const validateMessages = {

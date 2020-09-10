@@ -3,7 +3,7 @@ import { Descriptions, Row, Col } from 'antd';
 import FeedbackOnTask from '../FeedbackOnTask';
 import LeaveFeedback from '../LeaveFeedback';
 
-const TaskDescription = ({ task }) => {
+const TaskDescription = ({ task, setClickedTask }) => {
 
 
     const { name, type, dateTime, description, descriptionUrl, place, week } = task
@@ -47,7 +47,9 @@ const TaskDescription = ({ task }) => {
         <Row>
             <Col span={20} offset={2}>
                 {((task.feedback && task.feedback.isFeedback) || !task.feedback) && 
-                <LeaveFeedback task={task}/>}
+                <LeaveFeedback
+                task={task}
+                setClickedTask={setClickedTask}/>}
             </Col>
         </Row>
 
