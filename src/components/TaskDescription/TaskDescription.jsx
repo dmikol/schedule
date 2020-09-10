@@ -1,6 +1,7 @@
 import React from 'react';
 import { Descriptions, Row, Col } from 'antd';
 import FeedbackOnTask from '../FeedbackOnTask';
+import LeaveFeedback from '../LeaveFeedback';
 
 const TaskDescription = ({ task }) => {
 
@@ -40,9 +41,16 @@ const TaskDescription = ({ task }) => {
 
         <Row>
             <Col span={20} offset={2}>
-                {<FeedbackOnTask feedback={task.feedback && task.feedback}/>}
+                <FeedbackOnTask feedback={task.feedback && task.feedback}/>
             </Col>
         </Row>
+        <Row>
+            <Col span={20} offset={2}>
+                {((task.feedback && task.feedback.isFeedback) || !task.feedback) && 
+                <LeaveFeedback />}
+            </Col>
+        </Row>
+
         </>
     )
 };
