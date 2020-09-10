@@ -1,5 +1,7 @@
 import React from 'react'
 import { Select } from 'antd'
+import Filter from '../Filter';
+
 import {
   CalendarOutlined,
   GlobalOutlined,
@@ -43,6 +45,7 @@ const Sidebar = ({ mode, onModeChange, timezone, onTimezoneChange }) => {
           </Select.Option>
         </Select>
       </div>
+      <Filter />
     </div>
   )
 }

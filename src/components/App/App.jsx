@@ -30,7 +30,6 @@ const App = () => {
   return (
     <div className="app">
       <Header mentorMode={mentorMode} setMentorMode={setMentorMode} />
-
       <Row>
         <Col span={8}>
           <Sidebar
