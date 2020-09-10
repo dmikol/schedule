@@ -14,5 +14,20 @@ const events = [
   { name: 'Deadline', id: 7 },
 ]
 
+const type = events.map((event) => {
+  return (
+    <Select.Option value={event.name} key={event.id}>
+      <FilterOutlined /> {event.name}
+    </Select.Option>
+  )
+})
+
+const Filter = () => {
+  return (
+    <div>
+      <Select defaultValue="Фильтр">{type}</Select>
+    </div>
+  )
+}
 
 export default Filter
