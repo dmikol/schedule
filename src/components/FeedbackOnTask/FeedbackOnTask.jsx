@@ -9,7 +9,7 @@ const FeedbackOnTask = ({ feedback }) => {
 
     const generateFeedbackCard = (data) => {
         return data.map((item, i) => {
-            return <Card title={item.author} bordered={false} >
+            return <Card title={item.author} bordered={false} key={i}>
             <p>{item.text}</p>
           </Card>
         })

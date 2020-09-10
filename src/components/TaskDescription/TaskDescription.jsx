@@ -47,7 +47,7 @@ const TaskDescription = ({ task }) => {
         <Row>
             <Col span={20} offset={2}>
                 {((task.feedback && task.feedback.isFeedback) || !task.feedback) && 
-                <LeaveFeedback />}
+                <LeaveFeedback task={task}/>}
             </Col>
         </Row>
 

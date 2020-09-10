@@ -1,9 +1,10 @@
 import React from 'react'
 import {  Form, Input, Button  } from 'antd'
+import { API } from '../../api/api'
 
 import './LeaveFeedback.scss'
 
-const LeaveFeedback = () => {
+const LeaveFeedback = ({ task }) => {
 
     const layout = {
         labelCol: {
@@ -15,7 +16,22 @@ const LeaveFeedback = () => {
       };
 
     const onFinish = values => {
-        console.log(values);
+        const feedbacks = task.feedback ? [...task.feedback.data] : []
+        feedbacks.push({
+            author: values.name,
+            text: values.feedback
+        })
+        const eventToUpdate = {
+            ...task,
+            feedback: {
+                isFeedback: task.feedback ? task.feedback.isFeedback : true,
+                data: [...feedbacks]
+            }
+        }
+       API.updateEvent(
+            task.id,
+            eventToUpdate
+        )
       };
 
     const validateMessages = {
