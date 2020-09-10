@@ -29,7 +29,7 @@ const App = () => {
     setTimezone(selectedTimezone)
   }
 
-  const onTaskNameClick = (task) => {
+  const handleTaskNameClick = (task) => {
     setMode('description')
     setClickedTask(task)
   }
@@ -76,10 +76,10 @@ const App = () => {
         <Col span={24}>
           {mode === 'calendar' && <CalendarView />}
 
-          {mode === 'list' && <ListView onTaskNameClick={onTaskNameClick}/>}
+          {mode === 'list' && <ListView onTaskNameClick={handleTaskNameClick}/>}
 
           {mode === 'table' && <TableView mentorMode={mentorMode} 
-                                          onTaskNameClick={onTaskNameClick}/>}
+                                          onTaskNameClick={handleTaskNameClick}/>}
                                           
           {mode === 'description' && <TaskDescription task={clickedTask}/>}
 

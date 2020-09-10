@@ -1,3 +1,1 @@
-import TaskDescription from './TaskDescription';
-
-export default TaskDescription;
+export { default } from './TaskDescription'
