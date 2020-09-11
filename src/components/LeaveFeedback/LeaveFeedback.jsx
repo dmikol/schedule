@@ -36,7 +36,7 @@ const LeaveFeedback = ({ task, setClickedTask }) => {
       };
 
     const validateMessages = {
-    required: '${label} is required!',
+    required: 'Введите ${label}',
     };
 
     return (
