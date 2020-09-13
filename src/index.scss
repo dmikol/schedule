@@ -13,3 +13,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.high-contrast {
+  font-size: 20px;
+
+  * {
+    color: #000;
+  }
+
+  button {
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  table,
+  .ant-dropdown-menu-item,
+  .ant-radio-button-wrapper,
+  .ant-select,
+  .ant-select-item {
+    font-size: 20px;
+  }
+}

@@ -45,42 +45,37 @@ const App = () => {
             onModeChange={handleModeChange}
             timezone={timezone}
             onTimezoneChange={handleTimezoneChange}
-          />
-        </Col>
-        {mentorMode && (
-          <Col span={24} offset={21}>
-            <Button className="editScheduleButtonStyle">
-              Edit schedule
-              <EditOutlined />
-            </Button>
+          >
+            <div>
+              <Button.Group>
+                <Button
+                  onClick={() => setCustomColors(true)}
+                  onBlur={() => setCustomColors(false)}
+                >
+                  <SettingOutlined />
+                </Button>
 
-            <Button
-              onClick={() => setCustomColors(true)}
-              onBlur={() => setCustomColors(false)}
-            >
-              <SettingOutlined />
-            </Button>
-          </Col>
-        )}
-        {!mentorMode && (
-          <Col span={24} offset={23}>
-            <Button
-              onClick={() => setCustomColors(true)}
-              onBlur={() => setCustomColors(false)}
-            >
-              <SettingOutlined />
-            </Button>
-          </Col>
-        )}
-        {customColors && <div className="customColorsStyle">colors</div>}
-        <Col span={24}>
+                {mentorMode && (
+                  <Button className="editScheduleButtonStyle">
+                    <EditOutlined />
+                    Edit schedule
+                  </Button>
+                )}
+              </Button.Group>
+
+              {customColors && <div className="customColorsStyle">colors</div>}
+            </div>
+          </Sidebar>
+        </Col>
+
+        <Col span={16}>
           {mode === 'calendar' && <CalendarView />}
 
           {mode === 'list' && <ListView onTaskNameClick={handleTaskNameClick}/>}
 
           {mode === 'table' && <TableView mentorMode={mentorMode} 
                                           onTaskNameClick={handleTaskNameClick}/>}
-                                          
+
           {mode === 'description' && <TaskDescription task={clickedTask}/>}
 
         </Col>

@@ -95,6 +95,7 @@ class TableView extends React.Component {
               : 'noTypeStyle'
           }}
           pagination={false}
+          scroll={{ x: '100%' }}
         />
       </div>
     )
