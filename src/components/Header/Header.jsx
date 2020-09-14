@@ -10,7 +10,6 @@ import {
 import './Header.scss'
 
 import logo from './assets/logo.png'
-import { useState } from 'react'
 
 const menu = (
   <Menu>
