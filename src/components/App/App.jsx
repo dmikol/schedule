@@ -71,13 +71,23 @@ const App = () => {
         <Col span={16}>
           {mode === 'calendar' && <CalendarView />}
 
-          {mode === 'list' && <ListView onTaskNameClick={handleTaskNameClick}/>}
+          {mode === 'list' && (
+            <ListView onTaskNameClick={handleTaskNameClick} />
+          )}
 
-          {mode === 'table' && <TableView mentorMode={mentorMode} 
-                                          onTaskNameClick={handleTaskNameClick}/>}
-                                          
-          {mode === 'description' && <TaskDescription task={clickedTask}
-                                                      setClickedTask={setClickedTask}/>}
+          {mode === 'table' && (
+            <TableView
+              mentorMode={mentorMode}
+              onTaskNameClick={handleTaskNameClick}
+            />
+          )}
+
+          {mode === 'description' && (
+            <TaskDescription
+              task={clickedTask}
+              setClickedTask={setClickedTask}
+            />
+          )}
         </Col>
       </Row>
     </div>

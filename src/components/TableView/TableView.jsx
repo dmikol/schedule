@@ -28,11 +28,17 @@ class TableView extends React.Component {
         {
           title: 'Name',
           dataIndex: 'title',
-          render: (text, record) => <h3 className="tableView__task-name"
-            onClick={(title) => {
-            const clickedEvent = this.findTaskByKey(record.key);
-            props.onTaskNameClick(clickedEvent)
-          }}>{text}</h3>
+          render: (text, record) => (
+            <h3
+              className="tableView__task-name"
+              onClick={(title) => {
+                const clickedEvent = this.findTaskByKey(record.key)
+                props.onTaskNameClick(clickedEvent)
+              }}
+            >
+              {text}
+            </h3>
+          ),
         },
         {
           title: 'Details Url',
