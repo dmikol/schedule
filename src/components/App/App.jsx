@@ -8,6 +8,7 @@ import Header from '../Header'
 import ListView from '../ListView'
 import Sidebar from '../Sidebar'
 import TableView from '../TableView'
+import TaskDescription from '../TaskDescription'
 
 const App = () => {
   const [mode, setMode] = useState('table')
@@ -16,6 +17,7 @@ const App = () => {
 
   const [mentorMode, setMentorMode] = useState(true)
   const [customColors, setCustomColors] = useState(false)
+  const [clickedTask, setClickedTask] = useState(null)
 
   const handleModeChange = (selectedMode) => {
     setMode(selectedMode)
@@ -27,6 +29,11 @@ const App = () => {
 
   const handleTypeSelected = (selectedType) => {
     setTypeSelected(selectedType)
+
+  const handleTaskNameClick = (task) => {
+    setMode('description')
+    setClickedTask(task)
+
   }
 
   return (
@@ -42,41 +49,47 @@ const App = () => {
             type={type}
             onTypeChange={handleTypeSelected}
           />
-        </Col>
-        {mentorMode && (
-          <Col span={24} offset={21}>
-            <Button className="editScheduleButtonStyle">
-              Edit schedule
-              <EditOutlined />
-            </Button>
 
-            <Button
-              onClick={() => setCustomColors(true)}
-              onBlur={() => setCustomColors(false)}
-            >
-              <SettingOutlined />
-            </Button>
-          </Col>
-        )}
-        {!mentorMode && (
-          <Col span={24} offset={23}>
-            <Button
-              onClick={() => setCustomColors(true)}
-              onBlur={() => setCustomColors(false)}
-            >
-              <SettingOutlined />
-            </Button>
-          </Col>
-        )}
-        {customColors && <div className="customColorsStyle">colors</div>}
-        <Col span={24}>
+          >
+            <div>
+              <Button.Group>
+                <Button
+                  onClick={() => setCustomColors(true)}
+                  onBlur={() => setCustomColors(false)}
+                >
+                  <SettingOutlined />
+                </Button>
+
+                {mentorMode && (
+                  <Button className="editScheduleButtonStyle">
+                    <EditOutlined />
+                    Edit schedule
+                  </Button>
+                )}
+              </Button.Group>
+
+              {customColors && <div className="customColorsStyle">colors</div>}
+            </div>
+          </Sidebar>
+
+        </Col>
+
+        <Col span={16}>
           {mode === 'calendar' && <CalendarView />}
 
-          {mode === 'list' && <ListView />}
+          {mode === 'list' && <ListView onTaskNameClick={handleTaskNameClick}/>}
+
 
           {mode === 'table' && (
             <TableView mentorMode={mentorMode} type={type} />
           )}
+
+          {mode === 'table' && <TableView mentorMode={mentorMode} 
+                                          onTaskNameClick={handleTaskNameClick}/>}
+                                          
+          {mode === 'description' && <TaskDescription task={clickedTask}
+                                                      setClickedTask={setClickedTask}/>}
+
         </Col>
       </Row>
     </div>

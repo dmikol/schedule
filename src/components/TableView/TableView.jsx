@@ -28,6 +28,11 @@ class TableView extends React.Component {
         {
           title: 'Name',
           dataIndex: 'title',
+          render: (text, record) => <h3 className="tableView__task-name"
+            onClick={(title) => {
+            const clickedEvent = this.findTaskByKey(record.key);
+            props.onTaskNameClick(clickedEvent)
+          }}>{text}</h3>
         },
         {
           title: 'Details Url',
@@ -44,6 +49,11 @@ class TableView extends React.Component {
       ],
       events: [],
     }
+  }
+
+  findTaskByKey(key) {
+    const { events } = this.state
+    return events.find((item, i) => i === key)
   }
 
   componentDidMount() {
@@ -110,6 +120,7 @@ class TableView extends React.Component {
           dataSource={filteredData}
           rowClassName={this.mapClassNameByType}
           pagination={false}
+          scroll={{ x: '100%' }}
         />
       </div>
     )
