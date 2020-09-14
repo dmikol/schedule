@@ -49,27 +49,48 @@ class TableView extends React.Component {
   componentDidMount() {
     API.getEvents().then((response) => {
       this.setState({ events: response.data })
-      console.log(this.state.events)
     })
   }
+
   render() {
+    const { type } = this.props
     return (
       <div className="table-view">
         <h3>Table view</h3>
         <Table
           columns={this.state.columns}
-          dataSource={this.state.events.map((item, i) => ({
-            key: i,
-            title: item.name,
-            date: item.dateTime ? item.dateTime.slice(6) : '',
-            time: item.dateTime ? item.dateTime.slice(0, 5) : '',
-            type: item.type,
-            organizer: item.organizer ? item.organizer : 'Not assigned',
-            place: item.place ? item.place : '',
-            descriptionUrl: item.descriptionUrl ? item.descriptionUrl : '',
-            comment: item.comment ? item.comment : 'No comments yet',
-          }))}
-          rowClassName={(record, index) => {
+          dataSource={this.state.events.map((item, i) =>
+            type === 'All'
+              ? {
+                  key: i,
+                  title: item.name,
+                  date: item.dateTime ? item.dateTime.slice(6) : '',
+                  time: item.dateTime ? item.dateTime.slice(0, 5) : '',
+                  type: item.type,
+                  organizer: item.organizer ? item.organizer : 'Not assigned',
+                  place: item.place ? item.place : '',
+                  descriptionUrl: item.descriptionUrl
+                    ? item.descriptionUrl
+                    : '',
+                  comment: item.comment ? item.comment : 'No comments yet',
+                }
+              : type === item.type
+              ? {
+                  key: i,
+                  title: item.name,
+                  date: item.dateTime ? item.dateTime.slice(6) : '',
+                  time: item.dateTime ? item.dateTime.slice(0, 5) : '',
+                  type: item.type,
+                  organizer: item.organizer ? item.organizer : 'Not assigned',
+                  place: item.place ? item.place : '',
+                  descriptionUrl: item.descriptionUrl
+                    ? item.descriptionUrl
+                    : '',
+                  comment: item.comment ? item.comment : 'No comments yet',
+                }
+              : {},
+          )}
+          rowClassName={(record) => {
             return record.type === 'Факультатив'
               ? 'facultativeStyle'
               : record.type === 'YouTube Live'

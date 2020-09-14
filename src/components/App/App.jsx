@@ -10,21 +10,23 @@ import Sidebar from '../Sidebar'
 import TableView from '../TableView'
 
 const App = () => {
-  const [events] = useState(['Event 1', 'Event 2', 'Event 3'])
   const [mode, setMode] = useState('table')
   const [timezone, setTimezone] = useState('timezone1')
+  const [type, setTypeSelected] = useState('All')
 
   const [mentorMode, setMentorMode] = useState(true)
   const [customColors, setCustomColors] = useState(false)
 
   const handleModeChange = (selectedMode) => {
-    console.log(`${selectedMode} mode has been selected`)
     setMode(selectedMode)
   }
 
   const handleTimezoneChange = (selectedTimezone) => {
-    console.log(`${selectedTimezone} timezone has been selected`)
     setTimezone(selectedTimezone)
+  }
+
+  const handleTypeSelected = (selectedType) => {
+    setTypeSelected(selectedType)
   }
 
   return (
@@ -37,6 +39,8 @@ const App = () => {
             onModeChange={handleModeChange}
             timezone={timezone}
             onTimezoneChange={handleTimezoneChange}
+            type={type}
+            onTypeChange={handleTypeSelected}
           />
         </Col>
         {mentorMode && (
@@ -70,7 +74,9 @@ const App = () => {
 
           {mode === 'list' && <ListView />}
 
-          {mode === 'table' && <TableView mentorMode={mentorMode} />}
+          {mode === 'table' && (
+            <TableView mentorMode={mentorMode} type={type} />
+          )}
         </Col>
       </Row>
     </div>

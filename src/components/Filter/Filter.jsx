@@ -5,27 +5,30 @@ import { FilterOutlined } from '@ant-design/icons'
 import './filter.scss'
 
 const events = [
-  { name: 'Выдача таска', id: 1 },
-  { name: 'Факультатив', id: 2 },
-  { name: 'Тест', id: 3 },
-  { name: 'Митап в Минске', id: 4 },
-  { name: 'YouTube Live', id: 5 },
-  { name: 'Self education', id: 6 },
-  { name: 'Deadline', id: 7 },
+  { name: 'All', id: 1 },
+  { name: 'Выдача таска', id: 2 },
+  { name: 'Факультатив', id: 3 },
+  { name: 'Тест', id: 4 },
+  { name: 'Митап в Минске', id: 5 },
+  { name: 'YouTube Live', id: 6 },
+  { name: 'Self education', id: 7 },
+  { name: 'Deadline', id: 8 },
 ]
 
-const type = events.map((event) => {
+const type = events.map(({ name, id }) => {
   return (
-    <Select.Option value={event.name} key={event.id}>
-      <FilterOutlined /> {event.name}
+    <Select.Option value={name} key={id}>
+      <FilterOutlined /> {name}
     </Select.Option>
   )
 })
 
-const Filter = () => {
+const Filter = ({ types, onFilterChange }) => {
   return (
     <div>
-      <Select defaultValue="Фильтр">{type}</Select>
+      <Select defaultValue={types} onChange={onFilterChange}>
+        {type}
+      </Select>
     </div>
   )
 }

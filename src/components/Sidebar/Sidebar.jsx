@@ -1,6 +1,6 @@
 import React from 'react'
 import { Select } from 'antd'
-import Filter from '../Filter';
+import Filter from '../Filter'
 
 import {
   CalendarOutlined,
@@ -11,7 +11,14 @@ import {
 
 import './Sidebar.scss'
 
-const Sidebar = ({ mode, onModeChange, timezone, onTimezoneChange }) => {
+const Sidebar = ({
+  mode,
+  onModeChange,
+  timezone,
+  onTimezoneChange,
+  type,
+  onTypeChange,
+}) => {
   return (
     <div className="sidebar">
       <div>
@@ -45,7 +52,7 @@ const Sidebar = ({ mode, onModeChange, timezone, onTimezoneChange }) => {
           </Select.Option>
         </Select>
       </div>
-      <Filter />
+      <Filter types={type} onFilterChange={onTypeChange} />
     </div>
   )
 }
