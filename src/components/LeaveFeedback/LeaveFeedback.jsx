@@ -40,9 +40,9 @@ const LeaveFeedback = ({ task, setClickedTask }) => {
     };
 
     return (
-        <div className="LeaveFeedback">
+        <div className="leave-feedback">
             <h3>Оставить свой отзыв о задании:</h3>
-        <Form {...layout} className="LeaveFeedback__form" name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+        <Form {...layout} className="leave-feedback__form" name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
         <Form.Item
         name={['name']}
         label="Имя"
