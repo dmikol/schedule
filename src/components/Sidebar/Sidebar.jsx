@@ -1,4 +1,5 @@
 import React from 'react'
+import Filter from '../Filter'
 import { Select, Space, Switch } from 'antd'
 import {
   CalendarOutlined,
@@ -15,6 +16,8 @@ const Sidebar = ({
   onModeChange,
   timezone,
   onTimezoneChange,
+  type,
+  onTypeChange,
 }) => {
   const handleHighContrastModeChange = () => {
     document.body.classList.toggle('high-contrast')
@@ -54,6 +57,7 @@ const Sidebar = ({
             </Select.Option>
           </Select>
         </div>
+        <Filter types={type} onFilterChange={onTypeChange} />
 
         {children}
 

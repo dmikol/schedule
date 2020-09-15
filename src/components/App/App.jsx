@@ -14,6 +14,7 @@ const App = () => {
   const [events] = useState(['Event 1', 'Event 2', 'Event 3'])
   const [mode, setMode] = useState('table')
   const [timezone, setTimezone] = useState('timezone1')
+  const [type, setTypeSelected] = useState('All')
 
   const [mentorMode, setMentorMode] = useState(true)
   const [customColors, setCustomColors] = useState(false)
@@ -27,6 +28,10 @@ const App = () => {
   const handleTimezoneChange = (selectedTimezone) => {
     console.log(`${selectedTimezone} timezone has been selected`)
     setTimezone(selectedTimezone)
+  }
+
+  const handleTypeSelected = (selectedType) => {
+    setTypeSelected(selectedType)
   }
 
   const handleTaskNameClick = (task) => {
@@ -45,27 +50,29 @@ const App = () => {
             onModeChange={handleModeChange}
             timezone={timezone}
             onTimezoneChange={handleTimezoneChange}
-          >
-            <div>
-              <Button.Group>
-                <Button
-                  onClick={() => setCustomColors(true)}
-                  onBlur={() => setCustomColors(false)}
-                >
-                  <SettingOutlined />
+            type={type}
+            onTypeChange={handleTypeSelected}
+          />
+
+          <div>
+            <Button.Group>
+              <Button
+                onClick={() => setCustomColors(true)}
+                onBlur={() => setCustomColors(false)}
+              >
+                <SettingOutlined />
+              </Button>
+
+              {mentorMode && (
+                <Button className="editScheduleButtonStyle">
+                  <EditOutlined />
+                  Edit schedule
                 </Button>
+              )}
+            </Button.Group>
 
-                {mentorMode && (
-                  <Button className="editScheduleButtonStyle">
-                    <EditOutlined />
-                    Edit schedule
-                  </Button>
-                )}
-              </Button.Group>
-
-              {customColors && <div className="customColorsStyle">colors</div>}
-            </div>
-          </Sidebar>
+            {customColors && <div className="customColorsStyle">colors</div>}
+          </div>
         </Col>
 
         <Col span={16}>
