@@ -11,7 +11,6 @@ import TableView from '../TableView'
 import TaskDescription from '../TaskDescription'
 
 const App = () => {
-  const [events] = useState(['Event 1', 'Event 2', 'Event 3'])
   const [mode, setMode] = useState('table')
   const [timezone, setTimezone] = useState('timezone1')
   const [type, setTypeSelected] = useState('All')
@@ -21,12 +20,10 @@ const App = () => {
   const [clickedTask, setClickedTask] = useState(null)
 
   const handleModeChange = (selectedMode) => {
-    console.log(`${selectedMode} mode has been selected`)
     setMode(selectedMode)
   }
 
   const handleTimezoneChange = (selectedTimezone) => {
-    console.log(`${selectedTimezone} timezone has been selected`)
     setTimezone(selectedTimezone)
   }
 
@@ -42,7 +39,6 @@ const App = () => {
   return (
     <div className="app">
       <Header mentorMode={mentorMode} setMentorMode={setMentorMode} />
-
       <Row>
         <Col span={8}>
           <Sidebar
@@ -84,6 +80,7 @@ const App = () => {
 
           {mode === 'table' && (
             <TableView
+              type={type}
               mentorMode={mentorMode}
               onTaskNameClick={handleTaskNameClick}
             />
