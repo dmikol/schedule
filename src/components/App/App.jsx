@@ -29,6 +29,7 @@ const App = () => {
 
   const handleTypeSelected = (selectedType) => {
     setTypeSelected(selectedType)
+  }
 
   const handleTaskNameClick = (task) => {
     setMode('description')
@@ -50,7 +51,6 @@ const App = () => {
             onTypeChange={handleTypeSelected}
           />
 
-          >
             <div>
               <Button.Group>
                 <Button
@@ -70,7 +70,6 @@ const App = () => {
 
               {customColors && <div className="customColorsStyle">colors</div>}
             </div>
-          </Sidebar>
 
         </Col>
 
