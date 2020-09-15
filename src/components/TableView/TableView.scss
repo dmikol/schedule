@@ -3,6 +3,8 @@
 }
 
 .tableView__task-name {
+  display: inline-block;
+
   &:hover {
     cursor: pointer;
     text-decoration: underline;
