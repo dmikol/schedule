@@ -78,13 +78,9 @@ const App = () => {
 
           {mode === 'list' && <ListView onTaskNameClick={handleTaskNameClick}/>}
 
-
           {mode === 'table' && (
-            <TableView mentorMode={mentorMode} type={type} />
+            <TableView mentorMode={mentorMode} type={type} onTaskNameClick={handleTaskNameClick}/>
           )}
-
-          {mode === 'table' && <TableView mentorMode={mentorMode} 
-                                          onTaskNameClick={handleTaskNameClick}/>}
                                           
           {mode === 'description' && <TaskDescription task={clickedTask}
                                                       setClickedTask={setClickedTask}/>}
