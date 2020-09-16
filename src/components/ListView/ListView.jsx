@@ -62,18 +62,18 @@ class ListView extends React.Component {
     return (item) => {
       let classes =
         item.type === 'Факультатив'
-          ? 'facultativeStyle'
+          ? 'row-facultative'
           : item.type === 'YouTube Live'
-          ? 'youtubeLiveStyle'
+          ? 'row-youtube-live'
           : item.type === 'Выдача таска'
-          ? 'taskStyle'
+          ? 'row-task'
           : item.type === 'Self education'
-          ? 'selfEducationStyle'
+          ? 'row-self-education'
           : item.type === 'Митап в Минске'
-          ? 'meetUpStyle'
+          ? 'row-meetup'
           : item.type === 'Deadline'
-          ? 'deadlineStyle'
-          : 'noTypeStyle'
+          ? 'row-deadline'
+          : 'row-no-type'
 
       if (item.isHighlighted) {
         classes += ' highlighted'

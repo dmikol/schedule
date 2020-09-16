@@ -104,18 +104,18 @@ class TableView extends React.Component {
   mapClassNameByType(record) {
     let classes =
       record.type === 'Факультатив'
-        ? 'facultativeStyle'
+        ? 'row-facultative'
         : record.type === 'YouTube Live'
-        ? 'youtubeLiveStyle'
+        ? 'row-youtube-live'
         : record.type === 'Выдача таска'
-        ? 'taskStyle'
+        ? 'row-task'
         : record.type === 'Self education'
-        ? 'selfEducationStyle'
+        ? 'row-self-education'
         : record.type === 'Митап в Минске'
-        ? 'meetUpStyle'
+        ? 'row-meetup'
         : record.type === 'Deadline'
-        ? 'deadlineStyle'
-        : 'noTypeStyle'
+        ? 'row-deadline'
+        : 'row-no-type'
     if (record.isHighlighted) {
       classes += ' highlighted'
     }
@@ -164,16 +164,16 @@ export default TableView
 
 /*
 item.type === 'Факультатив'
-                ? 'facultativeStyle'
+                ? 'row-facultative'
                 : item.type === 'YouTube Live'
-                ? 'youtubeLiveStyle'
+                ? 'row-youtube-live'
                 : item.type === 'Выдача таска'
-                ? 'taskStyle '
+                ? 'row-task '
                 : item.type === '	Self education'
-                ? 'selfEducationStyle'
+                ? 'row-self-education'
                 : item.type === 'Митап в Минске'
-                ? 'meetUpStyle'
+                ? 'row-meetup'
                 : item.type === 'Deadline'
-                ? 'deadlineStyle'
+                ? 'row-deadline'
                 : null
 */
