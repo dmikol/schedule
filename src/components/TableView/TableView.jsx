@@ -31,7 +31,7 @@ class TableView extends React.Component {
           render: (text, record) => (
             <h3
               className="tableView__task-name"
-              onClick={(title) => {
+              onClick={() => {
                 const clickedEvent = this.findTaskByKey(record.key)
                 props.onTaskNameClick(clickedEvent)
               }}
@@ -59,19 +59,25 @@ class TableView extends React.Component {
 
   findTaskByKey(key) {
     const { events } = this.state
-    return events.find((item, i) => i === key)
+    return events.find((item) => item.id === key)
   }
 
   componentDidMount() {
     API.getEvents().then((response) => {
-      this.setState({ events: response.data })
-      console.log(this.state.events)
+      const events = response.data.map((event) => ({
+        isHighlighted: false,
+        ...event,
+      }))
+
+      this.setState({ events })
+      // console.log(this.state.events)
     })
   }
 
   mapEventForTable(item, i) {
     return {
-      key: i,
+      key: item.id,
+      isHighlighted: item.isHighlighted,
       title: item.name,
       date: item.dateTime ? item.dateTime.slice(6) : '',
       time: item.dateTime ? item.dateTime.slice(0, 5) : '',
@@ -96,25 +102,43 @@ class TableView extends React.Component {
   }
 
   mapClassNameByType(record) {
-    return record.type === 'Факультатив'
-      ? 'facultativeStyle'
-      : record.type === 'YouTube Live'
-      ? 'youtubeLiveStyle'
-      : record.type === 'Выдача таска'
-      ? 'taskStyle '
-      : record.type === 'Self education'
-      ? 'selfEducationStyle'
-      : record.type === 'Митап в Минске'
-      ? 'meetUpStyle'
-      : record.type === 'Deadline'
-      ? 'deadlineStyle'
-      : 'noTypeStyle'
+    let classes =
+      record.type === 'Факультатив'
+        ? 'facultativeStyle'
+        : record.type === 'YouTube Live'
+        ? 'youtubeLiveStyle'
+        : record.type === 'Выдача таска'
+        ? 'taskStyle'
+        : record.type === 'Self education'
+        ? 'selfEducationStyle'
+        : record.type === 'Митап в Минске'
+        ? 'meetUpStyle'
+        : record.type === 'Deadline'
+        ? 'deadlineStyle'
+        : 'noTypeStyle'
+    if (record.isHighlighted) {
+      classes += ' highlighted'
+    }
+    return classes
+  }
+
+  onRowClick(record) {
+    const { events, columns } = this.state
+    const newStateEvents = events.map((event) => {
+      if (event.id === record.key) {
+        event.isHighlighted = !event.isHighlighted
+      } else {
+        event.isHighlighted = false
+      }
+      return event
+    })
+    this.setState({ ...columns, newStateEvents })
   }
 
   render() {
     const { type } = this.props
     const tableData = this.mapEventsByType(type)
-    const filteredData = tableData.filter((item) => item !== null)
+    const filteredData = tableData.filter((record) => record !== null)
 
     return (
       <div className="table-view">
@@ -125,6 +149,11 @@ class TableView extends React.Component {
           rowClassName={this.mapClassNameByType}
           pagination={false}
           scroll={{ x: '100%' }}
+          onRow={(record) => {
+            return {
+              onClick: () => this.onRowClick(record),
+            }
+          }}
         />
       </div>
     )
