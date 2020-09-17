@@ -1,10 +1,31 @@
+@import '../../scss/variables.scss';
+
 .table-view {
   padding: 8px;
 }
 
 .tableView__task-name {
+  display: inline-block;
+
   &:hover {
     cursor: pointer;
     text-decoration: underline;
   }
 }
+
+.ant-table-tbody > .highlighted,
+.ant-table-tbody > tr.highlighted:hover {
+  & > td,
+  & > td:first-child,
+  & > td:last-child {
+    border-color: $primary-hover;
+  }
+}
+
+// .ant-table-tbody > .highlighted > td:first-child {
+//   border-left: thin solid;
+// }
+
+// .ant-table-tbody > .highlighted > td:last-child {
+//   border-right: thin solid;
+// }

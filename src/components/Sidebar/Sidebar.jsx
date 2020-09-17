@@ -19,7 +19,6 @@ const Sidebar = ({
   onModeChange,
   timezone,
   onTimezoneChange,
-
   type,
   onTypeChange,
 }) => {

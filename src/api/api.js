@@ -42,10 +42,7 @@ export const API = {
 
   updateEvent(eventId, changes) {
     return instance
-      .put(
-        `event/${eventId}`,
-        changes,
-      )
+      .put(`event/${eventId}`, changes)
       .then((response) => response.data)
   },
 

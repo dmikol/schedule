@@ -51,40 +51,48 @@ const App = () => {
             onTypeChange={handleTypeSelected}
           />
 
-            <div>
-              <Button.Group>
-                <Button
-                  onClick={() => setCustomColors(true)}
-                  onBlur={() => setCustomColors(false)}
-                >
-                  <SettingOutlined />
+          <div>
+            <Button.Group>
+              <Button
+                onClick={() => setCustomColors(true)}
+                onBlur={() => setCustomColors(false)}
+              >
+                <SettingOutlined />
+              </Button>
+
+              {mentorMode && (
+                <Button className="editScheduleButtonStyle">
+                  <EditOutlined />
+                  Edit schedule
                 </Button>
+              )}
+            </Button.Group>
 
-                {mentorMode && (
-                  <Button className="editScheduleButtonStyle">
-                    <EditOutlined />
-                    Edit schedule
-                  </Button>
-                )}
-              </Button.Group>
-
-              {customColors && <div className="customColorsStyle">colors</div>}
-            </div>
-
+            {customColors && <div className="customColorsStyle">colors</div>}
+          </div>
         </Col>
 
         <Col span={16}>
           {mode === 'calendar' && <CalendarView />}
 
-          {mode === 'list' && <ListView onTaskNameClick={handleTaskNameClick}/>}
+          {mode === 'list' && (
+            <ListView onTaskNameClick={handleTaskNameClick} />
+          )}
 
           {mode === 'table' && (
-            <TableView mentorMode={mentorMode} type={type} onTaskNameClick={handleTaskNameClick}/>
+            <TableView
+              type={type}
+              mentorMode={mentorMode}
+              onTaskNameClick={handleTaskNameClick}
+            />
           )}
-                                          
-          {mode === 'description' && <TaskDescription task={clickedTask}
-                                                      setClickedTask={setClickedTask}/>}
 
+          {mode === 'description' && (
+            <TaskDescription
+              task={clickedTask}
+              setClickedTask={setClickedTask}
+            />
+          )}
         </Col>
       </Row>
     </div>

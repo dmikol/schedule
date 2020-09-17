@@ -1,30 +1,52 @@
+@import '../../scss/variables.scss';
+
 .editScheduleButtonStyle{
-    margin-right: 23px;
+  margin-right: 23px;
 }
-.facultativeStyle {
-    background-color: #F1EBF9;
+
+$border-width: 2px;
+$border-radius: 2px;
+
+$rows:(
+  "facultative": $danger-bg,
+  "youtube-live": $primary-dark-bg,
+  "task": $warning-dark-bg,
+  "self-education": $success-bg,
+  "meetup": $warning-bg,
+  "deadline": $danger-dark-bg,
+  "no-type": $primary-bg);
+
+@each $type, $color in $rows {
+
+  .row-#{$type} {
+    background-color: $color;
   }
-  
-  .youtubeLiveStyle {
-    background-color: #d9edf7;
+
+  .ant-table-tbody > .row-#{$type} {
+    & > td {
+      border-top: $border-width solid $color;
+      border-bottom: $border-width solid $color;
+    }
+    
+    & > td:first-child {
+      border-left: $border-width solid $color;
+      border-radius: $border-radius 0 0 $border-radius;
+    }
+    
+    & > td:last-child {
+      border-right: $border-width solid $color;
+      border-radius: 0 $border-radius $border-radius 0;
+    }
   }
-  
-  .taskStyle {
-    background-color: #fcf8e3;
+
+  .ant-list-items .row-#{$type} {
+    border: $border-width solid $color;
   }
-  
-  .selfEducationStyle {
-    background-color: #dff0d8;
+
+  .ant-table-tbody > tr.row-#{$type} {
+    &:hover > td {
+      background-color: $default-bg;
+      border-color: $default-bg;
+    }
   }
-  
-  .meetUpStyle {
-    background-color: #E5D5CC;
-  }
-  
-  .deadlineStyle {
-    background-color: #f2dede;
-  }
-  
-  .noTypeStyle {
-    background-color: #f1f3f8;
-  }
+}
