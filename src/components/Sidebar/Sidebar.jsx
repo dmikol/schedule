@@ -47,17 +47,38 @@ const Sidebar = ({
 
         <div>
           <Select defaultValue={timezone} onChange={onTimezoneChange}>
-            <Select.Option value="timezone1">
-              <GlobalOutlined /> Timezone 1
+            <Select.Option value="-2London">
+              <GlobalOutlined /> Europe/London
             </Select.Option>
 
-            <Select.Option value="timezone2">
-              <GlobalOutlined /> Timezone 2
+            <Select.Option value="-1Warsaw">
+              <GlobalOutlined /> Europe/Warsaw
             </Select.Option>
 
-            <Select.Option value="timezone3">
-              <GlobalOutlined /> Timezone 3
+            <Select.Option value="+0Kiev">
+              <GlobalOutlined /> Europe/Kiev
             </Select.Option>
+
+            <Select.Option value="+0Minsk">
+              <GlobalOutlined /> Europe/Minsk
+            </Select.Option>
+
+            <Select.Option value="+0Moscow">
+              <GlobalOutlined /> Europe/Moscow
+            </Select.Option>
+
+            <Select.Option value="+1Volgograd">
+              <GlobalOutlined /> Europe/Volgograd
+            </Select.Option>
+
+            <Select.Option value="+1Yekaterinburg">
+              <GlobalOutlined /> Europe/Yekaterinburg
+            </Select.Option>
+
+            <Select.Option value="+2Tashkent">
+              <GlobalOutlined /> Asia/Tashkent
+            </Select.Option>
+
           </Select>
         </div>
         <Filter types={type} onFilterChange={onTypeChange} />
