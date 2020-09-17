@@ -32,11 +32,8 @@ const LeaveFeedback = ({ task, setClickedTask }) => {
   }
 
   const validateMessages = {
-    required: 'Введите ${label}',
-    string: {
-      range: 'Укажите ${name} длиной от ${min} до ${max} символов',
-    },
-  }
+    required: 'Заполните поле',
+  };
 
   return (
     <div className="leave-feedback">

@@ -70,7 +70,7 @@ class TableView extends React.Component {
       }))
 
       this.setState({ events })
-      // console.log(this.state.events)
+      console.log(this.state.events)
     })
   }
 

@@ -34,6 +34,7 @@ const App = () => {
   const handleTaskNameClick = (task) => {
     setMode('description')
     setClickedTask(task)
+
   }
 
   return (
