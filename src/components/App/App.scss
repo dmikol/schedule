@@ -25,7 +25,7 @@ $rows:(
   .ant-table-tbody > .row-#{$type} {
     & > td {
       border-top: $border-width solid $color;
-      border-bottom: $border-width solid $color;
+      border-bottom: $border-width solid $default-bg;
     }
     
     & > td:first-child {
@@ -41,6 +41,7 @@ $rows:(
 
   .ant-list-items .row-#{$type} {
     border: $border-width solid $color;
+    border-bottom: $border-width solid $default-bg;
   }
 
   .ant-table-tbody > tr.row-#{$type} {

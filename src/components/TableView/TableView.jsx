@@ -70,7 +70,7 @@ class TableView extends React.Component {
       }))
 
       this.setState({ events })
-      console.log(this.state.events)
+      // console.log(this.state.events)
     })
   }
 
@@ -122,12 +122,13 @@ class TableView extends React.Component {
     return classes
   }
 
-  onRowClick(record) {
+  onRowClick(record, evt) {
+    // console.log(evt.shiftKey)
     const { events, columns } = this.state
     const newStateEvents = events.map((event) => {
       if (event.id === record.key) {
         event.isHighlighted = !event.isHighlighted
-      } else {
+      } else if (!evt.shiftKey) {
         event.isHighlighted = false
       }
       return event
@@ -151,7 +152,7 @@ class TableView extends React.Component {
           scroll={{ x: '100%' }}
           onRow={(record) => {
             return {
-              onClick: () => this.onRowClick(record),
+              onClick: (evt) => this.onRowClick(record, evt),
             }
           }}
         />

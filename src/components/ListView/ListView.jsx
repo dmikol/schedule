@@ -46,11 +46,11 @@ class ListView extends React.Component {
     return items
   }
 
-  onRowClick(item) {
+  onRowClick(item, evt) {
     const newState = this.state.events.map((event) => {
       if (event.id === item.key) {
         event.isHighlighted = !event.isHighlighted
-      } else {
+      } else if (!evt.shiftKey) {
         event.isHighlighted = false
       }
       return event
@@ -80,7 +80,10 @@ class ListView extends React.Component {
       }
 
       return (
-        <List.Item onClick={() => this.onRowClick(item)} className={classes}>
+        <List.Item
+          onClick={(evt) => this.onRowClick(item, evt)}
+          className={classes}
+        >
           <List.Item.Meta
             avatar={<Avatar src="https://picsum.photos/128" />}
             title={item.title}
