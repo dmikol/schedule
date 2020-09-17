@@ -134,6 +134,7 @@ class TableView extends React.Component {
     })
     this.setState({ ...columns, newStateEvents })
   }
+ 
 
   render() {
     const { type } = this.props
