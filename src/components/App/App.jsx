@@ -111,10 +111,7 @@ const App = () => {
       </Row>
       <Row>
       <div id="download-links">
-         <a href="" id="download" onClick={() => download('schedule.txt', 'txt')} download>txt</a>
-         <a href="#" id="download" onClick={() => download('schedule.html', 'html')}>html</a>
-         <a href="#" id="download" onClick={() => download('schedule.xlsx', 'xlsx')}>xlsx</a>
-         <a href="#" id="download" onClick={() => download('schedule.docx', 'docx')}>docx</a>
+         <a href=" " id="download" onClick={() => download('schedule.txt', 'txt')} download>txt</a>
       </div>
         <Col span={24}>
           {mode === 'calendar' && <CalendarView />}
