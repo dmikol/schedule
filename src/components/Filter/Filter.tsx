@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { Select } from 'antd'
 import { FilterOutlined } from '@ant-design/icons'
 
-import './filter.scss'
+import './Filter.scss'
 
 const events = [
   { name: 'All', id: 1 },
@@ -15,19 +15,20 @@ const events = [
   { name: 'Deadline', id: 8 },
 ]
 
-const type = events.map(({ name, id }) => {
-  return (
-    <Select.Option value={name} key={id}>
-      <FilterOutlined /> {name}
-    </Select.Option>
-  )
-})
+type FilterProps = {
+  type: string
+  onFilterChange(type: string): void
+}
 
-const Filter = ({ types, onFilterChange }) => {
+const Filter: FunctionComponent<FilterProps> = ({ type, onFilterChange }) => {
   return (
     <div>
-      <Select defaultValue={types} onChange={onFilterChange}>
-        {type}
+      <Select defaultValue={type} onChange={onFilterChange}>
+        {events.map(({ id, name }) => (
+          <Select.Option key={id} value={name}>
+            <FilterOutlined /> {name}
+          </Select.Option>
+        ))}
       </Select>
     </div>
   )
