@@ -3,7 +3,7 @@ import { Descriptions, Row, Col } from 'antd'
 import FeedbackOnTask from '../FeedbackOnTask'
 import LeaveFeedback from '../LeaveFeedback'
 
-const TaskDescription = ({ task, setClickedTask }) => {
+const TaskDescription = ({ task, setClickedTask, timezone }) => {
   const {
     name,
     type,
@@ -31,7 +31,7 @@ const TaskDescription = ({ task, setClickedTask }) => {
               {week ? week : 'Описание отсутствует'}
             </Descriptions.Item>
             <Descriptions.Item label="Время и дата" span={3}>
-              {dateTime ? dateTime : 'Описание отсутствует'}
+              {dateTime ? `${+dateTime.slice(0, 2) + Number(timezone.slice(0,2))}${dateTime.slice(2)}` : 'Описание отсутствует'}
             </Descriptions.Item>
             <Descriptions.Item label="Тип" span={3}>
               {type ? type : 'Описание отсутствует'}

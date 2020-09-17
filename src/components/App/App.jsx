@@ -12,7 +12,7 @@ import TaskDescription from '../TaskDescription'
 
 const App = () => {
   const [mode, setMode] = useState('table')
-  const [timezone, setTimezone] = useState('timezone1')
+  const [timezone, setTimezone] = useState('+0Minsk')
   const [type, setTypeSelected] = useState('All')
 
   const [mentorMode, setMentorMode] = useState(true)
@@ -84,6 +84,7 @@ const App = () => {
               type={type}
               mentorMode={mentorMode}
               onTaskNameClick={handleTaskNameClick}
+              timezone={timezone}
             />
           )}
 
@@ -91,6 +92,7 @@ const App = () => {
             <TaskDescription
               task={clickedTask}
               setClickedTask={setClickedTask}
+              timezone={timezone}
             />
           )}
         </Col>

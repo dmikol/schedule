@@ -80,7 +80,7 @@ class TableView extends React.Component {
       isHighlighted: item.isHighlighted,
       title: item.name,
       date: item.dateTime ? item.dateTime.slice(6) : '',
-      time: item.dateTime ? item.dateTime.slice(0, 5) : '',
+      time: item.dateTime ? `${+item.dateTime.slice(0, 2) + Number(this.props.timezone.slice(0,2))}${item.dateTime.slice(2, 5)}` : '',
       type: item.type,
       organizer: item.organizer ? item.organizer : 'Not assigned',
       place: item.place ? item.place : '',
