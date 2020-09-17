@@ -13,19 +13,55 @@
   }
 }
 
-.ant-table-tbody > .highlighted,
+.ant-table-tbody > tr.highlighted,
 .ant-table-tbody > tr.highlighted:hover {
   & > td,
   & > td:first-child,
   & > td:last-child {
     border-color: $primary-hover;
   }
+
+  & > td:first-child {
+    border-radius: $border-radius 0 0 $border-radius;
+  }
+  
+  & > td:last-child {
+    border-radius: 0 $border-radius $border-radius 0;
+  }
 }
 
-// .ant-table-tbody > .highlighted > td:first-child {
-//   border-left: thin solid;
-// }
+.ant-table-tbody > tr.hidden {
+  & > td,
+  & > td:first-child,
+  & > td:last-child {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 0;
+    line-height: 0;
+  }
 
-// .ant-table-tbody > .highlighted > td:last-child {
-//   border-right: thin solid;
-// }
+  & > td:first-child {
+    border-radius: $border-radius 0 0 $border-radius;
+  }
+  
+  & > td:last-child {
+    border-radius: 0 $border-radius $border-radius 0;
+  }
+}
+
+.ant-table-tbody > tr.hidden:hover {
+  & > td,
+  & > td:first-child,
+  & > td:last-child {
+    background-color: inherit;
+    cursor: pointer;
+  }
+
+  // & > td:first-child {
+  //   border-radius: $border-radius 0 0 $border-radius;
+  // }
+  
+  // & > td:last-child {
+  //   border-radius: 0 $border-radius $border-radius 0;
+  // }
+}

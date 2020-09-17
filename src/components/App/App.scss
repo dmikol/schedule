@@ -4,9 +4,6 @@
   margin-right: 23px;
 }
 
-$border-width: 2px;
-$border-radius: 2px;
-
 $rows:(
   "facultative": $danger-bg,
   "youtube-live": $primary-dark-bg,
@@ -26,16 +23,15 @@ $rows:(
     & > td {
       border-top: $border-width solid $color;
       border-bottom: $border-width solid $default-bg;
+      transition: $def-transition;
     }
     
     & > td:first-child {
       border-left: $border-width solid $color;
-      border-radius: $border-radius 0 0 $border-radius;
     }
     
     & > td:last-child {
       border-right: $border-width solid $color;
-      border-radius: 0 $border-radius $border-radius 0;
     }
   }
 
