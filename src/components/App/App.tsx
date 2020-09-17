@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import { Col, Row, Button } from 'antd'
 import { EditOutlined, SettingOutlined } from '@ant-design/icons'
+
 import './App.scss'
 
+import { ITask } from '../../models'
 import CalendarView from '../CalendarView'
 import Header from '../Header'
 import ListView from '../ListView'
@@ -10,36 +12,35 @@ import Sidebar from '../Sidebar'
 import TableView from '../TableView'
 import TaskDescription from '../TaskDescription'
 
-const App = () => {
+const App: FunctionComponent = () => {
+  const [clickedTask, setClickedTask] = useState<ITask | null>(null)
+  const [customColors, setCustomColors] = useState(false)
+  const [mentorMode, setMentorMode] = useState(true)
   const [mode, setMode] = useState('table')
   const [timezone, setTimezone] = useState('timezone1')
   const [type, setTypeSelected] = useState('All')
 
-  const [mentorMode, setMentorMode] = useState(true)
-  const [customColors, setCustomColors] = useState(false)
-  const [clickedTask, setClickedTask] = useState(null)
-
-  const handleModeChange = (selectedMode) => {
+  const handleModeChange = (selectedMode: string) => {
     setMode(selectedMode)
   }
 
-  const handleTimezoneChange = (selectedTimezone) => {
+  const handleTimezoneChange = (selectedTimezone: string) => {
     setTimezone(selectedTimezone)
   }
 
-  const handleTypeSelected = (selectedType) => {
+  const handleTypeSelect = (selectedType: string) => {
     setTypeSelected(selectedType)
   }
 
-  const handleTaskNameClick = (task) => {
+  const handleTaskNameClick = (task: ITask) => {
     setMode('description')
     setClickedTask(task)
-
   }
 
   return (
     <div className="app">
       <Header mentorMode={mentorMode} setMentorMode={setMentorMode} />
+
       <Row>
         <Col span={8}>
           <Sidebar
@@ -48,10 +49,8 @@ const App = () => {
             timezone={timezone}
             onTimezoneChange={handleTimezoneChange}
             type={type}
-            onTypeChange={handleTypeSelected}
-          />
-
-          <div>
+            onTypeChange={handleTypeSelect}
+          >
             <Button.Group>
               <Button
                 onClick={() => setCustomColors(true)}
@@ -69,25 +68,21 @@ const App = () => {
             </Button.Group>
 
             {customColors && <div className="customColorsStyle">colors</div>}
-          </div>
+          </Sidebar>
         </Col>
 
         <Col span={16}>
           {mode === 'calendar' && <CalendarView />}
 
           {mode === 'list' && (
-            <ListView onTaskNameClick={handleTaskNameClick} />
+            <ListView type={type} onTaskNameClick={handleTaskNameClick} />
           )}
 
           {mode === 'table' && (
-            <TableView
-              type={type}
-              mentorMode={mentorMode}
-              onTaskNameClick={handleTaskNameClick}
-            />
+            <TableView type={type} onTaskNameClick={handleTaskNameClick} />
           )}
 
-          {mode === 'description' && (
+          {mode === 'description' && clickedTask && (
             <TaskDescription
               task={clickedTask}
               setClickedTask={setClickedTask}

@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { Calendar } from 'antd'
 
 import './CalendarView.scss'
 
-const CalendarView = () => {
+const CalendarView: FunctionComponent = () => {
   return (
     <div className="calendar-view">
       <h3>Calendar view</h3>
