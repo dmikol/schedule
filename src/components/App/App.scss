@@ -1,20 +1,20 @@
-@import '../../scss/variables.scss';
+@import '../../styles/variables.scss';
 
 .editScheduleButtonStyle {
   margin-right: 23px;
 }
 
-$rows:(
-  "facultative": $danger-bg,
-  "youtube-live": $primary-dark-bg,
-  "task": $warning-dark-bg,
-  "self-education": $success-bg,
-  "meetup": $warning-bg,
-  "deadline": $danger-dark-bg,
-  "no-type": $primary-bg);
+$rows: (
+  'facultative': $danger-bg,
+  'youtube-live': $primary-dark-bg,
+  'task': $warning-dark-bg,
+  'self-education': $success-bg,
+  'meetup': $warning-bg,
+  'deadline': $danger-dark-bg,
+  'no-type': $primary-bg,
+);
 
 @each $type, $color in $rows {
-
   .row-#{$type} {
     background-color: $color;
     transition: $def-transition;
@@ -26,11 +26,11 @@ $rows:(
       border-bottom: $border-width solid $default-bg;
       transition: $def-transition;
     }
-    
+
     & > td:first-child {
       border-left: $border-width solid $color;
     }
-    
+
     & > td:last-child {
       border-right: $border-width solid $color;
     }

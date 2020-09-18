@@ -1,12 +1,10 @@
-@import "../../scss/variables.scss";
+@import '../../styles/variables.scss';
 
 .list-view {
   padding: 8px;
 }
 
 .ant-list-items {
-
-
   .highlighted {
     border: 2px solid #59a5d8;
     border-radius: 2px;

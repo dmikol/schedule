@@ -1,4 +1,4 @@
-@import '../../scss/variables.scss';
+@import '../../styles/variables.scss';
 
 .table-view {
   padding: 8px;
@@ -24,7 +24,7 @@
   & > td:first-child {
     border-radius: $border-radius 0 0 $border-radius;
   }
-  
+
   & > td:last-child {
     border-radius: 0 $border-radius $border-radius 0;
   }
@@ -43,7 +43,7 @@
   & > td:first-child {
     border-radius: $border-radius 0 0 $border-radius;
   }
-  
+
   & > td:last-child {
     border-radius: 0 $border-radius $border-radius 0;
   }
@@ -56,12 +56,4 @@
     background-color: inherit;
     cursor: pointer;
   }
-
-  // & > td:first-child {
-  //   border-radius: $border-radius 0 0 $border-radius;
-  // }
-  
-  // & > td:last-child {
-  //   border-radius: 0 $border-radius $border-radius 0;
-  // }
 }

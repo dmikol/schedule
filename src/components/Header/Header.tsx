@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties, FunctionComponent } from 'react'
 import { Button, Dropdown, Menu } from 'antd'
 import {
   EditOutlined,
@@ -29,26 +29,36 @@ const menu = (
   </Menu>
 )
 
-const Header = (props) => {
-  const activeModeStyle = {
+type HeaderProps = {
+  mentorMode: boolean
+  setMentorMode(mode: boolean): void
+}
+
+const Header: FunctionComponent<HeaderProps> = ({
+  mentorMode,
+  setMentorMode,
+}) => {
+  const activeModeStyle: CSSProperties = {
     fontWeight: 'bold',
   }
+
   const mode = (
     <Menu>
       <Menu.Item
         key="0"
-        style={!props.mentorMode && activeModeStyle}
+        style={!mentorMode ? activeModeStyle : undefined}
         onClick={() => {
-          props.setMentorMode(false)
+          setMentorMode(false)
         }}
       >
         <UserOutlined /> Student
       </Menu.Item>
+
       <Menu.Item
         key="1"
-        style={props.mentorMode && activeModeStyle}
+        style={mentorMode ? activeModeStyle : undefined}
         onClick={() => {
-          props.setMentorMode(true)
+          setMentorMode(true)
         }}
       >
         <UserOutlined /> Mentor
@@ -72,6 +82,7 @@ const Header = (props) => {
             Mode
           </Button>
         </Dropdown>
+
         <Dropdown overlay={menu} trigger={['click']}>
           <Button type="dashed">My Profile</Button>
         </Dropdown>

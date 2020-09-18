@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { Form, Input, Button } from 'antd'
 import { API } from '../../api/api'
 
 import './LeaveFeedback.scss'
 
-const LeaveFeedback = ({ task, setClickedTask }) => {
+import { ITask } from '../../models'
+
+type LeaveFeedbackProps = {
+  task: ITask
+  setClickedTask(task: ITask): void
+}
+
+const LeaveFeedback: FunctionComponent<LeaveFeedbackProps> = ({
+  task,
+  setClickedTask,
+}) => {
   const layout = {
     labelCol: {
       span: 4,
@@ -14,7 +24,7 @@ const LeaveFeedback = ({ task, setClickedTask }) => {
     },
   }
 
-  const onFinish = (values) => {
+  const onFinish = (values: any) => {
     const feedbacks = task.feedback ? [...task.feedback.data] : []
     feedbacks.push({
       author: values.name,
@@ -33,11 +43,12 @@ const LeaveFeedback = ({ task, setClickedTask }) => {
 
   const validateMessages = {
     required: 'Заполните поле',
-  };
+  }
 
   return (
     <div className="leave-feedback">
       <h3>Оставить свой отзыв о задании:</h3>
+
       <Form
         {...layout}
         className="leave-feedback__form"
@@ -78,6 +89,7 @@ const LeaveFeedback = ({ task, setClickedTask }) => {
         >
           <Input.TextArea />
         </Form.Item>
+
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
           <Button type="primary" htmlType="submit">
             Submit
