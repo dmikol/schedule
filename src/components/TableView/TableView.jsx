@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table } from 'antd'
+import { message, Table, Button } from 'antd'
 
 import './TableView.scss'
 import { API } from '../../api/api'
@@ -54,6 +54,7 @@ class TableView extends React.Component {
         },
       ],
       events: [],
+      isMessageShown: false,
     }
   }
 
@@ -65,18 +66,18 @@ class TableView extends React.Component {
   componentDidMount() {
     API.getEvents().then((response) => {
       const events = response.data.map((event) => ({
+        isHidden: false,
         isHighlighted: false,
         ...event,
       }))
-
       this.setState({ events })
-      // console.log(this.state.events)
     })
   }
 
   mapEventForTable(item, i) {
     return {
       key: item.id,
+      isHidden: item.isHidden,
       isHighlighted: item.isHighlighted,
       title: item.name,
       date: item.dateTime ? item.dateTime.slice(6) : '',
@@ -91,7 +92,6 @@ class TableView extends React.Component {
 
   mapEventsByType(type) {
     const { events } = this.state
-
     return events.map((item, i) =>
       type === 'All'
         ? this.mapEventForTable(item, i)
@@ -119,21 +119,79 @@ class TableView extends React.Component {
     if (record.isHighlighted) {
       classes += ' highlighted'
     }
+    if (record.isHidden) {
+      classes += ' hidden'
+    }
     return classes
   }
 
-  onRowClick(record, evt) {
-    // console.log(evt.shiftKey)
-    const { events, columns } = this.state
-    const newStateEvents = events.map((event) => {
-      if (event.id === record.key) {
-        event.isHighlighted = !event.isHighlighted
-      } else if (!evt.shiftKey) {
+  hideRows() {
+    let { events, isMessageShown } = this.state
+    events = events.map((event) => {
+      if (event.isHighlighted) {
+        event.isHidden = true
         event.isHighlighted = false
       }
       return event
     })
-    this.setState({ ...columns, newStateEvents })
+    message.destroy()
+    isMessageShown = false
+    this.setState(() => ({ events, isMessageShown }))
+  }
+
+  showMessageToHideRows(record) {
+    const BtnHideRows = () => {
+      return (
+        <Button onClick={() => this.hideRows()}>Скрыть выделенные ряды</Button>
+      )
+    }
+    const BtnContainer = () => (
+      <div className="message__btn-container">
+        <BtnHideRows />
+      </div>
+    )
+
+    message.open({
+      duration: 0,
+      content: <BtnContainer />,
+      className: 'message',
+      key: record.key,
+    })
+  }
+
+  handleRowClick(record, evt) {
+    let { events, isMessageShown } = this.state
+    let isNameClicked = false
+    const nameLinks = document.querySelectorAll('.tableView__task-name')
+
+    nameLinks.forEach((name) => {
+      if (name === evt.target) isNameClicked = true
+    })
+
+    if (isNameClicked) {
+      message.destroy()
+      isMessageShown = false
+    } else {
+      if (!isMessageShown) {
+        this.showMessageToHideRows(record)
+        isMessageShown = true
+      }
+
+      events = events.map((event) => {
+        if (event.id === record.key) {
+          if (event.isHighlighted) message.destroy()
+          event.isHighlighted = !event.isHighlighted
+        } else if (!evt.shiftKey) {
+          event.isHighlighted = false
+        }
+        return event
+      })
+
+      const highlightedEvents = events.filter((event) => event.isHighlighted)
+      if (highlightedEvents.length < 1) isMessageShown = false
+
+      this.setState(() => ({ events, isMessageShown }))
+    }
   }
 
   render() {
@@ -152,7 +210,7 @@ class TableView extends React.Component {
           scroll={{ x: '100%' }}
           onRow={(record) => {
             return {
-              onClick: (evt) => this.onRowClick(record, evt),
+              onClick: (evt) => this.handleRowClick(record, evt),
             }
           }}
         />
