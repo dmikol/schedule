@@ -62,6 +62,15 @@ class ListView extends React.Component {
     this.setState(() => ({ events, isMessageShown }))
   }
 
+  showRows(item) {
+    let { events } = this.state
+    events = events.map((event) => {
+      if (event.id === item.key) event.isHidden = false
+      return event
+    })
+    this.setState(() => ({ events }))
+  }
+
   showMessageToHideRows(record) {
     const BtnHideRows = () => {
       return (
@@ -95,25 +104,29 @@ class ListView extends React.Component {
       message.destroy()
       isMessageShown = false
     } else {
-      if (!isMessageShown) {
-        this.showMessageToHideRows(item)
-        isMessageShown = true
-      }
-
-      events = events.map((event) => {
-        if (event.id === item.key) {
-          if (event.isHighlighted) message.destroy()
-          event.isHighlighted = !event.isHighlighted
-        } else if (!evt.shiftKey) {
-          event.isHighlighted = false
+      if (item.isHidden) {
+        this.showRows(item)
+      } else {
+        if (!isMessageShown) {
+          this.showMessageToHideRows(item)
+          isMessageShown = true
         }
-        return event
-      })
 
-      const highlightedEvents = events.filter((event) => event.isHighlighted)
-      if (highlightedEvents.length < 1) isMessageShown = false
+        events = events.map((event) => {
+          if (event.id === item.key) {
+            if (event.isHighlighted) message.destroy()
+            event.isHighlighted = !event.isHighlighted
+          } else if (!evt.shiftKey) {
+            event.isHighlighted = false
+          }
+          return event
+        })
 
-      this.setState(() => ({ events, isMessageShown }))
+        const highlightedEvents = events.filter((event) => event.isHighlighted)
+        if (highlightedEvents.length < 1) isMessageShown = false
+
+        this.setState(() => ({ events, isMessageShown }))
+      }
     }
   }
 

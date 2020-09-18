@@ -11,7 +11,7 @@ import TableView from '../TableView'
 import TaskDescription from '../TaskDescription'
 
 const App = () => {
-  const [mode, setMode] = useState('list')
+  const [mode, setMode] = useState('table')
   const [timezone, setTimezone] = useState('timezone1')
   const [type, setTypeSelected] = useState('All')
 

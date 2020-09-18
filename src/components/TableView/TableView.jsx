@@ -139,6 +139,15 @@ class TableView extends React.Component {
     this.setState(() => ({ events, isMessageShown }))
   }
 
+  showRows(record) {
+    let { events } = this.state
+    events = events.map((event) => {
+      if (event.id === record.key) event.isHidden = false
+      return event
+    })
+    this.setState(() => ({ events }))
+  }
+
   showMessageToHideRows(record) {
     const BtnHideRows = () => {
       return (
@@ -172,25 +181,29 @@ class TableView extends React.Component {
       message.destroy()
       isMessageShown = false
     } else {
-      if (!isMessageShown) {
-        this.showMessageToHideRows(record)
-        isMessageShown = true
-      }
-
-      events = events.map((event) => {
-        if (event.id === record.key) {
-          if (event.isHighlighted) message.destroy()
-          event.isHighlighted = !event.isHighlighted
-        } else if (!evt.shiftKey) {
-          event.isHighlighted = false
+      if (record.isHidden) {
+        this.showRows(record)
+      } else {
+        if (!isMessageShown) {
+          this.showMessageToHideRows(record)
+          isMessageShown = true
         }
-        return event
-      })
 
-      const highlightedEvents = events.filter((event) => event.isHighlighted)
-      if (highlightedEvents.length < 1) isMessageShown = false
+        events = events.map((event) => {
+          if (event.id === record.key) {
+            if (event.isHighlighted) message.destroy()
+            event.isHighlighted = !event.isHighlighted
+          } else if (!evt.shiftKey) {
+            event.isHighlighted = false
+          }
+          return event
+        })
 
-      this.setState(() => ({ events, isMessageShown }))
+        const highlightedEvents = events.filter((event) => event.isHighlighted)
+        if (highlightedEvents.length < 1) isMessageShown = false
+
+        this.setState(() => ({ events, isMessageShown }))
+      }
     }
   }
 
