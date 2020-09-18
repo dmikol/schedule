@@ -10,7 +10,7 @@ import LeaveFeedback from '../LeaveFeedback'
 type TaskDescriptionProps = {
   task: ITask
   setClickedTask(task: ITask): void
-  timezone: any
+  timezone: string
 }
 
 const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
