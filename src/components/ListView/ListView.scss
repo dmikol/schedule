@@ -1,11 +1,27 @@
+@import "../../scss/variables.scss";
+
 .list-view {
   padding: 8px;
 }
 
 .ant-list-items {
 
+
   .highlighted {
     border: 2px solid #59a5d8;
     border-radius: 2px;
+  }
+
+  .hidden {
+    height: 0;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-radius: $border-radius;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .hidden * {
+    display: none;
   }
 }

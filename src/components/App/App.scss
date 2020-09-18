@@ -17,6 +17,7 @@ $rows:(
 
   .row-#{$type} {
     background-color: $color;
+    transition: $def-transition;
   }
 
   .ant-table-tbody > .row-#{$type} {

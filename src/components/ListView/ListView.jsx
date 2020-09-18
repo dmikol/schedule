@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, List } from 'antd'
+import { Avatar, List, Button, message } from 'antd'
 
 import './ListView.scss'
 import { API } from '../../api/api'
@@ -9,23 +9,25 @@ class ListView extends React.Component {
     super(props)
     this.state = {
       events: [],
+      isMessageShown: false,
     }
   }
   componentDidMount() {
     API.getEvents().then((response) => {
       const events = response.data.map((event) => ({
+        isHidden: false,
         isHighlighted: false,
         ...event,
       }))
 
       this.setState({ events })
-      console.log(this.state.events)
     })
   }
 
   getListItems() {
     const items = this.state.events.map((item) => ({
       key: item.id,
+      isHidden: item.isHidden,
       isHighlighted: item.isHighlighted,
       title: (
         <p
@@ -46,16 +48,73 @@ class ListView extends React.Component {
     return items
   }
 
-  onRowClick(item, evt) {
-    const newState = this.state.events.map((event) => {
-      if (event.id === item.key) {
-        event.isHighlighted = !event.isHighlighted
-      } else if (!evt.shiftKey) {
+  hideRows() {
+    let { events, isMessageShown } = this.state
+    events = events.map((event) => {
+      if (event.isHighlighted) {
+        event.isHidden = true
         event.isHighlighted = false
       }
       return event
     })
-    this.setState(newState)
+    message.destroy()
+    isMessageShown = false
+    this.setState(() => ({ events, isMessageShown }))
+  }
+
+  showMessageToHideRows(record) {
+    const BtnHideRows = () => {
+      return (
+        <Button onClick={() => this.hideRows()}>Скрыть выделенные ряды</Button>
+      )
+    }
+    const BtnContainer = () => (
+      <div className="message__btn-container">
+        <BtnHideRows />
+      </div>
+    )
+
+    message.open({
+      duration: 0,
+      content: <BtnContainer />,
+      className: 'message',
+      key: record.key,
+    })
+  }
+
+  handleRowClick(item, evt) {
+    let { events, isMessageShown } = this.state
+    let isNameClicked = false
+    const nameLinks = document.querySelectorAll('.tableView__task-name')
+
+    nameLinks.forEach((name) => {
+      if (name === evt.target) isNameClicked = true
+    })
+
+    if (isNameClicked) {
+      message.destroy()
+      isMessageShown = false
+    } else {
+      if (!isMessageShown) {
+        this.showMessageToHideRows(item)
+        isMessageShown = true
+      }
+
+      events = events.map((event) => {
+        if (event.id === item.key) {
+          if (event.isHighlighted) message.destroy()
+          event.isHighlighted = !event.isHighlighted
+        } else if (!evt.shiftKey) {
+          event.isHighlighted = false
+        }
+        return event
+      })
+
+      const highlightedEvents = events.filter((event) => event.isHighlighted)
+      if (highlightedEvents.length < 1) isMessageShown = false
+
+      this.setState(() => ({ events, isMessageShown }))
+    }
   }
 
   renderItems() {
@@ -74,14 +133,16 @@ class ListView extends React.Component {
           : item.type === 'Deadline'
           ? 'row-deadline'
           : 'row-no-type'
-
       if (item.isHighlighted) {
         classes += ' highlighted'
+      }
+      if (item.isHidden) {
+        classes += ' hidden'
       }
 
       return (
         <List.Item
-          onClick={(evt) => this.onRowClick(item, evt)}
+          onClick={(evt) => this.handleRowClick(item, evt)}
           className={classes}
         >
           <List.Item.Meta
