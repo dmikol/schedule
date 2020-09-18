@@ -1,9 +1,5 @@
-import React from 'react'
-
-import Filter from '../Filter'
-
+import React, { FunctionComponent, ReactNode } from 'react'
 import { Select, Space, Switch } from 'antd'
-
 import {
   CalendarOutlined,
   GlobalOutlined,
@@ -13,7 +9,19 @@ import {
 
 import './Sidebar.scss'
 
-const Sidebar = ({
+import Filter from '../Filter'
+
+type SidebarProps = {
+  children?: ReactNode
+  mode: string
+  onModeChange(mode: string): void
+  timezone: string
+  onTimezoneChange(timezone: string): void
+  type: string
+  onTypeChange(type: string): void
+}
+
+const Sidebar: FunctionComponent<SidebarProps> = ({
   children,
   mode,
   onModeChange,
@@ -81,7 +89,8 @@ const Sidebar = ({
 
           </Select>
         </div>
-        <Filter types={type} onFilterChange={onTypeChange} />
+
+        <Filter type={type} onFilterChange={onTypeChange} />
 
         {children}
 
