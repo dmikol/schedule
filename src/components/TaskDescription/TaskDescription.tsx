@@ -36,6 +36,21 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
       </a>
     )
   }
+console.log('place = ', place);
+
+  let map = null
+  if (type === 'Митап' || type === 'Митап в Минске') {
+    map = (
+      <Descriptions.Item label="Карта" span={3}>
+        <iframe
+          title={place}
+          src={"https://www.google.com/maps/embed/v1/place?key=AIzaSyBP9llkXgAKBFCb-Q_r6bggoz964zqNuXM&q=" + place}
+          className="map__iframe"
+          frameBorder="0">
+        </iframe>
+      </Descriptions.Item>
+    )
+  }
 
   return (
     <>
@@ -86,6 +101,7 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
               </iframe>
               : `Видео отсутствует`}
             </Descriptions.Item>
+            {map}
           </Descriptions>
         </Col>
       </Row>
