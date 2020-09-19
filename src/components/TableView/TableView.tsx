@@ -144,7 +144,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
     this.setState(() => ({ records }))
   }
 
-  showMessageToHideRows(record: TableRecord) {
+  showMessageToHideRows = (record: TableRecord) => {
     const BtnHideRows = () => (
       <div className="message__btn">
         <Button onClick={() => this.hideRows()}>Скрыть выделенные ряды</Button>
