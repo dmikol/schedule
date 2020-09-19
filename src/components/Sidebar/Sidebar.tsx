@@ -1,10 +1,11 @@
 import React, { FunctionComponent, ReactNode } from 'react'
-import { Select, Space, Switch } from 'antd'
+import { Select, Space, Switch, Button } from 'antd'
 import {
   CalendarOutlined,
   GlobalOutlined,
   TableOutlined,
   UnorderedListOutlined,
+  RollbackOutlined
 } from '@ant-design/icons'
 
 import './Sidebar.scss'
@@ -19,6 +20,7 @@ type SidebarProps = {
   onTimezoneChange(timezone: string): void
   type: string
   onTypeChange(type: string): void
+  onBackToSchedule(): void
 }
 
 const Sidebar: FunctionComponent<SidebarProps> = ({
@@ -29,14 +31,25 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   onTimezoneChange,
   type,
   onTypeChange,
+  onBackToSchedule
 }) => {
   const handleHighContrastModeChange = () => {
     document.body.classList.toggle('high-contrast')
   }
 
-  return (
-    <div className="sidebar">
-      <Space direction="vertical">
+const drawBackButtonIfDescMode = (mode: string) => {
+  if (mode === 'description') {
+    return (
+      <Button
+        onClick={() => onBackToSchedule()}
+        className="back-btn">
+        <RollbackOutlined />
+          Back to schedule
+        </Button>
+        )
+   } else {
+     return (
+       <>
         <div>
           <Select defaultValue={mode} onChange={onModeChange}>
             <Select.Option value="calendar">
@@ -53,6 +66,18 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
           </Select>
         </div>
 
+        <Filter type={type} onFilterChange={onTypeChange} />
+      </>
+     )
+   } 
+}
+
+  return (
+    <div className="sidebar">
+      <Space direction="vertical">
+        {
+          drawBackButtonIfDescMode(mode)
+         }
         <div>
           <Select defaultValue={timezone} onChange={onTimezoneChange}>
             <Select.Option value="-2London">
@@ -89,8 +114,6 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
 
           </Select>
         </div>
-
-        <Filter type={type} onFilterChange={onTypeChange} />
 
         {children}
 

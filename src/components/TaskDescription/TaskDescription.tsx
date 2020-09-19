@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react'
 import { Col, Descriptions, Row } from 'antd'
-import { FieldTimeOutlined } from '@ant-design/icons';
 
 import './TaskDescription.scss'
 
