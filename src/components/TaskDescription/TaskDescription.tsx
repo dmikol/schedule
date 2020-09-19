@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react'
 import { Col, Descriptions, Row } from 'antd'
+import { FieldTimeOutlined } from '@ant-design/icons';
 
 import './TaskDescription.scss'
 
@@ -61,7 +62,7 @@ console.log('place = ', place);
               {week || 'Описание отсутствует'}
             </Descriptions.Item>
 
-            <Descriptions.Item label="Время и дата" span={3}>
+            <Descriptions.Item label="Время и дата" span={3} className="task-desc__highlight">
               {dateTime
                 ? `${
                     +dateTime.slice(0, 2) + Number(timezone.slice(0, 2))
@@ -73,7 +74,7 @@ console.log('place = ', place);
               {type || 'Описание отсутствует'}
             </Descriptions.Item>
 
-            <Descriptions.Item label="Cсылка" span={3}>
+            <Descriptions.Item label="Cсылка" span={3} className="task-desc__highlight">
               {descriptionUrl ? link : 'Описание отсутствует'}
             </Descriptions.Item>
 
@@ -84,11 +85,13 @@ console.log('place = ', place);
             <Descriptions.Item label="Место проведения" span={3}>
               {place || 'Описание отсутствует'}
             </Descriptions.Item>
+
             <Descriptions.Item label="Фото" span={3}>
               {photo ? 
               <img className="task-desc__photo" src={photo} alt={name}/> 
               : `Фото отсутствует`}
             </Descriptions.Item>
+
             <Descriptions.Item label="Видео" span={3}>
               {place === 'youtube' ? 
               <iframe 
@@ -102,7 +105,7 @@ console.log('place = ', place);
               : `Видео отсутствует`}
             </Descriptions.Item>
             {map}
-          </Descriptions>
+            </Descriptions>
         </Col>
       </Row>
 

@@ -1,4 +1,9 @@
+@import '../../styles/variables';
+
 .task-desc__photo {
   width: 400px;
   height: auto;
+}
+.task-desc__highlight {
+  background: $danger-dark-bg;
 }
