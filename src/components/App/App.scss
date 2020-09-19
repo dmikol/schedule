@@ -4,9 +4,6 @@
   margin-right: 23px;
 }
 
-$border-width: 2px;
-$border-radius: 2px;
-
 $rows: (
   'facultative': $danger-bg,
   'youtube-live': $primary-dark-bg,
@@ -20,27 +17,28 @@ $rows: (
 @each $type, $color in $rows {
   .row-#{$type} {
     background-color: $color;
+    transition: $def-transition;
   }
 
   .ant-table-tbody > .row-#{$type} {
     & > td {
       border-top: $border-width solid $color;
-      border-bottom: $border-width solid $color;
+      border-bottom: $border-width solid $default-bg;
+      transition: $def-transition;
     }
 
     & > td:first-child {
       border-left: $border-width solid $color;
-      border-radius: $border-radius 0 0 $border-radius;
     }
 
     & > td:last-child {
       border-right: $border-width solid $color;
-      border-radius: 0 $border-radius $border-radius 0;
     }
   }
 
   .ant-list-items .row-#{$type} {
     border: $border-width solid $color;
+    border-bottom: $border-width solid $default-bg;
   }
 
   .ant-table-tbody > tr.row-#{$type} {
@@ -49,12 +47,10 @@ $rows: (
       border-color: $default-bg;
     }
   }
-  .ant-btn-group{
-    margin-left: 5px;
-  }
+
   #download-links{
-    margin-top: 15px;
     display: none;
+    margin-top: 15px;
 
     & a {
       margin-left: 6px;
