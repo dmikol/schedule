@@ -26,6 +26,7 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
     descriptionUrl,
     place,
     week,
+    photo
   } = task
   let link
   if (descriptionUrl) {
@@ -67,6 +68,23 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
 
             <Descriptions.Item label="Место проведения" span={3}>
               {place || 'Описание отсутствует'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Фото" span={3}>
+              {photo ? 
+              <img className="task-desc__photo" src={photo} alt={name}/> 
+              : `Фото отсутствует`}
+            </Descriptions.Item>
+            <Descriptions.Item label="Видео" span={3}>
+              {place === 'youtube' ? 
+              <iframe 
+                width="500"
+                height="300" 
+                title={name}
+                src={"https://youtube.com/embed/" + descriptionUrl.slice(descriptionUrl.indexOf('=') + 1)} 
+                frameBorder="0" 
+                allowFullScreen>
+              </iframe>
+              : `Видео отсутствует`}
             </Descriptions.Item>
           </Descriptions>
         </Col>

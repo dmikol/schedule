@@ -16,4 +16,5 @@ export interface ITask {
   timeZone: string
   type: string
   week: string
+  photo: string
 }
