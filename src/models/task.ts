@@ -16,4 +16,6 @@ export interface ITask {
   timeZone: string
   type: string
   week: string
+  isHidden?: boolean
+  isHighlighted?: boolean
 }

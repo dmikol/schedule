@@ -1,11 +1,16 @@
-import React, { FunctionComponent, useState } from 'react'
-import { Col, Row, Button } from 'antd'
+import React, {
+  FunctionComponent,
+  MouseEvent,
+  useEffect,
+  useState,
+} from 'react'
+import { Col, Row, Button, message } from 'antd'
 import { EditOutlined, SettingOutlined } from '@ant-design/icons'
 
 import './App.scss'
 
 import { API } from '../../api/api'
-import { ITask } from '../../models'
+import { ITask, IRow } from '../../models'
 import CalendarView from '../CalendarView'
 import Header from '../Header'
 import ListView from '../ListView'
@@ -13,13 +18,62 @@ import Sidebar from '../Sidebar'
 import TableView from '../TableView'
 import TaskDescription from '../TaskDescription'
 
+type TaskData = {
+  tasks: ITask[]
+}
+
+type RowData = {
+  rows: IRow[]
+  isMessageShown: boolean
+}
+
+const typeClassNames: any = {
+  Факультатив: 'row-facultative',
+  'YouTube Live': 'row-youtube-live',
+  'Выдача таска': 'row-task',
+  'Self education': 'row-self-education',
+  'Митап в Минске': 'row-meetup',
+  Deadline: 'row-deadline',
+}
+
+const convertTaskToRow = (task: ITask): IRow => {
+  return {
+    key: task.id,
+    isHighlighted: false,
+    isHidden: false,
+    title: task.name,
+    date: task.dateTime ? task.dateTime.slice(6) : '',
+    time: task.dateTime ? task.dateTime.slice(0, 5) : '',
+    type: task.type,
+    organizer: task.organizer || 'Not assigned',
+    place: task.place || '',
+    descriptionUrl: task.descriptionUrl || '',
+    comment: task.comment || 'No comments yet',
+  }
+}
+
 const App: FunctionComponent = () => {
+  const [taskData, setTaskData] = useState<TaskData>({
+    tasks: [] as ITask[],
+  })
+  const [rowData, setRowData] = useState<RowData>({
+    rows: [] as IRow[],
+    isMessageShown: false,
+  })
   const [clickedTask, setClickedTask] = useState<ITask | null>(null)
   const [customColors, setCustomColors] = useState(false)
   const [mentorMode, setMentorMode] = useState(true)
-  const [mode, setMode] = useState('table')
+  const [mode, setMode] = useState('list')
   const [timezone, setTimezone] = useState('+0Minsk')
   const [type, setTypeSelected] = useState('All')
+
+  useEffect(() => {
+    API.getEvents().then((tasksFromApi) => {
+      const rows = tasksFromApi.map((task) => convertTaskToRow(task))
+      setTaskData({ tasks: tasksFromApi })
+      setRowData((state) => ({ ...state, rows }))
+    })
+  }, [])
 
   const handleModeChange = (selectedMode: string) => {
     setMode(selectedMode)
@@ -33,9 +87,107 @@ const App: FunctionComponent = () => {
     setTypeSelected(selectedType)
   }
 
-  const handleTaskNameClick = (task: ITask) => {
-    setMode('description')
-    setClickedTask(task)
+  const handleTaskNameClick = (clickedRowKey: string) => {
+    const { tasks } = taskData
+    const task = tasks.find((task) => task.id === clickedRowKey)
+
+    if (task) {
+      setMode('description')
+      setClickedTask(task)
+    }
+  }
+
+  const hideRows = () => {
+    const rows = rowData.rows.map((row) => {
+      if (row.isHighlighted) {
+        row.isHidden = true
+        row.isHighlighted = false
+      }
+      return row
+    })
+
+    message.destroy()
+
+    const isMessageShown = false
+    setRowData((state) => ({ ...state, rows, isMessageShown }))
+  }
+
+  const showRows = (clickedRow: IRow) => {
+    const rows = rowData.rows.map((row) => {
+      if (row.key === clickedRow.key) row.isHidden = false
+      return row
+    })
+    setRowData((state) => ({ ...state, rows }))
+  }
+
+  const showMessageToHideRows = (row: IRow) => {
+    const BtnHideRows = () => (
+      <div className="message__btn">
+        <Button onClick={() => hideRows()}>Скрыть выделенные ряды</Button>
+      </div>
+    )
+
+    message.open({
+      type: 'info',
+      duration: 0,
+      content: null,
+      icon: <BtnHideRows />,
+      className: 'message',
+      key: row.key,
+    })
+  }
+
+  const handleRowClick = (clickedRow: IRow, evt: MouseEvent<HTMLElement>) => {
+    let { rows, isMessageShown } = rowData
+    let isNameClicked = false
+    const nameLinks = document.querySelectorAll('.tableView__task-name')
+
+    nameLinks.forEach((name) => {
+      if (name === evt.target) isNameClicked = true
+    })
+
+    if (isNameClicked) {
+      message.destroy()
+      isMessageShown = false
+    } else {
+      if (clickedRow.isHidden) {
+        showRows(clickedRow)
+      } else {
+        if (!isMessageShown) {
+          showMessageToHideRows(clickedRow)
+          isMessageShown = true
+        }
+
+        rows = rows.map((row) => {
+          if (row.key === clickedRow.key) {
+            if (row.isHighlighted) message.destroy()
+
+            row.isHighlighted = !row.isHighlighted
+          } else if (!evt.shiftKey) {
+            row.isHighlighted = false
+          }
+          return row
+        })
+
+        const highlightedRows = rows.filter((row) => row.isHighlighted)
+        if (highlightedRows.length < 1) isMessageShown = false
+
+        setRowData(() => ({ rows, isMessageShown }))
+      }
+    }
+  }
+
+  const setRowClassName = (row: IRow): string => {
+    let className = typeClassNames[row.type] || 'row-no-type'
+
+    if (row.isHighlighted) {
+      className += ' highlighted'
+    }
+    if (row.isHidden) {
+      className += ' hidden'
+    }
+
+    return className
   }
 
   let arr = [] as string[]
@@ -61,13 +213,15 @@ const App: FunctionComponent = () => {
       num = 0
     }
 
-    API.getEvents().then((response) => {
-      response.forEach((event) => {
-        arr.push(` Name: ${event.name}, Date: ${event.dateTime}, 
-      Url: ${event.descriptionUrl}, Description: ${event.description}
-      --------------------------------------------------------------
-      `)
-      })
+    taskData.tasks.forEach((task) => {
+      arr.push(`
+      Name: ${task.name},
+      Date: ${task.dateTime},
+      Url: ${task.descriptionUrl},
+      Description: ${task.description}
+
+    --------------------------------------------------------------
+    `)
     })
   }
 
@@ -122,14 +276,23 @@ const App: FunctionComponent = () => {
       {mode === 'calendar' && <CalendarView />}
 
       {mode === 'list' && (
-        <ListView type={type} onTaskNameClick={handleTaskNameClick} />
+        <ListView
+          type={type}
+          rows={rowData.rows}
+          handleTaskNameClick={handleTaskNameClick}
+          handleRowClick={handleRowClick}
+          setRowClassName={setRowClassName}
+        />
       )}
 
       {mode === 'table' && (
         <TableView
           type={type}
-          onTaskNameClick={handleTaskNameClick}
           timezone={timezone}
+          rows={rowData.rows}
+          handleTaskNameClick={handleTaskNameClick}
+          handleRowClick={handleRowClick}
+          setRowClassName={setRowClassName}
         />
       )}
 
