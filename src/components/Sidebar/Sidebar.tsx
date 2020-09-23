@@ -1,37 +1,59 @@
-import React, { FunctionComponent, ReactNode } from 'react'
+import React, { FunctionComponent, ReactNode, createElement } from 'react'
 import { Select, Space, Switch } from 'antd'
-import {
-  CalendarOutlined,
-  GlobalOutlined,
-  TableOutlined,
-  UnorderedListOutlined,
-} from '@ant-design/icons'
+import { GlobalOutlined } from '@ant-design/icons'
 
 import './Sidebar.scss'
 
+import { VIEW_MODES, TIMEZONE_MODES } from '../../utils/constants'
 import Filter from '../Filter'
 
 type SidebarProps = {
   children?: ReactNode
   mode: string
-  onModeChange(mode: string): void
   timezone: string
-  onTimezoneChange(timezone: string): void
   type: string
+  onModeChange(mode: string): void
+  onTimezoneChange(timezone: string): void
   onTypeChange(type: string): void
 }
 
 const Sidebar: FunctionComponent<SidebarProps> = ({
   children,
   mode,
-  onModeChange,
   timezone,
-  onTimezoneChange,
   type,
+  onModeChange,
+  onTimezoneChange,
   onTypeChange,
 }) => {
   const handleHighContrastModeChange = () => {
     document.body.classList.toggle('high-contrast')
+  }
+
+  let modeOptions = []
+  for (const mode in VIEW_MODES) {
+    const { title, icon } = VIEW_MODES[mode]
+    if (VIEW_MODES[mode] !== VIEW_MODES.DESCRIPTION) {
+      const name = title.charAt(0).toUpperCase() + title.slice(1)
+
+      const modeOption = (
+        <Select.Option value={title} key={title}>
+          {createElement(icon)} {`${name}`}
+        </Select.Option>
+      )
+      modeOptions.push(modeOption)
+    }
+  }
+
+  let timezoneOptions = []
+  for (const mode in TIMEZONE_MODES) {
+    const { zone, name } = TIMEZONE_MODES[mode]
+    const timezoneOption = (
+      <Select.Option value={zone} key={zone}>
+        <GlobalOutlined /> {`${name}`}
+      </Select.Option>
+    )
+    timezoneOptions.push(timezoneOption)
   }
 
   return (
@@ -39,54 +61,13 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
       <Space direction="vertical">
         <div>
           <Select defaultValue={mode} onChange={onModeChange}>
-            <Select.Option value="calendar">
-              <CalendarOutlined /> Calendar
-            </Select.Option>
-
-            <Select.Option value="list">
-              <UnorderedListOutlined /> List
-            </Select.Option>
-
-            <Select.Option value="table">
-              <TableOutlined /> Table
-            </Select.Option>
+            {modeOptions}
           </Select>
         </div>
 
         <div>
           <Select defaultValue={timezone} onChange={onTimezoneChange}>
-            <Select.Option value="-2London">
-              <GlobalOutlined /> Europe/London
-            </Select.Option>
-
-            <Select.Option value="-1Warsaw">
-              <GlobalOutlined /> Europe/Warsaw
-            </Select.Option>
-
-            <Select.Option value="+0Kiev">
-              <GlobalOutlined /> Europe/Kiev
-            </Select.Option>
-
-            <Select.Option value="+0Minsk">
-              <GlobalOutlined /> Europe/Minsk
-            </Select.Option>
-
-            <Select.Option value="+0Moscow">
-              <GlobalOutlined /> Europe/Moscow
-            </Select.Option>
-
-            <Select.Option value="+1Volgograd">
-              <GlobalOutlined /> Europe/Volgograd
-            </Select.Option>
-
-            <Select.Option value="+1Yekaterinburg">
-              <GlobalOutlined /> Europe/Yekaterinburg
-            </Select.Option>
-
-            <Select.Option value="+2Tashkent">
-              <GlobalOutlined /> Asia/Tashkent
-            </Select.Option>
-
+            {timezoneOptions}
           </Select>
         </div>
 

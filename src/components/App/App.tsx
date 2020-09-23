@@ -18,6 +18,15 @@ import Sidebar from '../Sidebar'
 import TableView from '../TableView'
 import TaskDescription from '../TaskDescription'
 
+import {
+  TYPE_CLASS_NAMES,
+  CONVERT_TASK_TO_ROW,
+  VIEW_MODES,
+  TIMEZONE_MODES,
+} from '../../utils/constants'
+const { TABLE, LIST, CALENDAR, DESCRIPTION } = VIEW_MODES
+const { MINSK } = TIMEZONE_MODES
+
 type TaskData = {
   tasks: ITask[]
 }
@@ -25,31 +34,6 @@ type TaskData = {
 type RowData = {
   rows: IRow[]
   isMessageShown: boolean
-}
-
-const typeClassNames: any = {
-  Факультатив: 'row-facultative',
-  'YouTube Live': 'row-youtube-live',
-  'Выдача таска': 'row-task',
-  'Self education': 'row-self-education',
-  'Митап в Минске': 'row-meetup',
-  Deadline: 'row-deadline',
-}
-
-const convertTaskToRow = (task: ITask): IRow => {
-  return {
-    key: task.id,
-    isHighlighted: false,
-    isHidden: false,
-    title: task.name,
-    date: task.dateTime ? task.dateTime.slice(6) : '',
-    time: task.dateTime ? task.dateTime.slice(0, 5) : '',
-    type: task.type,
-    organizer: task.organizer || 'Not assigned',
-    place: task.place || '',
-    descriptionUrl: task.descriptionUrl || '',
-    comment: task.comment || 'No comments yet',
-  }
 }
 
 const App: FunctionComponent = () => {
@@ -63,13 +47,14 @@ const App: FunctionComponent = () => {
   const [clickedTask, setClickedTask] = useState<ITask | null>(null)
   const [customColors, setCustomColors] = useState(false)
   const [mentorMode, setMentorMode] = useState(true)
-  const [mode, setMode] = useState('list')
-  const [timezone, setTimezone] = useState('+0Minsk')
+  const [mode, setMode] = useState(TABLE.title)
+  const [timezone, setTimezone] = useState(MINSK.zone)
   const [type, setTypeSelected] = useState('All')
 
   useEffect(() => {
     API.getEvents().then((tasksFromApi) => {
-      const rows = tasksFromApi.map((task) => convertTaskToRow(task))
+      const rows = tasksFromApi.map((task) => CONVERT_TASK_TO_ROW(task))
+
       setTaskData({ tasks: tasksFromApi })
       setRowData((state) => ({ ...state, rows }))
     })
@@ -92,7 +77,7 @@ const App: FunctionComponent = () => {
     const task = tasks.find((task) => task.id === clickedRowKey)
 
     if (task) {
-      setMode('description')
+      setMode(DESCRIPTION.title)
       setClickedTask(task)
     }
   }
@@ -178,14 +163,10 @@ const App: FunctionComponent = () => {
   }
 
   const setRowClassName = (row: IRow): string => {
-    let className = typeClassNames[row.type] || 'row-no-type'
+    let className = TYPE_CLASS_NAMES[row.type] || 'row-no-type'
 
-    if (row.isHighlighted) {
-      className += ' highlighted'
-    }
-    if (row.isHidden) {
-      className += ' hidden'
-    }
+    if (row.isHighlighted) className += ' highlighted'
+    if (row.isHidden) className += ' hidden'
 
     return className
   }
@@ -233,10 +214,10 @@ const App: FunctionComponent = () => {
         <Col span={8}>
           <Sidebar
             mode={mode}
-            onModeChange={handleModeChange}
             timezone={timezone}
-            onTimezoneChange={handleTimezoneChange}
             type={type}
+            onModeChange={handleModeChange}
+            onTimezoneChange={handleTimezoneChange}
             onTypeChange={handleTypeSelect}
           >
             <Button.Group>
@@ -273,9 +254,9 @@ const App: FunctionComponent = () => {
         </a>
       </div>
 
-      {mode === 'calendar' && <CalendarView />}
+      {mode === CALENDAR.title && <CalendarView />}
 
-      {mode === 'list' && (
+      {mode === LIST.title && (
         <ListView
           type={type}
           rows={rowData.rows}
@@ -285,7 +266,7 @@ const App: FunctionComponent = () => {
         />
       )}
 
-      {mode === 'table' && (
+      {mode === TABLE.title && (
         <TableView
           type={type}
           timezone={timezone}
@@ -296,7 +277,7 @@ const App: FunctionComponent = () => {
         />
       )}
 
-      {mode === 'description' && clickedTask && (
+      {mode === DESCRIPTION.title && clickedTask && (
         <TaskDescription
           task={clickedTask}
           setClickedTask={setClickedTask}

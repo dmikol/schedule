@@ -15,66 +15,60 @@ type TableViewProps = {
   setRowClassName(row: IRow): string
 }
 
-type TableViewState = {
-  columns: ColumnsType<IRow>
-}
-
-class TableView extends Component<TableViewProps, TableViewState> {
-  state = {
-    columns: [
-      {
-        title: 'Date',
-        dataIndex: 'date',
+class TableView extends Component<TableViewProps> {
+  columns: ColumnsType<IRow> = [
+    {
+      title: 'Date',
+      dataIndex: 'date',
+    },
+    {
+      title: 'Time',
+      dataIndex: 'time',
+      render: (text: string) => {
+        return text
+          ? `${
+              +text.slice(0, 2) + Number(this.props.timezone.slice(0, 2))
+            }${text.slice(2, 5)}`
+          : ''
       },
-      {
-        title: 'Time',
-        dataIndex: 'time',
-        render: (text: string) => {
-          return text
-            ? `${
-                +text.slice(0, 2) + Number(this.props.timezone.slice(0, 2))
-              }${text.slice(2, 5)}`
-            : ''
-        },
-      },
-      {
-        title: 'Type',
-        dataIndex: 'type',
-      },
-      {
-        title: 'Place',
-        dataIndex: 'place',
-      },
-      {
-        title: 'Name',
-        dataIndex: 'title',
-        render: (text: string, row: IRow) => (
-          <h3
-            className="tableView__task-name"
-            onClick={() => this.props.handleTaskNameClick(row.key)}
-          >
-            {text}
-          </h3>
-        ),
-      },
-      {
-        title: 'Details Url',
-        dataIndex: 'descriptionUrl',
-      },
-      {
-        title: 'Organizer',
-        dataIndex: 'organizer',
-      },
-      {
-        title: 'Comment',
-        dataIndex: 'comment',
-      },
-    ],
-  }
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+    },
+    {
+      title: 'Place',
+      dataIndex: 'place',
+    },
+    {
+      title: 'Name',
+      dataIndex: 'title',
+      render: (text: string, row: IRow) => (
+        <h3
+          className="tableView__task-name"
+          onClick={() => this.props.handleTaskNameClick(row.key)}
+        >
+          {text}
+        </h3>
+      ),
+    },
+    {
+      title: 'Details Url',
+      dataIndex: 'descriptionUrl',
+    },
+    {
+      title: 'Organizer',
+      dataIndex: 'organizer',
+    },
+    {
+      title: 'Comment',
+      dataIndex: 'comment',
+    },
+  ]
 
   render() {
     const { type, rows, handleRowClick, setRowClassName } = this.props
-    const { columns } = this.state
+    console.log(rows)
     const filteredRecords =
       type === 'All' ? rows : rows.filter((row) => row.type === type)
 
@@ -83,7 +77,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
         <h3>Table view</h3>
 
         <Table
-          columns={columns}
+          columns={this.columns}
           dataSource={filteredRecords}
           rowClassName={setRowClassName}
           pagination={false}
