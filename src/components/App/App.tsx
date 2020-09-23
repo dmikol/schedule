@@ -171,6 +171,10 @@ const App: FunctionComponent = () => {
     return className
   }
 
+  const onBackToSchedule = () => {
+    setMode('table')
+  }
+
   let arr = [] as string[]
   const download = (name: string, type: string) => {
     if (type === 'txt') {
@@ -219,6 +223,7 @@ const App: FunctionComponent = () => {
             onModeChange={handleModeChange}
             onTimezoneChange={handleTimezoneChange}
             onTypeChange={handleTypeSelect}
+            onBackToSchedule={onBackToSchedule}
           >
             <Button.Group>
               <Button
