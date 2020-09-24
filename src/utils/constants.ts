@@ -80,6 +80,46 @@ export const TIMEZONE_MODES: {
   },
 }
 
+export const COLUMNS_DATA: {
+  [key: string]: {
+    title: string
+    dataIndex: string
+  }
+} = {
+  DATE: {
+    title: 'Date',
+    dataIndex: 'date',
+  },
+  TIME: {
+    title: 'Time',
+    dataIndex: 'time',
+  },
+  TYPE: {
+    title: 'Type',
+    dataIndex: 'type',
+  },
+  PLACE: {
+    title: 'Place',
+    dataIndex: 'place',
+  },
+  NAME: {
+    title: 'Name',
+    dataIndex: 'title',
+  },
+  DETAILS: {
+    title: 'Details Url',
+    dataIndex: 'descriptionUrl',
+  },
+  ORGANIZER: {
+    title: 'Organizer',
+    dataIndex: 'organizer',
+  },
+  COMMENT: {
+    title: 'Comment',
+    dataIndex: 'comment',
+  },
+}
+
 export const CONVERT_TASK_TO_ROW = (task: ITask): IRow => {
   return {
     key: task.id,

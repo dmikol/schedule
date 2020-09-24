@@ -1,10 +1,11 @@
-import React, { Component, MouseEvent } from 'react'
+import React, { FunctionComponent, MouseEvent } from 'react'
 import { Table } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
 
 import './TableView.scss'
 
 import { IRow } from '../../models'
+import { COLUMNS_DATA } from '../../utils/constants'
 
 type TableViewProps = {
   type: string
@@ -15,80 +16,62 @@ type TableViewProps = {
   setRowClassName(row: IRow): string
 }
 
-class TableView extends Component<TableViewProps> {
-  columns: ColumnsType<IRow> = [
-    {
-      title: 'Date',
-      dataIndex: 'date',
-    },
-    {
-      title: 'Time',
-      dataIndex: 'time',
-      render: (text: string) => {
-        return text
-          ? `${
-              +text.slice(0, 2) + Number(this.props.timezone.slice(0, 2))
-            }${text.slice(2, 5)}`
-          : ''
-      },
-    },
-    {
-      title: 'Type',
-      dataIndex: 'type',
-    },
-    {
-      title: 'Place',
-      dataIndex: 'place',
-    },
-    {
-      title: 'Name',
-      dataIndex: 'title',
-      render: (text: string, row: IRow) => (
-        <h3
-          className="tableView__task-name"
-          onClick={() => this.props.handleTaskNameClick(row.key)}
-        >
-          {text}
-        </h3>
-      ),
-    },
-    {
-      title: 'Details Url',
-      dataIndex: 'descriptionUrl',
-    },
-    {
-      title: 'Organizer',
-      dataIndex: 'organizer',
-    },
-    {
-      title: 'Comment',
-      dataIndex: 'comment',
-    },
-  ]
+const columnsData: ColumnsType<IRow> = Object.values(COLUMNS_DATA)
 
-  render() {
-    const { type, rows, handleRowClick, setRowClassName } = this.props
-    console.log(rows)
-    const filteredRecords =
-      type === 'All' ? rows : rows.filter((row) => row.type === type)
+const TableView: FunctionComponent<TableViewProps> = ({
+  type,
+  timezone,
+  rows,
+  handleTaskNameClick,
+  handleRowClick,
+  setRowClassName,
+}) => {
+  const columns: ColumnsType<IRow> = columnsData.map((columnItem) => {
+    if (columnItem.title === COLUMNS_DATA.TIME.title) {
+      columnItem.render = (text: string) => renderTime(text)
+    }
+    if (columnItem.title === COLUMNS_DATA.NAME.title) {
+      columnItem.render = (text: string, row: IRow) => renderName(text, row)
+    }
+    return columnItem
+  })
 
+  const renderTime = (text: string) => {
+    return text
+      ? `${+text.slice(0, 2) + Number(timezone.slice(0, 2))}${text.slice(2, 5)}`
+      : ''
+  }
+
+  const renderName = (text: string, row: IRow) => {
     return (
-      <div className="table-view">
-        <h3>Table view</h3>
-
-        <Table
-          columns={this.columns}
-          dataSource={filteredRecords}
-          rowClassName={setRowClassName}
-          pagination={false}
-          scroll={{ x: '100%' }}
-          onRow={(row) => ({
-            onClick: (evt) => handleRowClick(row, evt),
-          })}
-        />
-      </div>
+      <h3
+        className="tableView__task-name"
+        onClick={() => handleTaskNameClick(row.key)}
+      >
+        {text}
+      </h3>
     )
   }
+
+  const filteredRecords =
+    type === 'All' ? rows : rows.filter((row) => row.type === type)
+
+  return (
+    <div className="table-view">
+      <h3>Table view</h3>
+
+      <Table
+        columns={columns}
+        dataSource={filteredRecords}
+        rowClassName={setRowClassName}
+        pagination={false}
+        scroll={{ x: '100%' }}
+        onRow={(row) => ({
+          onClick: (evt) => handleRowClick(row, evt),
+        })}
+      />
+    </div>
+  )
 }
 
 export default TableView

@@ -27,7 +27,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   onModeChange,
   onTimezoneChange,
   onTypeChange,
-  onBackToSchedule
+  onBackToSchedule,
 }) => {
   const handleHighContrastModeChange = () => {
     document.body.classList.toggle('high-contrast')
@@ -62,16 +62,14 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   const drawBackButtonIfDescMode = (mode: string) => {
     if (mode === DESCRIPTION.title) {
       return (
-        <Button
-          onClick={() => onBackToSchedule()}
-          className="back-btn">
+        <Button onClick={() => onBackToSchedule()} className="back-btn">
           <RollbackOutlined />
-            Back to schedule
-          </Button>
-          )
-     } else {
-       return (
-         <>
+          Back to schedule
+        </Button>
+      )
+    } else {
+      return (
+        <>
           <div>
             <Select defaultValue={mode} onChange={onModeChange}>
               {modeOptions}
@@ -80,16 +78,14 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
 
           <Filter type={type} onFilterChange={onTypeChange} />
         </>
-       )
-     } 
+      )
+    }
   }
 
   return (
     <div className="sidebar">
       <Space direction="vertical">
-        {
-          drawBackButtonIfDescMode(mode)
-         }
+        {drawBackButtonIfDescMode(mode)}
         <div>
           <Select defaultValue={timezone} onChange={onTimezoneChange}>
             {timezoneOptions}
