@@ -33,7 +33,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
     document.body.classList.toggle('high-contrast')
   }
 
-  let modeOptions = []
+  let modeOptions: ReactNode[] = []
   for (const mode in VIEW_MODES) {
     const { title, icon } = VIEW_MODES[mode]
     if (VIEW_MODES[mode] !== DESCRIPTION) {
@@ -48,7 +48,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
     }
   }
 
-  let timezoneOptions = []
+  let timezoneOptions: ReactNode[] = []
   for (const mode in TIMEZONE_MODES) {
     const { zone, name } = TIMEZONE_MODES[mode]
     const timezoneOption = (
