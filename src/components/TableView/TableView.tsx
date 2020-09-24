@@ -34,7 +34,6 @@ interface TableRecord {
 type TableViewProps = {
   type: string
   onTaskNameClick(task: ITask): void
-  deleteRowClick(): void
   timezone: string
   mentorMode: boolean
 }
@@ -112,11 +111,11 @@ class TableView extends Component<TableViewProps, TableViewState> {
       arrayColumns.push({
         title: 'Operation',
         dataIndex: 'operation',
-        render: () => (
+        render: (text: string, record: any) => (
           <span className="delete-row"
-            onClick={() => this.props.deleteRowClick()}
+            onClick={() => this.deleteRowClick(record)}
           >
-            Delete
+            {text}
           </span>
         ),
       })
@@ -130,11 +129,11 @@ class TableView extends Component<TableViewProps, TableViewState> {
         arrayColumns.push({
           title: 'Operation',
           dataIndex: 'operation',
-          render: () => (
+          render: (text: string, record: any) => (
             <span className="delete-row"
-              onClick={() => this.props.deleteRowClick()}
+              onClick={() => this.deleteRowClick(record)}
             >
-              Delete
+              {text}
             </span>
           ),
         })
@@ -145,6 +144,26 @@ class TableView extends Component<TableViewProps, TableViewState> {
       }
     }
   }
+
+  deleteRowClick = (record: any) => {
+    API.deleteEvent(record.key).then(() => {
+
+    })
+    this.state.records.forEach((item) => {
+      if (item.key === record.key) {
+        item.title = ""
+        item.date = ""
+        item.time = ""
+        item.organizer = ""
+        item.place = ""
+        item.descriptionUrl = "Пункт удален"
+        item.comment = ""
+        item.type = ""
+        item.operation = ""
+      } 
+    })
+  }
+
 
   getRecordClassName = (record: TableRecord): string => {
     let className = typeClassNames[record.type] || 'row-no-type'
@@ -213,6 +232,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
           onRow={(row) => ({
             onClick: () => this.handleRowClick(row),
           })}
+          
         />
       </div>
     )

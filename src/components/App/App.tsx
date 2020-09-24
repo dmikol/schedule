@@ -40,10 +40,7 @@ const App: FunctionComponent = () => {
     setMode('description')
     setClickedTask(task)
   }
-  const deleteRowClick = () => {
-    alert('вы удалили строку')
-  }
-
+  
   const onBackToSchedule = () => {
     setMode('table')
   }
@@ -78,7 +75,12 @@ const App: FunctionComponent = () => {
       alert('Извините, но данный формат пока недоступен')
     }
   }
-  
+  let table = <TableView
+    type={type}
+    onTaskNameClick={handleTaskNameClick}
+    timezone={timezone}
+    mentorMode={mentorMode}
+  />
   return (
     <div className="app">
       <Header mentorMode={mentorMode} setMentorMode={setMentorMode} />
@@ -114,7 +116,7 @@ const App: FunctionComponent = () => {
                 <Button 
                 onClick={() => setVisibleLessonForm(!visibleLessonForm)}>
                   <EditOutlined />
-                  Edit schedule
+                  Add new
                 </Button>
               )}
             </Button.Group>
@@ -146,23 +148,13 @@ const App: FunctionComponent = () => {
         <ListView type={type} onTaskNameClick={handleTaskNameClick} />
       )}
 
+      
+
       {mode === 'table' && mentorMode && (
-        <TableView
-          type={type}
-          onTaskNameClick={handleTaskNameClick}
-          deleteRowClick={deleteRowClick}
-          timezone={timezone}
-          mentorMode={mentorMode}
-        />
+        table
       )}
       {mode === 'table' && !mentorMode && (
-        <TableView
-          type={type}
-          onTaskNameClick={handleTaskNameClick}
-          deleteRowClick={deleteRowClick}
-          timezone={timezone}
-          mentorMode={mentorMode}
-        />
+        table
       )}
 
       {mode === 'description' && clickedTask && (
