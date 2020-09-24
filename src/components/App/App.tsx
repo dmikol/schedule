@@ -23,8 +23,6 @@ const App: FunctionComponent = () => {
   const [type, setTypeSelected] = useState('All')
   const [visibleFilesType, setVisibleFilesType] = useState(false)
   const [visibleLessonForm, setVisibleLessonForm] = useState(false)
-  //const allLinksDownload = useRef()
-  
 
   const handleModeChange = (selectedMode: string) => {
     setMode(selectedMode)
@@ -56,6 +54,7 @@ const App: FunctionComponent = () => {
     }
 
   }
+
   API.getEvents().then((response) => {
     response.forEach((event) => {
       arrayTasksToFile.push(` Name: ${event.name}, Date: ${event.dateTime}, 
@@ -144,11 +143,20 @@ const App: FunctionComponent = () => {
         <ListView type={type} onTaskNameClick={handleTaskNameClick} />
       )}
 
-      {mode === 'table' && (
+      {mode === 'table' && mentorMode && (
         <TableView
           type={type}
           onTaskNameClick={handleTaskNameClick}
           timezone={timezone}
+          mentorMode={mentorMode}
+        />
+      )}
+      {mode === 'table' && !mentorMode && (
+        <TableView
+          type={type}
+          onTaskNameClick={handleTaskNameClick}
+          timezone={timezone}
+          mentorMode={mentorMode}
         />
       )}
 

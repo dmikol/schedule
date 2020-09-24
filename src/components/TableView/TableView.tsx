@@ -14,6 +14,7 @@ const typeClassNames: any = {
   'Self education': 'row-self-education',
   'Митап в Минске': 'row-meetup',
   Deadline: 'row-deadline',
+
 }
 
 interface TableRecord {
@@ -27,12 +28,14 @@ interface TableRecord {
   place: string
   descriptionUrl: string
   comment: string
+  operation: string
 }
 
 type TableViewProps = {
   type: string
   onTaskNameClick(task: ITask): void
   timezone: string
+  mentorMode: boolean
 }
 
 type TableViewState = {
@@ -95,7 +98,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
     events: [] as ITask[],
     records: [] as TableRecord[],
   }
-
+  
   componentDidMount() {
     API.getEvents().then((events) => {
       this.setState({
@@ -103,6 +106,29 @@ class TableView extends Component<TableViewProps, TableViewState> {
         records: events.map(this.mapEventToTableRecord),
       })
     })
+    let arrayColumns = this.state.columns;
+    if(this.props.mentorMode){
+      arrayColumns.push({
+        title: 'Operation',
+        dataIndex: 'operation',
+      })
+      this.setState({columns: arrayColumns})
+    }
+  }
+  componentDidUpdate(prevProps: any){
+    let arrayColumns = this.state.columns;
+    if (this.props.mentorMode !== prevProps.mentorMode) {
+      if(this.props.mentorMode){
+        arrayColumns.push({
+          title: 'Operation',
+          dataIndex: 'operation',
+        })
+        this.setState({columns: arrayColumns})
+      }else if(this.state.columns.length === 9){
+        arrayColumns.pop()
+        this.setState({columns: arrayColumns})
+      }
+    }
   }
 
   getRecordClassName = (record: TableRecord): string => {
@@ -150,6 +176,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
       place: event.place || '',
       descriptionUrl: event.descriptionUrl || '',
       comment: event.comment || 'No comments yet',
+      operation: 'delete',
     }
   }
 
@@ -162,7 +189,6 @@ class TableView extends Component<TableViewProps, TableViewState> {
     return (
       <div className="table-view">
         <h3>Table view</h3>
-
         <Table
           columns={columns}
           dataSource={filteredRecords}
