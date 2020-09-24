@@ -172,7 +172,7 @@ const App: FunctionComponent = () => {
   }
 
   const onBackToSchedule = () => {
-    setMode('table')
+    setMode(TABLE.title)
   }
 
   let arr = [] as string[]
