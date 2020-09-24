@@ -34,6 +34,7 @@ interface TableRecord {
 type TableViewProps = {
   type: string
   onTaskNameClick(task: ITask): void
+  deleteRowClick(): void
   timezone: string
   mentorMode: boolean
 }
@@ -111,6 +112,13 @@ class TableView extends Component<TableViewProps, TableViewState> {
       arrayColumns.push({
         title: 'Operation',
         dataIndex: 'operation',
+        render: () => (
+          <span className="delete-row"
+            onClick={() => this.props.deleteRowClick()}
+          >
+            Delete
+          </span>
+        ),
       })
       this.setState({columns: arrayColumns})
     }
@@ -122,6 +130,13 @@ class TableView extends Component<TableViewProps, TableViewState> {
         arrayColumns.push({
           title: 'Operation',
           dataIndex: 'operation',
+          render: () => (
+            <span className="delete-row"
+              onClick={() => this.props.deleteRowClick()}
+            >
+              Delete
+            </span>
+          ),
         })
         this.setState({columns: arrayColumns})
       }else if(this.state.columns.length === 9){

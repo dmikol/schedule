@@ -21,7 +21,15 @@
     border-color: $primary-hover;
   }
 }
+.delete-row{
+  margin: 0px 10px;
+  color: #1890ff;
 
+  &:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
 // .ant-table-tbody > .highlighted > td:first-child {
 //   border-left: thin solid;
 // }

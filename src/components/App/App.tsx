@@ -40,6 +40,9 @@ const App: FunctionComponent = () => {
     setMode('description')
     setClickedTask(task)
   }
+  const deleteRowClick = () => {
+    alert('вы удалили строку')
+  }
 
   const onBackToSchedule = () => {
     setMode('table')
@@ -147,6 +150,7 @@ const App: FunctionComponent = () => {
         <TableView
           type={type}
           onTaskNameClick={handleTaskNameClick}
+          deleteRowClick={deleteRowClick}
           timezone={timezone}
           mentorMode={mentorMode}
         />
@@ -155,6 +159,7 @@ const App: FunctionComponent = () => {
         <TableView
           type={type}
           onTaskNameClick={handleTaskNameClick}
+          deleteRowClick={deleteRowClick}
           timezone={timezone}
           mentorMode={mentorMode}
         />
