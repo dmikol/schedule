@@ -20,6 +20,7 @@ const App: FunctionComponent = () => {
   const [mode, setMode] = useState('table')
   const [timezone, setTimezone] = useState('+0Minsk')
   const [type, setTypeSelected] = useState('All')
+  const [edit, setEdit] = useState(false)
 
   const handleModeChange = (selectedMode: string) => {
     setMode(selectedMode)
@@ -40,6 +41,10 @@ const App: FunctionComponent = () => {
 
   const onBackToSchedule = () => {
     setMode('table')
+  }
+
+  const onEditClick = () => {
+    setEdit(true)
   }
 
   let arr = [] as string[]
@@ -101,9 +106,11 @@ const App: FunctionComponent = () => {
               <Button onClick={() => visibleLinksDownload()}>Download</Button>
 
               {mentorMode && (
-                <Button className="editScheduleButtonStyle">
-                  <EditOutlined />
-                  Edit schedule
+                <Button 
+                  className="editScheduleButtonStyle"
+                  onClick={onEditClick}>
+                    <EditOutlined />
+                    Edit schedule
                 </Button>
               )}
             </Button.Group>
@@ -143,6 +150,7 @@ const App: FunctionComponent = () => {
           task={clickedTask}
           setClickedTask={setClickedTask}
           timezone={timezone}
+          edit={edit}
         />
       )}
     </div>

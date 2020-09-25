@@ -1,22 +1,29 @@
-import React, { FunctionComponent } from 'react'
-import { Col, Descriptions, Row } from 'antd'
+import React, { FunctionComponent, useState } from 'react'
+import { Col, Descriptions, Row, Typography } from 'antd'
 
 import './TaskDescription.scss'
 
 import { ITask } from '../../models'
 import FeedbackOnTask from '../FeedbackOnTask'
 import LeaveFeedback from '../LeaveFeedback'
+import EditLine from '../EditLine'
+
+import EditableTable from './TaskDescriptionTable'
+
+const { Paragraph } = Typography;
 
 type TaskDescriptionProps = {
   task: ITask
   setClickedTask(task: ITask): void
   timezone: string
+  edit: boolean
 }
 
 const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
   task,
   setClickedTask,
   timezone,
+  edit
 }) => {
   const {
     name,
@@ -28,6 +35,10 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
     week,
     photo
   } = task
+
+const [typeStr, setTypeStr] = useState(type)
+const [ nameStr, setnNameStr ] = useState(name)
+
   let link
   if (descriptionUrl) {
     link = (
@@ -36,7 +47,6 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
       </a>
     )
   }
-console.log('place = ', place);
 
   let map = null
   if (type === 'Митап' || type === 'Митап в Минске') {
@@ -52,11 +62,23 @@ console.log('place = ', place);
     )
   }
 
+  let editableTable = null
+  if (edit) {
+    editableTable = (<Row>
+      <Col span={20} offset={2}>
+        <EditableTable
+          task={task}
+          edit={edit}/>
+      </Col>
+    </Row>)
+  }
+
   return (
     <>
+      {editableTable}
       <Row>
         <Col span={20} offset={2}>
-          <Descriptions title={name} bordered>
+          <Descriptions title={<EditLine isEdit={edit} text={nameStr}/>} bordered>
             <Descriptions.Item label="Неделя" span={3}>
               {week || 'Описание отсутствует'}
             </Descriptions.Item>
@@ -70,7 +92,7 @@ console.log('place = ', place);
             </Descriptions.Item>
 
             <Descriptions.Item label="Тип" span={3}>
-              {type || 'Описание отсутствует'}
+              <EditLine isEdit={edit} text={typeStr} />
             </Descriptions.Item>
 
             <Descriptions.Item label="Cсылка" span={3} className="task-desc__highlight">
@@ -78,7 +100,7 @@ console.log('place = ', place);
             </Descriptions.Item>
 
             <Descriptions.Item label="Описание" span={3}>
-              {description || 'Описание отсутствует'}
+              {description || 'Описание Отсутсвует'}
             </Descriptions.Item>
 
             <Descriptions.Item label="Место проведения" span={3}>
@@ -107,7 +129,7 @@ console.log('place = ', place);
             </Descriptions>
         </Col>
       </Row>
-
+      
       <Row>
         <Col span={20} offset={2}>
           <FeedbackOnTask feedback={task.feedback} />
