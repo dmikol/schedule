@@ -23,9 +23,16 @@ import {
   CONVERT_TASK_TO_ROW,
   VIEW_MODES,
   TIMEZONE_MODES,
+  COLUMNS_DATA,
 } from '../../utils/constants'
 const { TABLE, LIST, CALENDAR, DESCRIPTION } = VIEW_MODES
 const { MINSK } = TIMEZONE_MODES
+const columnsData: ColumnState = Object.values(COLUMNS_DATA).map(
+  (columnData) => ({
+    title: columnData.title,
+    isColumnHidden: false,
+  }),
+)
 
 type TaskData = {
   tasks: ITask[]
@@ -36,6 +43,11 @@ type RowData = {
   isMessageShown: boolean
 }
 
+type ColumnState = {
+  title: string
+  isColumnHidden: boolean
+}[]
+
 const App: FunctionComponent = () => {
   const [taskData, setTaskData] = useState<TaskData>({
     tasks: [] as ITask[],
@@ -44,6 +56,7 @@ const App: FunctionComponent = () => {
     rows: [] as IRow[],
     isMessageShown: false,
   })
+  const [columnsState, setColumnsState] = useState<ColumnState>(columnsData)
   const [clickedTask, setClickedTask] = useState<ITask | null>(null)
   const [customColors, setCustomColors] = useState(false)
   const [mentorMode, setMentorMode] = useState(true)
@@ -171,6 +184,10 @@ const App: FunctionComponent = () => {
     return className
   }
 
+  const handleChangeColumnsState = (newColumnState: ColumnState) => {
+    setColumnsState(newColumnState)
+  }
+
   const onBackToSchedule = () => {
     setMode(TABLE.title)
   }
@@ -276,6 +293,8 @@ const App: FunctionComponent = () => {
           type={type}
           timezone={timezone}
           rows={rowData.rows}
+          columnsState={columnsState}
+          handleChangeColumnsState={handleChangeColumnsState}
           handleTaskNameClick={handleTaskNameClick}
           handleRowClick={handleRowClick}
           setRowClassName={setRowClassName}

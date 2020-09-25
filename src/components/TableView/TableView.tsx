@@ -1,16 +1,24 @@
 import React, { FunctionComponent, MouseEvent } from 'react'
-import { Table } from 'antd'
+import { Table, Popover, Button, Space, Checkbox } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
+import { InsertRowRightOutlined } from '@ant-design/icons'
 
 import './TableView.scss'
 
 import { IRow } from '../../models'
 import { COLUMNS_DATA } from '../../utils/constants'
 
+type ColumnState = {
+  title: string
+  isColumnHidden: boolean
+}[]
+
 type TableViewProps = {
   type: string
   timezone: string
   rows: IRow[]
+  columnsState: ColumnState
+  handleChangeColumnsState(newColumnState: ColumnState): void
   handleTaskNameClick(clickedRowKey: string): void
   handleRowClick(clickedRow: IRow, evt: MouseEvent<HTMLElement>): void
   setRowClassName(row: IRow): string
@@ -22,19 +30,31 @@ const TableView: FunctionComponent<TableViewProps> = ({
   type,
   timezone,
   rows,
+  columnsState,
+  handleChangeColumnsState,
   handleTaskNameClick,
   handleRowClick,
   setRowClassName,
 }) => {
   const columns: ColumnsType<IRow> = columnsData.map((columnItem) => {
+    columnsState.forEach((columnStateItem) => {
+      if (columnStateItem.title === columnItem.title) {
+        columnItem.className = columnStateItem.isColumnHidden ? 'hidden' : ''
+      }
+    })
     if (columnItem.title === COLUMNS_DATA.TIME.title) {
       columnItem.render = (text: string) => renderTime(text)
     }
     if (columnItem.title === COLUMNS_DATA.NAME.title) {
       columnItem.render = (text: string, row: IRow) => renderName(text, row)
     }
+
     return columnItem
   })
+
+  const columnNames: string[] = columnsState.map((column) =>
+    !column.isColumnHidden ? column.title : '',
+  )
 
   const renderTime = (text: string) => {
     return text
@@ -56,20 +76,54 @@ const TableView: FunctionComponent<TableViewProps> = ({
   const filteredRecords =
     type === 'All' ? rows : rows.filter((row) => row.type === type)
 
+  const handleColumnToggle = (evt: any) => {
+    const newColumnsState = columnsState.map((column) => {
+      if (column.title === evt.target.value) {
+        column.isColumnHidden = !column.isColumnHidden
+      }
+      return column
+    })
+
+    handleChangeColumnsState(newColumnsState)
+  }
+
+  const popoverContent = () => {
+    const checkboxes = columnsState.map((column) => (
+      <div key={column.title}>
+        <Checkbox onChange={handleColumnToggle} value={column.title}>
+          {column.title}
+        </Checkbox>
+      </div>
+    ))
+
+    return (
+      <Checkbox.Group defaultValue={columnNames}>{checkboxes}</Checkbox.Group>
+    )
+  }
+
   return (
     <div className="table-view">
       <h3>Table view</h3>
 
-      <Table
-        columns={columns}
-        dataSource={filteredRecords}
-        rowClassName={setRowClassName}
-        pagination={false}
-        scroll={{ x: '100%' }}
-        onRow={(row) => ({
-          onClick: (evt) => handleRowClick(row, evt),
-        })}
-      />
+      <Space direction="vertical">
+        <Space>
+          <h3 className="table__edit-title">Отображение колонок:</h3>
+          <Popover content={popoverContent} trigger="click">
+            <Button icon={<InsertRowRightOutlined />}>Изменить</Button>
+          </Popover>
+        </Space>
+
+        <Table
+          columns={columns}
+          dataSource={filteredRecords}
+          rowClassName={setRowClassName}
+          pagination={false}
+          scroll={{ x: '100%' }}
+          onRow={(row) => ({
+            onClick: (evt) => handleRowClick(row, evt),
+          })}
+        />
+      </Space>
     </div>
   )
 }

@@ -4,6 +4,10 @@
   padding: 8px;
 }
 
+.table__edit-title {
+  margin-bottom: 0;
+}
+
 .tableView__task-name {
   display: inline-block;
 
@@ -56,4 +60,9 @@
     background-color: inherit;
     cursor: pointer;
   }
+}
+
+.ant-table-thead th.hidden,
+.ant-table-tbody td.hidden {
+  display: none;
 }
