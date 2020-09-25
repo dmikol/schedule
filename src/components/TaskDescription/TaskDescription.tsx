@@ -73,6 +73,27 @@ const [ nameStr, setnNameStr ] = useState(name)
     </Row>)
   }
 
+  let customTaskFields = null
+
+  if(task.custom) {
+    customTaskFields = task.custom.map((item, i) => {
+      console.log(item);
+      console.log('Object.entries(item)[0] = ',Object.entries(item)[0][0]);
+      console.log('Object.entries(item)[1] = ',Object.entries(item)[0][1]);
+      
+      const key = Object.entries(item)[0][0]
+      const value = Object.entries(item)[0][1]
+      return (
+        <>
+            <Descriptions.Item label={key} span={3} key={i}>
+              {value || 'Описание отсутствует'}
+            </Descriptions.Item>
+        </>
+      )
+    })
+  }
+  
+
   return (
     <>
       {editableTable}
@@ -126,6 +147,7 @@ const [ nameStr, setnNameStr ] = useState(name)
               : `Видео отсутствует`}
             </Descriptions.Item>
             {map}
+            {customTaskFields}
             </Descriptions>
         </Col>
       </Row>

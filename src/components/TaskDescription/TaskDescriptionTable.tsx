@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Table, Input, Button, Popconfirm, Form } from 'antd';
+import { API } from '../../api/api'
 
 const EditableContext = React.createContext<any>(null);
 
@@ -97,7 +98,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
   return <td {...restProps}>{childNode}</td>;
 };
 
-
 class EditableTable extends React.Component<any, any> {
   columns: ({ key: string; title: string; dataIndex: string; width: string; editable: boolean; render?: undefined; } | { key: string; title: string; dataIndex: string; width?: undefined; editable?: undefined; render?: undefined; } | { key: string; title: string; dataIndex: string; render: (text: string, record: any) => JSX.Element | null; width?: undefined; editable?: undefined; })[];
   columnsCustom: any[];
@@ -141,6 +141,7 @@ class EditableTable extends React.Component<any, any> {
     let taskEntriesIndex: number = -1;
     this.state = {
       dataSource: Object.entries(this.props.task).map(([ key, value ]) => {
+        if (['custom', 'feedback'].includes(key)) return null
         taskEntriesIndex += 1
         return {
           key: taskEntriesIndex,
@@ -186,6 +187,33 @@ class EditableTable extends React.Component<any, any> {
     console.log(newData);
   };
 
+  handleSaveCustom = (row: any) => {
+    const newData = [...this.state.dataSourceCustom];
+    const index = newData.findIndex(item => row.key === item.key);
+    const item = newData[index];
+    newData.splice(index, 1, {
+      ...item,
+      ...row,
+    });
+    this.setState({ dataSourceCustom: newData });
+    this.handleSaveToServer(newData);
+  };
+
+  handleSaveToServer(data: any) {
+    const mappedTask = this.mapSavedTask(data)
+    API.updateEvent(mappedTask.id, mappedTask)
+  }
+
+  mapSavedTask(data: any) {
+    return {
+      ...this.props.task,
+      custom: [...data.map(({ point, info } : { point: string; info: string }) => ({
+        [point]: info
+      }))]
+    }
+  }
+
+
   mapColumnsForTable(array: any[]): any {
     array.map(col => {
       if (!col.editable) {
@@ -195,7 +223,6 @@ class EditableTable extends React.Component<any, any> {
       return {
         ...col,
         onCell: (record: any) => {
-        console.log('record = ', record);
         
           return {
           record,
@@ -211,6 +238,9 @@ class EditableTable extends React.Component<any, any> {
   render() {
     const { dataSource, dataSourceCustom } = this.state;
 
+    const filteredDataSource = dataSource.filter((item: null) => item !== null)
+    const filteredDataSourceCustom = dataSourceCustom.filter((item: null) => item !== null)
+
     const components = {
       body: {
         row: EditableRow,
@@ -225,7 +255,6 @@ class EditableTable extends React.Component<any, any> {
       return {
         ...col,
         onCell: (record: any) => {
-        console.log('record = ', record);
         
           return {
           record,
@@ -244,14 +273,13 @@ class EditableTable extends React.Component<any, any> {
       return {
         ...col,
         onCell: (record: any) => {
-        console.log('record = ', record);
         
           return {
           record,
           editable: record.editable,
           dataIndex: col.dataIndex,
           title: col.title,
-          handleSave: this.handleSave,
+          handleSave: this.handleSaveCustom,
         }}
       };
     });
@@ -263,7 +291,7 @@ class EditableTable extends React.Component<any, any> {
           components={components}
           rowClassName={() => 'editable-row'}
           bordered
-          dataSource={dataSource}
+          dataSource={filteredDataSource}
           columns={columns}
         />
         <Table
@@ -272,7 +300,7 @@ class EditableTable extends React.Component<any, any> {
           components={components}
           rowClassName={() => 'editable-row'}
           bordered
-          dataSource={dataSourceCustom}
+          dataSource={filteredDataSourceCustom}
           columns={columnsCustom}
         />
         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
