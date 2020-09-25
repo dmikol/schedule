@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Form, Input } from 'antd'
 import { API } from '../../api/api'
-
+import { ITask } from '../../models'
 import './AddNewLesson.scss'
 
 const layout = {
@@ -58,7 +58,7 @@ class AddNewLesson extends Component<NewLesson> {
     
   }
   handleFormSubmit() {
-    API.addNewEvent(this.state).then(() => {
+    API.addNewEvent(this.state as ITask).then(() => {
     })
     alert('Пункт добавлен!')
   }

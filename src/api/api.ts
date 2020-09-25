@@ -12,7 +12,7 @@ export const API = {
     return instance.get(`events`).then((response) => response.data.data)
   },
 
-  addNewEvent(event: any) {
+  addNewEvent(event: ITask) {
     return instance.post(`event`, event).then((response) => response.data)
   },
 
