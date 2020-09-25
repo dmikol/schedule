@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Table, Input, Button, Popconfirm, Form } from 'antd';
 import { API } from '../../api/api'
+import { ICustom } from '../../models/'
 
 const EditableContext = React.createContext<any>(null);
 
@@ -139,6 +140,7 @@ class EditableTable extends React.Component<any, any> {
       },
     ]
     let taskEntriesIndex: number = -1;
+    
     this.state = {
       dataSource: Object.entries(this.props.task).map(([ key, value ]) => {
         if (['custom', 'feedback'].includes(key)) return null
@@ -151,9 +153,24 @@ class EditableTable extends React.Component<any, any> {
         }
       }),
       count: Object.keys(props.task).length,
-      dataSourceCustom: [],
-      countCustom: 0,
+      dataSourceCustom: this.props.task.custom ? this.mapCustomDataSource(this.props.task.custom) : [],
+      countCustom: this.props.task.custom ? this.props.task.custom.length : 0,
     };
+  }
+
+  mapCustomDataSource(array: any[]) {
+    console.log(array);
+    
+    return array.map((item : ICustom, i: number) => {
+      const key = Object.keys(item)[0]
+      const value = Object.values(item)[0]
+      return {
+        key: i,
+        point: key ? key : 'Отсутствует',
+        info: value ? value : 'Отсутствует',
+        editable: true
+      }
+    }) 
   }
 
   handleDelete = (key: any) => {
@@ -184,7 +201,7 @@ class EditableTable extends React.Component<any, any> {
       ...row,
     });
     this.setState({ dataSource: newData });
-    console.log(newData);
+    this.handleSaveToServer(newData);
   };
 
   handleSaveCustom = (row: any) => {
@@ -201,7 +218,9 @@ class EditableTable extends React.Component<any, any> {
 
   handleSaveToServer(data: any) {
     const mappedTask = this.mapSavedTask(data)
-    API.updateEvent(mappedTask.id, mappedTask)
+    console.log('data = ', data);
+    console.log('mappedTask = ', mappedTask);
+    
   }
 
   mapSavedTask(data: any) {
