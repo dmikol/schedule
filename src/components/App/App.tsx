@@ -124,7 +124,13 @@ const App: FunctionComponent = () => {
         </a>
       </div>
 
-      {mode === 'calendar' && <CalendarView />}
+      {mode === 'calendar' && (
+        <CalendarView
+          type={type}
+          timezone={timezone}
+          onTaskNameClick={handleTaskNameClick}
+        />
+      )}
 
       {mode === 'list' && (
         <ListView type={type} onTaskNameClick={handleTaskNameClick} />

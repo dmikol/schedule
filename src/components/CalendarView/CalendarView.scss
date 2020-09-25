@@ -1,3 +1,19 @@
 .calendar-view {
   padding: 8px;
+
+  ul {
+    padding: 0;
+
+    .ant-badge {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+  }
+}
+
+.ant-popover-inner {
+  max-width: 320px;
 }
