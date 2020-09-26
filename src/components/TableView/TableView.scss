@@ -4,7 +4,7 @@
   padding: 8px;
 }
 
-.table__edit-title {
+.table__edit-titles {
   margin-bottom: 0;
 }
 
@@ -65,4 +65,14 @@
 .ant-table-thead th.hidden,
 .ant-table-tbody td.hidden {
   display: none;
+}
+
+.delete-row {
+  margin: 0px 10px;
+  color: #1890ff;
+
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }

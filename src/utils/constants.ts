@@ -133,5 +133,6 @@ export const CONVERT_TASK_TO_ROW = (task: ITask): IRow => {
     place: task.place || '',
     descriptionUrl: task.descriptionUrl || '',
     comment: task.comment || 'No comments yet',
+    operation: 'delete',
   }
 }

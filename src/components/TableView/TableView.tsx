@@ -17,7 +17,9 @@ type TableViewProps = {
   type: string
   timezone: string
   rows: IRow[]
+  mentorMode: boolean
   columnsState: ColumnState
+  handleDeleteRowClick(deletedRowKey: string): void
   handleChangeColumnsState(newColumnState: ColumnState): void
   handleTaskNameClick(clickedRowKey: string): void
   handleRowClick(clickedRow: IRow, evt: MouseEvent<HTMLElement>): void
@@ -30,7 +32,9 @@ const TableView: FunctionComponent<TableViewProps> = ({
   type,
   timezone,
   rows,
+  mentorMode,
   columnsState,
+  handleDeleteRowClick,
   handleChangeColumnsState,
   handleTaskNameClick,
   handleRowClick,
@@ -51,6 +55,21 @@ const TableView: FunctionComponent<TableViewProps> = ({
 
     return columnItem
   })
+
+  if (mentorMode) {
+    columns.push({
+      title: 'Operation',
+      dataIndex: 'operation',
+      render: (text: string, row: IRow) => (
+        <span
+          className="delete-row"
+          onClick={() => handleDeleteRowClick(row.key)}
+        >
+          {text}
+        </span>
+      ),
+    })
+  }
 
   const columnNames: string[] = columnsState.map((column) =>
     !column.isColumnHidden ? column.title : '',
@@ -107,7 +126,7 @@ const TableView: FunctionComponent<TableViewProps> = ({
 
       <Space direction="vertical">
         <Space>
-          <h3 className="table__edit-title">Отображение колонок:</h3>
+          <h3 className="table__edit-titles">Отображение колонок:</h3>
           <Popover content={popoverContent} trigger="click">
             <Button icon={<InsertRowRightOutlined />}>Изменить</Button>
           </Popover>

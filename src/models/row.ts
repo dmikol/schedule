@@ -12,4 +12,5 @@ export interface IRow {
   place: string
   descriptionUrl: string
   comment: string
+  operation?: string
 }

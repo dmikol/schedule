@@ -17,6 +17,7 @@ import ListView from '../ListView'
 import Sidebar from '../Sidebar'
 import TableView from '../TableView'
 import TaskDescription from '../TaskDescription'
+import AddNewLesson from '../AddNewLesson'
 
 import {
   TYPE_CLASS_NAMES,
@@ -63,6 +64,8 @@ const App: FunctionComponent = () => {
   const [mode, setMode] = useState(TABLE.title)
   const [timezone, setTimezone] = useState(MINSK.zone)
   const [type, setTypeSelected] = useState('All')
+  const [visibleFilesType, setVisibleFilesType] = useState(false)
+  const [visibleLessonForm, setVisibleLessonForm] = useState(false)
 
   useEffect(() => {
     API.getEvents().then((tasksFromApi) => {
@@ -139,10 +142,19 @@ const App: FunctionComponent = () => {
     let { rows, isMessageShown } = rowData
     let isNameClicked = false
     const nameLinks = document.querySelectorAll('.tableView__task-name')
+    const deleteLinks = document.querySelectorAll('span.delete-row')
 
-    nameLinks.forEach((name) => {
-      if (name === evt.target) isNameClicked = true
-    })
+    if (!!nameLinks.length) {
+      nameLinks.forEach((link) => {
+        if (link === evt.target) isNameClicked = true
+      })
+    }
+
+    if (!!deleteLinks.length) {
+      deleteLinks.forEach((link) => {
+        if (link === evt.target) isNameClicked = true
+      })
+    }
 
     if (isNameClicked) {
       message.destroy()
@@ -188,35 +200,38 @@ const App: FunctionComponent = () => {
     setColumnsState(newColumnState)
   }
 
+  const handleDeleteRowClick = (deletedRowKey: string) => {
+    message.destroy()
+    const newRows: IRow[] = rowData.rows.map((row) => {
+      if (row.key === deletedRowKey) {
+        row.title = ''
+        row.date = ''
+        row.time = ''
+        row.organizer = ''
+        row.place = ''
+        row.descriptionUrl = 'Событие удалено'
+        row.comment = ''
+        row.type = ''
+        row.operation = ''
+      }
+      return row
+    })
+    setRowData((state) => ({ ...state, newRows }))
+    // API.deleteEvent(deletedRowKey)
+    console.log(rowData.rows, newRows)
+  }
+
   const onBackToSchedule = () => {
     setMode(TABLE.title)
   }
 
-  let arr = [] as string[]
-  const download = (name: string, type: string) => {
-    if (type === 'txt') {
-      const a = document.getElementById('download') as HTMLAnchorElement
-      const file = new Blob(arr, { type })
-      a.href = URL.createObjectURL(file)
-      a.download = name
-    } else {
-      alert('Извините, но данный формат пока недоступен')
-    }
-  }
-
-  let num = 0
   const visibleLinksDownload = () => {
     const allLinks: any = document.getElementById('download-links')
-    if (num === 0) {
-      allLinks.style.display = 'block'
-      num = 1
-    } else {
-      allLinks.style.display = 'none'
-      num = 0
-    }
+
+    allLinks.style.display = !visibleFilesType ? 'block' : 'none'
 
     taskData.tasks.forEach((task) => {
-      arr.push(`
+      arrayTasksToFile.push(`
       Name: ${task.name},
       Date: ${task.dateTime},
       Url: ${task.descriptionUrl},
@@ -225,7 +240,37 @@ const App: FunctionComponent = () => {
     --------------------------------------------------------------
     `)
     })
+    setVisibleFilesType(!visibleFilesType)
   }
+
+  const arrayTasksToFile = [] as string[]
+  const download = (name: string, type: string) => {
+    if (type === 'txt') {
+      const downloadLink = document.getElementById(
+        'download',
+      ) as HTMLAnchorElement
+      const file = new Blob(arrayTasksToFile, { type })
+      downloadLink.href = URL.createObjectURL(file)
+      downloadLink.download = name
+    } else {
+      alert('Извините, но данный формат пока недоступен')
+    }
+  }
+
+  const tableView = (
+    <TableView
+      type={type}
+      timezone={timezone}
+      rows={rowData.rows}
+      mentorMode={mentorMode}
+      columnsState={columnsState}
+      handleDeleteRowClick={handleDeleteRowClick}
+      handleChangeColumnsState={handleChangeColumnsState}
+      handleTaskNameClick={handleTaskNameClick}
+      handleRowClick={handleRowClick}
+      setRowClassName={setRowClassName}
+    />
+  )
 
   return (
     <div className="app">
@@ -250,12 +295,14 @@ const App: FunctionComponent = () => {
                 <SettingOutlined />
               </Button>
 
-              <Button onClick={() => visibleLinksDownload()}>Download</Button>
+              <Button onClick={visibleLinksDownload}>Download</Button>
 
               {mentorMode && (
-                <Button className="editScheduleButtonStyle">
+                <Button
+                  onClick={() => setVisibleLessonForm(!visibleLessonForm)}
+                >
                   <EditOutlined />
-                  Edit schedule
+                  Add new
                 </Button>
               )}
             </Button.Group>
@@ -276,6 +323,8 @@ const App: FunctionComponent = () => {
         </a>
       </div>
 
+      {mentorMode && <AddNewLesson visibleLessonForm={visibleLessonForm} />}
+
       {mode === CALENDAR.title && <CalendarView />}
 
       {mode === LIST.title && (
@@ -288,18 +337,8 @@ const App: FunctionComponent = () => {
         />
       )}
 
-      {mode === TABLE.title && (
-        <TableView
-          type={type}
-          timezone={timezone}
-          rows={rowData.rows}
-          columnsState={columnsState}
-          handleChangeColumnsState={handleChangeColumnsState}
-          handleTaskNameClick={handleTaskNameClick}
-          handleRowClick={handleRowClick}
-          setRowClassName={setRowClassName}
-        />
-      )}
+      {mode === TABLE.title && mentorMode && tableView}
+      {mode === TABLE.title && !mentorMode && tableView}
 
       {mode === DESCRIPTION.title && clickedTask && (
         <TaskDescription
