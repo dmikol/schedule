@@ -182,8 +182,8 @@ class EditableTable extends React.Component<any, any> {
     const dataSourceCustom = [...this.state.dataSourceCustom];
     this.setState({ dataSourceCustom: dataSourceCustom.filter(item => item.key !== key) });
     const mappedData = this.mapSavedTaskCustom((dataSourceCustom.filter(item => item.key !== key)))
-    console.log(mappedData)
     this.handleSaveToServer(mappedData)
+    this.props.setClickedTask(mappedData)
   };
 
   handleAdd = () => {
@@ -201,6 +201,7 @@ class EditableTable extends React.Component<any, any> {
       task: mappedTask
     });
     API.updateEvent(mappedTask.id, mappedTask)
+    this.props.setClickedTask(mappedTask)
   };
 
   mapNewAddedTask(item: any) {
@@ -235,6 +236,7 @@ class EditableTable extends React.Component<any, any> {
     this.setState({ dataSource: newData });
     const mappedData = this.mapSavedTask(newData)
     this.handleSaveToServer(mappedData);
+    this.props.setClickedTask(mappedData)
   };
 
   handleSaveCustom = (row: any) => {
@@ -248,6 +250,7 @@ class EditableTable extends React.Component<any, any> {
     this.setState({ dataSourceCustom: newData });
     const mappedData = this.mapSavedTaskCustom(newData)
     this.handleSaveToServer(mappedData);
+    this.props.setClickedTask(mappedData)
   };
 
   handleSaveToServer(data: any) {

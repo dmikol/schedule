@@ -1,16 +1,13 @@
 import React, { FunctionComponent, useState } from 'react'
-import { Col, Descriptions, Row, Typography } from 'antd'
+import { Col, Descriptions, Row } from 'antd'
 
 import './TaskDescription.scss'
 
 import { ITask } from '../../models'
 import FeedbackOnTask from '../FeedbackOnTask'
 import LeaveFeedback from '../LeaveFeedback'
-import EditLine from '../EditLine'
 
 import EditableTable from './TaskDescriptionTable'
-
-const { Paragraph } = Typography;
 
 type TaskDescriptionProps = {
   task: ITask
@@ -35,9 +32,6 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
     week,
     photo
   } = task
-
-const [typeStr, setTypeStr] = useState(type)
-const [ nameStr, setnNameStr ] = useState(name)
 
   let link
   if (descriptionUrl) {
@@ -68,7 +62,8 @@ const [ nameStr, setnNameStr ] = useState(name)
       <Col span={20} offset={2}>
         <EditableTable
           task={task}
-          edit={edit}/>
+          edit={edit}
+          setClickedTask={setClickedTask}/>
       </Col>
     </Row>)
   }
@@ -95,7 +90,7 @@ const [ nameStr, setnNameStr ] = useState(name)
       {editableTable}
       <Row key={1}>
         <Col span={20} offset={2}>
-          <Descriptions title={<EditLine isEdit={edit} text={nameStr}/>} bordered>
+          <Descriptions title={name} bordered>
             <Descriptions.Item label="Неделя" span={3}>
               {week || 'Описание отсутствует'}
             </Descriptions.Item>
@@ -109,7 +104,7 @@ const [ nameStr, setnNameStr ] = useState(name)
             </Descriptions.Item>
 
             <Descriptions.Item label="Тип" span={3}>
-              <EditLine isEdit={edit} text={typeStr} />
+              {type || 'Отсутсвует'}
             </Descriptions.Item>
 
             <Descriptions.Item label="Cсылка" span={3} className="task-desc__highlight">
