@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Table } from 'antd'
+import React, { Component, MouseEvent } from 'react'
+import { Table, Button, message } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
 
 import './TableView.scss'
@@ -23,6 +23,7 @@ interface TableRecord {
   date: string
   time: string
   isHighlighted: boolean
+  isHidden: boolean
   type: string
   organizer: string
   place: string
@@ -42,6 +43,7 @@ type TableViewState = {
   columns: ColumnsType<ITask>
   events: ITask[]
   records: TableRecord[]
+  isMessageShown: boolean
 }
 
 class TableView extends Component<TableViewProps, TableViewState> {
@@ -97,6 +99,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
     ],
     events: [] as ITask[],
     records: [] as TableRecord[],
+    isMessageShown: false,
   }
   
   componentDidMount() {
@@ -171,22 +174,91 @@ class TableView extends Component<TableViewProps, TableViewState> {
     if (record.isHighlighted) {
       className += ' highlighted'
     }
+    if (record.isHidden) {
+      className += ' hidden'
+    }
 
     return className
   }
 
-  handleRowClick = (row: TableRecord) => {
-    const records = this.state.records.map((record) => {
-      if (record.key === row.key) {
-        record.isHighlighted = !row.isHighlighted
-      } else {
-        record.isHighlighted = false
+  hideRows = () => {
+    const records = this.state.records.map((event) => {
+      if (event.isHighlighted) {
+        event.isHidden = true
+        event.isHighlighted = false
       }
-
-      return record
+      return event
     })
 
-    this.setState({ records })
+    message.destroy()
+
+    const isMessageShown = false
+    this.setState(() => ({ records, isMessageShown }))
+  }
+
+  showRows = (clickedRecord: TableRecord) => {
+    const records = this.state.records.map((record) => {
+      if (record.key === clickedRecord.key) record.isHidden = false
+      return record
+    })
+    this.setState(() => ({ records }))
+  }
+
+  showMessageToHideRows = (record: TableRecord) => {
+    const BtnHideRows = () => (
+      <div className="message__btn">
+        <Button onClick={() => this.hideRows()}>Скрыть выделенные ряды</Button>
+      </div>
+    )
+
+    message.open({
+      type: 'info',
+      duration: 0,
+      content: null,
+      icon: <BtnHideRows />,
+      className: 'message',
+      key: record.key,
+    })
+  }
+
+  handleRowClick = (row: TableRecord, evt: MouseEvent<HTMLElement>) => {
+    let { isMessageShown } = this.state
+    let isNameClicked = false
+    const nameLinks = document.querySelectorAll('.tableView__task-name')
+
+    nameLinks.forEach((name) => {
+      if (name === evt.target) isNameClicked = true
+    })
+
+    if (isNameClicked) {
+      message.destroy()
+      isMessageShown = false
+    } else {
+      if (row.isHidden) {
+        this.showRows(row)
+      } else {
+        if (!isMessageShown) {
+          this.showMessageToHideRows(row)
+          isMessageShown = true
+        }
+
+        const records = this.state.records.map((record) => {
+          if (record.key === row.key) {
+            if (record.isHighlighted) message.destroy()
+
+            record.isHighlighted = !record.isHighlighted
+          } else if (!evt.shiftKey) {
+            record.isHighlighted = false
+          }
+          return record
+        })
+
+        const highlightedRows = records.filter((event) => event.isHighlighted)
+        if (highlightedRows.length < 1) isMessageShown = false
+
+        this.setState(() => ({ records, isMessageShown }))
+      }
+    }
   }
 
   handleTaskClick = (id: string) => {
@@ -202,6 +274,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
     return {
       key: event.id,
       isHighlighted: false,
+      isHidden: false,
       title: event.name,
       date: event.dateTime ? event.dateTime.slice(6) : '',
       time: event.dateTime ? event.dateTime.slice(0, 5) : '',
@@ -230,7 +303,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
           pagination={false}
           scroll={{ x: '100%' }}
           onRow={(row) => ({
-            onClick: () => this.handleRowClick(row),
+            onClick: (evt) => this.handleRowClick(row, evt),
           })}
           
         />
