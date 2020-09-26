@@ -64,7 +64,7 @@ const [ nameStr, setnNameStr ] = useState(name)
 
   let editableTable = null
   if (edit) {
-    editableTable = (<Row>
+    editableTable = (<Row key={0}>
       <Col span={20} offset={2}>
         <EditableTable
           task={task}
@@ -80,11 +80,11 @@ const [ nameStr, setnNameStr ] = useState(name)
       const key = Object.keys(item)[0]
       const value = Object.values(item)[0]
       return (
-        <>
-            <Descriptions.Item label={key} span={3} key={key+i+value}>
+        <React.Fragment key={i}>
+            <Descriptions.Item label={key} span={3}>
               {value || 'Описание отсутствует'}
             </Descriptions.Item>
-        </>
+        </React.Fragment>
       )
     })
   }
@@ -93,7 +93,7 @@ const [ nameStr, setnNameStr ] = useState(name)
   return (
     <>
       {editableTable}
-      <Row>
+      <Row key={1}>
         <Col span={20} offset={2}>
           <Descriptions title={<EditLine isEdit={edit} text={nameStr}/>} bordered>
             <Descriptions.Item label="Неделя" span={3}>
@@ -148,13 +148,13 @@ const [ nameStr, setnNameStr ] = useState(name)
         </Col>
       </Row>
       
-      <Row>
+      <Row key={2}>
         <Col span={20} offset={2}>
           <FeedbackOnTask feedback={task.feedback} />
         </Col>
       </Row>
 
-      <Row>
+      <Row key={3}>
         <Col span={20} offset={2}>
           {((task.feedback && task.feedback.isFeedback) || !task.feedback) && (
             <LeaveFeedback task={task} setClickedTask={setClickedTask} />
