@@ -12,6 +12,7 @@ import ListView from '../ListView'
 import Sidebar from '../Sidebar'
 import TableView from '../TableView'
 import TaskDescription from '../TaskDescription'
+import AddNewLesson from '../AddNewLesson'
 
 const App: FunctionComponent = () => {
   const [clickedTask, setClickedTask] = useState<ITask | null>(null)
@@ -20,6 +21,8 @@ const App: FunctionComponent = () => {
   const [mode, setMode] = useState('table')
   const [timezone, setTimezone] = useState('+0Minsk')
   const [type, setTypeSelected] = useState('All')
+  const [visibleFilesType, setVisibleFilesType] = useState(false)
+  const [visibleLessonForm, setVisibleLessonForm] = useState(false)
 
   const handleModeChange = (selectedMode: string) => {
     setMode(selectedMode)
@@ -37,44 +40,47 @@ const App: FunctionComponent = () => {
     setMode('description')
     setClickedTask(task)
   }
-
+  
   const onBackToSchedule = () => {
     setMode('table')
   }
+  const visibleLinksDownload = () => {
+    
+    const allLinks: any = document.getElementById('download-links')
+    if (!visibleFilesType) {
+      allLinks.style.display = 'block'
+    } else {
+      allLinks.style.display = 'none'
+    }
 
-  let arr = [] as string[]
+  }
+
+  API.getEvents().then((response) => {
+    response.forEach((event) => {
+      arrayTasksToFile.push(` Name: ${event.name}, Date: ${event.dateTime}, 
+    Url: ${event.descriptionUrl}, Description: ${event.description}
+    --------------------------------------------------------------
+    `)
+    })
+  })
+
+  let arrayTasksToFile = [] as string[]
   const download = (name: string, type: string) => {
     if (type === 'txt') {
-      const a = document.getElementById('download') as HTMLAnchorElement
-      const file = new Blob(arr, { type })
-      a.href = URL.createObjectURL(file)
-      a.download = name
+      const downloadLink = document.getElementById('download') as HTMLAnchorElement
+      const file = new Blob(arrayTasksToFile, { type })
+      downloadLink.href = URL.createObjectURL(file)
+      downloadLink.download = name
     } else {
       alert('Извините, но данный формат пока недоступен')
     }
   }
-
-  let num = 0
-  const visibleLinksDownload = () => {
-    const allLinks: any = document.getElementById('download-links')
-    if (num === 0) {
-      allLinks.style.display = 'block'
-      num = 1
-    } else {
-      allLinks.style.display = 'none'
-      num = 0
-    }
-
-    API.getEvents().then((response) => {
-      response.forEach((event) => {
-        arr.push(` Name: ${event.name}, Date: ${event.dateTime}, 
-      Url: ${event.descriptionUrl}, Description: ${event.description}
-      --------------------------------------------------------------
-      `)
-      })
-    })
-  }
-
+  let table = <TableView
+    type={type}
+    onTaskNameClick={handleTaskNameClick}
+    timezone={timezone}
+    mentorMode={mentorMode}
+  />
   return (
     <div className="app">
       <Header mentorMode={mentorMode} setMentorMode={setMentorMode} />
@@ -98,12 +104,19 @@ const App: FunctionComponent = () => {
                 <SettingOutlined />
               </Button>
 
-              <Button onClick={() => visibleLinksDownload()}>Download</Button>
+              <Button 
+              onClick={() => {
+                visibleLinksDownload();
+                setVisibleFilesType(!visibleFilesType) 
+              }}
+              >
+              Download</Button>
 
               {mentorMode && (
-                <Button className="editScheduleButtonStyle">
+                <Button 
+                onClick={() => setVisibleLessonForm(!visibleLessonForm)}>
                   <EditOutlined />
-                  Edit schedule
+                  Add new
                 </Button>
               )}
             </Button.Group>
@@ -114,9 +127,8 @@ const App: FunctionComponent = () => {
       </Row>
 
       <div id="download-links">
-        <a
+        <a id="download"
           href=" "
-          id="download"
           onClick={() => download('schedule.txt', 'txt')}
           download
         >
@@ -124,18 +136,25 @@ const App: FunctionComponent = () => {
         </a>
       </div>
 
+      {mentorMode && (
+      <AddNewLesson 
+        visibleLessonForm={visibleLessonForm}
+      />
+      )}
+
       {mode === 'calendar' && <CalendarView />}
 
       {mode === 'list' && (
         <ListView type={type} onTaskNameClick={handleTaskNameClick} />
       )}
 
-      {mode === 'table' && (
-        <TableView
-          type={type}
-          onTaskNameClick={handleTaskNameClick}
-          timezone={timezone}
-        />
+      
+
+      {mode === 'table' && mentorMode && (
+        table
+      )}
+      {mode === 'table' && !mentorMode && (
+        table
       )}
 
       {mode === 'description' && clickedTask && (

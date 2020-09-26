@@ -47,13 +47,12 @@ $rows: (
       border-color: $default-bg;
     }
   }
-
-  #download-links{
+}
+#download-links{
     display: none;
     margin-top: 15px;
 
-    & a {
-      margin-left: 6px;
-    }
+  & a {
+    margin-left: 6px;
   }
 }
