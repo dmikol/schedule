@@ -140,21 +140,26 @@ class EditableTable extends React.Component<any, any> {
       },
     ]
     let taskEntriesIndex: number = -1;
-    
-    this.state = {
-      dataSource: Object.entries(this.props.task).map(([ key, value ]) => {
-        if (['custom', 'feedback'].includes(key)) return null
+
+    const mapDataSource = (data: any) => {
+      return Object.entries(data).map(([ key, value ]) => {
+        if (['custom', 'feedback', 'id'].includes(key)) return null
         taskEntriesIndex += 1
         return {
           key: taskEntriesIndex,
           point: key,
           info: value ? value : 'Отсутствует',
-          editable: key === 'id' ? false : true
+          editable: true
         }
-      }),
+      })
+    }
+    
+    this.state = {
+      dataSource: mapDataSource(this.props.task).filter((item) => item !== null),
       count: Object.keys(props.task).length,
       dataSourceCustom: this.props.task.custom ? this.mapCustomDataSource(this.props.task.custom) : [],
       countCustom: this.props.task.custom ? this.props.task.custom.length : 0,
+      task: props.task
     };
   }
 
@@ -176,6 +181,9 @@ class EditableTable extends React.Component<any, any> {
   handleDelete = (key: any) => {
     const dataSourceCustom = [...this.state.dataSourceCustom];
     this.setState({ dataSourceCustom: dataSourceCustom.filter(item => item.key !== key) });
+    const mappedData = this.mapSavedTaskCustom((dataSourceCustom.filter(item => item.key !== key)))
+    console.log(mappedData)
+    this.handleSaveToServer(mappedData)
   };
 
   handleAdd = () => {
@@ -186,11 +194,35 @@ class EditableTable extends React.Component<any, any> {
       info: 'Описание пункта задания',
       editable: true
     };
+    const mappedTask = this.mapNewAddedTask(newData)
     this.setState({
       dataSourceCustom: [...dataSourceCustom, newData],
       countCustom: countCustom + 1,
+      task: mappedTask
     });
+    API.updateEvent(mappedTask.id, mappedTask)
   };
+
+  mapNewAddedTask(item: any) {
+    const { task } = this.state
+    const { point, info } = item
+    let tempCustom
+
+    if(task.custom) {
+      tempCustom = [
+        ...task.custom,
+        { [point]: info}
+      ]
+    } else {
+      tempCustom = [{[point]: info}]
+    }
+    console.log('tempCustom = ', tempCustom);
+    
+    return {
+      ...task,
+      custom: tempCustom
+    }
+  }
 
   handleSave = (row: any) => {
     const newData = [...this.state.dataSource];
@@ -201,7 +233,8 @@ class EditableTable extends React.Component<any, any> {
       ...row,
     });
     this.setState({ dataSource: newData });
-    this.handleSaveToServer(newData);
+    const mappedData = this.mapSavedTask(newData)
+    this.handleSaveToServer(mappedData);
   };
 
   handleSaveCustom = (row: any) => {
@@ -213,17 +246,15 @@ class EditableTable extends React.Component<any, any> {
       ...row,
     });
     this.setState({ dataSourceCustom: newData });
-    this.handleSaveToServer(newData);
+    const mappedData = this.mapSavedTaskCustom(newData)
+    this.handleSaveToServer(mappedData);
   };
 
   handleSaveToServer(data: any) {
-    const mappedTask = this.mapSavedTask(data)
-    console.log('data = ', data);
-    console.log('mappedTask = ', mappedTask);
-    
+    API.updateEvent(data.id, data)
   }
 
-  mapSavedTask(data: any) {
+  mapSavedTaskCustom(data: any) {
     return {
       ...this.props.task,
       custom: [...data.map(({ point, info } : { point: string; info: string }) => ({
@@ -232,6 +263,15 @@ class EditableTable extends React.Component<any, any> {
     }
   }
 
+  mapSavedTask(data: any) {
+    return {
+      ...this.props.task,
+      ...data.reduce((acc: any, { point, info } : { point: string; info: string }) => ({
+        ...acc,
+        [point]: info
+      }), {})
+    }
+  }
 
   mapColumnsForTable(array: any[]): any {
     array.map(col => {

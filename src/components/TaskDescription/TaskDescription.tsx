@@ -77,15 +77,11 @@ const [ nameStr, setnNameStr ] = useState(name)
 
   if(task.custom) {
     customTaskFields = task.custom.map((item, i) => {
-      console.log(item);
-      console.log('Object.entries(item)[0] = ',Object.entries(item)[0][0]);
-      console.log('Object.entries(item)[1] = ',Object.entries(item)[0][1]);
-      
       const key = Object.keys(item)[0]
       const value = Object.values(item)[0]
       return (
         <>
-            <Descriptions.Item label={key} span={3} key={i}>
+            <Descriptions.Item label={key} span={3} key={key+i+value}>
               {value || 'Описание отсутствует'}
             </Descriptions.Item>
         </>
