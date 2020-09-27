@@ -35,10 +35,6 @@ const columnsData: ColumnState = Object.values(COLUMNS_DATA).map(
   }),
 )
 
-type TaskData = {
-  tasks: ITask[]
-}
-
 type RowData = {
   rows: IRow[]
   isMessageShown: boolean
@@ -50,9 +46,7 @@ type ColumnState = {
 }[]
 
 const App: FunctionComponent = () => {
-  const [taskData, setTaskData] = useState<TaskData>({
-    tasks: [] as ITask[],
-  })
+  const [taskData, setTaskData] = useState<ITask[]>([])
   const [rowData, setRowData] = useState<RowData>({
     rows: [] as IRow[],
     isMessageShown: false,
@@ -71,10 +65,18 @@ const App: FunctionComponent = () => {
     API.getEvents().then((tasksFromApi) => {
       const rows = tasksFromApi.map((task) => CONVERT_TASK_TO_ROW(task))
 
-      setTaskData({ tasks: tasksFromApi })
+      setTaskData(tasksFromApi)
       setRowData((state) => ({ ...state, rows }))
     })
   }, [])
+
+  useEffect(() => {
+    API.getEvents().then((tasksFromApi) => {
+      const rows = tasksFromApi.map((task) => CONVERT_TASK_TO_ROW(task))
+
+      setRowData((state) => ({ ...state, rows }))
+    })
+  }, [taskData])
 
   const handleModeChange = (selectedMode: string) => {
     setMode(selectedMode)
@@ -89,8 +91,7 @@ const App: FunctionComponent = () => {
   }
 
   const handleTaskNameClick = (clickedRowKey: string) => {
-    const { tasks } = taskData
-    const task = tasks.find((task) => task.id === clickedRowKey)
+    const task = taskData.find((task) => task.id === clickedRowKey)
 
     if (task) {
       setMode(DESCRIPTION.title)
@@ -201,7 +202,6 @@ const App: FunctionComponent = () => {
   }
 
   const handleDeleteRowClick = (deletedRowKey: string) => {
-    message.destroy()
     const newRows: IRow[] = rowData.rows.map((row) => {
       if (row.key === deletedRowKey) {
         row.title = ''
@@ -217,8 +217,7 @@ const App: FunctionComponent = () => {
       return row
     })
     setRowData((state) => ({ ...state, newRows }))
-    // API.deleteEvent(deletedRowKey)
-    console.log(rowData.rows, newRows)
+    API.deleteEvent(deletedRowKey)
   }
 
   const onBackToSchedule = () => {
@@ -230,7 +229,7 @@ const App: FunctionComponent = () => {
 
     allLinks.style.display = !visibleFilesType ? 'block' : 'none'
 
-    taskData.tasks.forEach((task) => {
+    taskData.forEach((task) => {
       arrayTasksToFile.push(`
       Name: ${task.name},
       Date: ${task.dateTime},
@@ -255,6 +254,21 @@ const App: FunctionComponent = () => {
     } else {
       alert('Извините, но данный формат пока недоступен')
     }
+  }
+
+  const handleAddNewTask = (newTask: ITask) => {
+    const newTaskData = [...taskData]
+
+    API.addNewEvent(newTask).then((response) => {
+      const updatedNewTask = {
+        ...newTask,
+        id: response.id,
+      }
+
+      newTaskData.push(updatedNewTask)
+      setTaskData(newTaskData)
+      alert('Событие добавлено!')
+    })
   }
 
   const tableView = (
@@ -323,7 +337,12 @@ const App: FunctionComponent = () => {
         </a>
       </div>
 
-      {mentorMode && <AddNewLesson visibleLessonForm={visibleLessonForm} />}
+      {mentorMode && (
+        <AddNewLesson
+          visibleLessonForm={visibleLessonForm}
+          handleAddNewTask={handleAddNewTask}
+        />
+      )}
 
       {mode === CALENDAR.title && <CalendarView />}
 
