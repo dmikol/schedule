@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, DatePicker } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { ITask } from '../../models'
 import './AddNewLesson.scss'
@@ -12,6 +12,9 @@ const layout = {
 const validateMessages = {
   required: 'Введите корректное значение',
 }
+
+let dateTimeNum = ''
+
 type NewLesson = {
   visibleLessonForm: boolean
   handleAddNewTask(values: object): void
@@ -22,6 +25,7 @@ class AddNewLesson extends Component<NewLesson> {
     super(props)
     this.myRefForm = React.createRef()
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
+    this.onChangeDate = this.onChangeDate.bind(this)
   }
 
   form = React.createRef<FormInstance>()
@@ -58,10 +62,15 @@ class AddNewLesson extends Component<NewLesson> {
     }
   }
 
+  onChangeDate(value: any, dateString: string) {
+    dateTimeNum = dateString
+  }
+
   handleFormSubmit(inputValues: object) {
     const newTask: ITask = {
       ...this.templateNewTask,
       ...inputValues,
+      dateTime: dateTimeNum,
     }
 
     this.props.handleAddNewTask(newTask)
@@ -73,6 +82,17 @@ class AddNewLesson extends Component<NewLesson> {
     return (
       <div className="addNewLessonForm" ref={this.myRefForm}>
         <h3>Добавление нового пункта в расписание</h3>
+
+        <span className="date-time">
+          <span className="red-star">*</span>
+          Date and Time:
+        </span>
+        <DatePicker
+          showTime
+          onChange={this.onChangeDate}
+          format="HH:mm DD-MM-YYYY"
+        />
+
         <Form
           {...layout}
           ref={this.form}
@@ -81,13 +101,6 @@ class AddNewLesson extends Component<NewLesson> {
           validateMessages={validateMessages}
           onFinish={this.handleFormSubmit}
         >
-          <Form.Item
-            name="dateTime"
-            label="Date and Time"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
           <Form.Item name="type" label="Type" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
