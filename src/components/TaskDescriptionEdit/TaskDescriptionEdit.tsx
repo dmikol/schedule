@@ -222,7 +222,6 @@ class TaskDescriptionEdit extends React.Component<any, any> {
 
   onChangeDate = (value: any, dateString: string) => {
     const { task } = this.props
-    console.log('no change -------------------')
 
     const taskToUpdate = {
       ...task,
@@ -256,6 +255,9 @@ class TaskDescriptionEdit extends React.Component<any, any> {
         data: task.feedback ? task.feedback.data : [],
       },
     }
+
+    this.setState({task: taskToUpdate})
+    
     this.handleSaveToServer(taskToUpdate)
     this.props.setClickedTask(taskToUpdate)
   }
@@ -308,7 +310,15 @@ class TaskDescriptionEdit extends React.Component<any, any> {
   }
 
   handleSave = (row: any) => {
+  
     const data = [...this.state.dataSource]
+
+    const index = data.findIndex((item) => row.key === item.key)
+    const item = data[index]
+    data.splice(index, 1, {
+      ...item,
+      ...row,
+    })
     const filterdFromDatePickerData = data.filter(
       (item) => item.point !== 'dateTime',
     )
@@ -323,28 +333,8 @@ class TaskDescriptionEdit extends React.Component<any, any> {
         editable: dataPickerItem.editable,
       },
     ]
-    const dataToState = [
-      ...filterdFromDatePickerData,
-      {
-        key: dataPickerItem.key,
-        info: (
-          <DatePicker
-            showTime
-            onChange={this.onChangeDate}
-            format="HH:mm DD-MM-YYYY"
-          />
-        ),
-        point: dataPickerItem.point,
-        editable: dataPickerItem.editable,
-      },
-    ]
-    const index = dataToState.findIndex((item) => row.key === item.key)
-    const item = dataToState[index]
-    dataToState.splice(index, 1, {
-      ...item,
-      ...row,
-    })
-    this.setState({ dataSource: dataToState })
+    
+    this.setState({ dataSource: data })
     const mappedData = this.mapSavedTask(newDataToBeMapped)
     this.handleSaveToServer(mappedData)
     this.props.setClickedTask(mappedData)
