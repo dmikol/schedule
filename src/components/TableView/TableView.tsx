@@ -271,6 +271,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
   }
 
   mapEventToTableRecord = (event: ITask): TableRecord => {
+
     return {
       key: event.id,
       isHighlighted: false,

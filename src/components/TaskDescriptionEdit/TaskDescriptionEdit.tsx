@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Table, Input, Button, Popconfirm, Form, Checkbox } from 'antd';
+import { Table, Input, Button, Popconfirm, Form, Checkbox, DatePicker } from 'antd';
 import { API } from '../../api/api'
 import { ICustom } from '../../models'
 
@@ -148,8 +148,13 @@ class TaskDescriptionEdit extends React.Component<any, any> {
         return {
           key: taskEntriesIndex,
           point: key,
-          info: value ? value : 'Отсутствует',
-          editable: true
+          info: key === 'dateTime' ? 
+            <DatePicker 
+            showTime 
+            onChange={this.onChangeDate} 
+            format="HH:mm DD-MM-YYYY"
+            /> : (value ? value : 'Отсутствует'),
+          editable: key === 'dateTime' ? false : true
         }
       })
     }
@@ -161,6 +166,18 @@ class TaskDescriptionEdit extends React.Component<any, any> {
       countCustom: this.props.task.custom ? this.props.task.custom.length : 0,
       task: props.task
     };
+  }
+
+  onChangeDate = (value: any, dateString: string) => {
+    const { task } = this.props
+
+    const taskToUpdate = {
+      ...task,
+      dateTime: dateString
+    }
+
+    this.handleSaveToServer(taskToUpdate)
+    this.props.setClickedTask(taskToUpdate)
   }
 
   mapCustomDataSource(array: any[]) {   

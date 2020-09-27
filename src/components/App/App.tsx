@@ -38,6 +38,7 @@ const App: FunctionComponent = () => {
   }
 
   const handleTaskNameClick = (task: ITask) => {
+    visibleLessonForm && setVisibleLessonForm(false) 
     setMode('description')
     setClickedTask(task)
   }

@@ -14,7 +14,6 @@ type FeedbackOnTaskProps = {
 const FeedbackOnTask: FunctionComponent<FeedbackOnTaskProps> = ({
   feedback,
 }) => {
-  let feedBackContent = null
 
   const generateFeedbackCard = (data: IFeedback[]) => {
     return data.map((item, i) => (
@@ -24,10 +23,10 @@ const FeedbackOnTask: FunctionComponent<FeedbackOnTaskProps> = ({
     ))
   }
 
+  let feedBackContent = null
+
   if (feedback && feedback.data.length) {
     feedBackContent = generateFeedbackCard(feedback.data)
-  } else {
-    feedBackContent = <h4>Пока еще никто не оставил свой отзыв...</h4>
   }
 
   let feedbackComponent = null
@@ -36,11 +35,11 @@ const FeedbackOnTask: FunctionComponent<FeedbackOnTaskProps> = ({
     feedbackComponent = (
       <div className="site-card-border-less-wrapper feedbackOnTask">
         <h2>Отзывы о задании: </h2>
-        {feedBackContent}
+        {feedBackContent ? feedBackContent : <h4>Пока еще никто не оставил свой отзыв...</h4>}
       </div>
     )
   }
-
+  
   return feedbackComponent
 }
 
