@@ -344,7 +344,15 @@ const App: FunctionComponent = () => {
         />
       )}
 
-      {mode === CALENDAR.title && <CalendarView />}
+      {/* {mode === CALENDAR.title && <CalendarView />} */}
+      {mode === CALENDAR.title && (
+        <CalendarView
+          type={type}
+          timezone={timezone}
+          events={taskData}
+          handleTaskNameClick={handleTaskNameClick}
+        />
+      )}
 
       {mode === LIST.title && (
         <ListView
