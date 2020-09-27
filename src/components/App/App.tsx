@@ -13,6 +13,7 @@ import Sidebar from '../Sidebar'
 import TableView from '../TableView'
 import TaskDescription from '../TaskDescription'
 import AddNewLesson from '../AddNewLesson'
+import Spinner from '../Spinner'
 
 const App: FunctionComponent = () => {
   const [clickedTask, setClickedTask] = useState<ITask | null>(null)
@@ -24,6 +25,7 @@ const App: FunctionComponent = () => {
   const [edit, setEdit] = useState(false)
   const [visibleFilesType, setVisibleFilesType] = useState(false)
   const [visibleLessonForm, setVisibleLessonForm] = useState(false)
+  const [loading] = useState(false)
 
   const handleModeChange = (selectedMode: string) => {
     setMode(selectedMode)
@@ -89,7 +91,8 @@ const App: FunctionComponent = () => {
     mentorMode={mentorMode}
   />
   return (
-    <div className="app">
+    <div className={loading ? 'app spinner__wrapper' : 'app'}>
+      {loading && <Spinner />}
       <Header mentorMode={mentorMode} setMentorMode={setMentorMode} />
 
       <Row>
