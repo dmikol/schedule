@@ -36,6 +36,8 @@ const columnsData: ColumnState = Object.values(COLUMNS_DATA).map(
   }),
 )
 
+const arrayTasksToFile = [] as string[]
+
 type RowData = {
   rows: IRow[]
   isMessageShown: boolean
@@ -257,7 +259,6 @@ const App: FunctionComponent = () => {
     setVisibleFilesType(!visibleFilesType)
   }
 
-  const arrayTasksToFile = [] as string[]
   const download = (name: string, type: string) => {
     if (type === 'txt') {
       const downloadLink = document.getElementById(
