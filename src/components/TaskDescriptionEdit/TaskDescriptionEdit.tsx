@@ -255,6 +255,9 @@ class TaskDescriptionEdit extends React.Component<any, any> {
         data: task.feedback ? task.feedback.data : [],
       },
     }
+
+    this.setState({task: taskToUpdate})
+    
     this.handleSaveToServer(taskToUpdate)
     this.props.setClickedTask(taskToUpdate)
   }
