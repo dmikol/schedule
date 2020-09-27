@@ -41,10 +41,11 @@ const App: FunctionComponent = () => {
 
   const onBackToSchedule = () => {
     setMode('table')
+    setEdit(false)
   }
 
   const onEditClick = () => {
-    setEdit(true)
+    setEdit(!edit)
   }
 
   let arr = [] as string[]
@@ -106,7 +107,8 @@ const App: FunctionComponent = () => {
               <Button onClick={() => visibleLinksDownload()}>Download</Button>
 
               {mentorMode && (
-                <Button 
+                <Button
+                  type={edit ? "primary" : "default"}
                   className="editScheduleButtonStyle"
                   onClick={onEditClick}>
                     <EditOutlined />

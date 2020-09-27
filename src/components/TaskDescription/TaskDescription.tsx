@@ -7,7 +7,7 @@ import { ITask } from '../../models'
 import FeedbackOnTask from '../FeedbackOnTask'
 import LeaveFeedback from '../LeaveFeedback'
 
-import EditableTable from './TaskDescriptionTable'
+import TaskDescriptionEdit from '../TaskDescriptionEdit'
 
 type TaskDescriptionProps = {
   task: ITask
@@ -60,7 +60,7 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
   if (edit) {
     editableTable = (<Row key={0}>
       <Col span={20} offset={2}>
-        <EditableTable
+        <TaskDescriptionEdit
           task={task}
           edit={edit}
           setClickedTask={setClickedTask}/>

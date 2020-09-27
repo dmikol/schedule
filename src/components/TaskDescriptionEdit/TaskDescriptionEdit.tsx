@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Table, Input, Button, Popconfirm, Form } from 'antd';
 import { API } from '../../api/api'
-import { ICustom } from '../../models/'
+import { ICustom } from '../../models'
 
 const EditableContext = React.createContext<any>(null);
 
@@ -99,7 +99,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   return <td {...restProps}>{childNode}</td>;
 };
 
-class EditableTable extends React.Component<any, any> {
+class TaskDescriptionEdit extends React.Component<any, any> {
   columns: ({ key: string; title: string; dataIndex: string; width: string; editable: boolean; render?: undefined; } | { key: string; title: string; dataIndex: string; width?: undefined; editable?: undefined; render?: undefined; } | { key: string; title: string; dataIndex: string; render: (text: string, record: any) => JSX.Element | null; width?: undefined; editable?: undefined; })[];
   columnsCustom: any[];
   constructor(props: any) {
@@ -163,9 +163,7 @@ class EditableTable extends React.Component<any, any> {
     };
   }
 
-  mapCustomDataSource(array: any[]) {
-    console.log(array);
-    
+  mapCustomDataSource(array: any[]) {   
     return array.map((item : ICustom, i: number) => {
       const key = Object.keys(item)[0]
       const value = Object.values(item)[0]
@@ -217,7 +215,6 @@ class EditableTable extends React.Component<any, any> {
     } else {
       tempCustom = [{[point]: info}]
     }
-    console.log('tempCustom = ', tempCustom);
     
     return {
       ...task,
@@ -365,7 +362,7 @@ class EditableTable extends React.Component<any, any> {
           dataSource={filteredDataSourceCustom}
           columns={columnsCustom}
         />
-        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+        <Button onClick={this.handleAdd} type="dashed" style={{ marginBottom: 16, marginTop: 10 }}>
           Add a row
         </Button>
       </div>
@@ -373,4 +370,4 @@ class EditableTable extends React.Component<any, any> {
   }
 }
 
-export default EditableTable;
+export default TaskDescriptionEdit;
