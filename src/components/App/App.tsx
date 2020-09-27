@@ -118,7 +118,7 @@ const App: FunctionComponent = () => {
               >
               Download</Button>
 
-              {mentorMode && (
+              {(mentorMode && mode === 'description') && (
                 <Button
                   type={edit ? "primary" : "default"}
                   className="editScheduleButtonStyle"
