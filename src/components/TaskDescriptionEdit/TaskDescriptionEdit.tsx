@@ -286,7 +286,7 @@ class TaskDescriptionEdit extends React.Component<any, any> {
       countCustom: countCustom + 1,
       task: mappedTask,
     })
-    this.handleSaveToServer(mappedTask)
+    API.updateEvent(mappedTask.id, mappedTask)
     this.props.setClickedTask(mappedTask)
   }
 
