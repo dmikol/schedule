@@ -58,6 +58,7 @@ const App: FunctionComponent = () => {
   const [mode, setMode] = useState(TABLE.title)
   const [timezone, setTimezone] = useState(MINSK.zone)
   const [type, setTypeSelected] = useState('All')
+  const [edit, setEdit] = useState<boolean>(false)
   const [visibleFilesType, setVisibleFilesType] = useState(false)
   const [visibleLessonForm, setVisibleLessonForm] = useState(false)
 
@@ -92,6 +93,8 @@ const App: FunctionComponent = () => {
 
   const handleTaskNameClick = (clickedRowKey: string) => {
     const task = taskData.find((task) => task.id === clickedRowKey)
+
+    visibleLessonForm && setVisibleLessonForm(false)
 
     if (task) {
       setMode(DESCRIPTION.title)
@@ -222,6 +225,11 @@ const App: FunctionComponent = () => {
 
   const onBackToSchedule = () => {
     setMode(TABLE.title)
+    setEdit(false)
+  }
+
+  const onEditClick = () => {
+    setEdit(!edit)
   }
 
   const visibleLinksDownload = () => {
@@ -311,12 +319,23 @@ const App: FunctionComponent = () => {
 
               <Button onClick={visibleLinksDownload}>Download</Button>
 
-              {mentorMode && (
+              {mentorMode && mode === DESCRIPTION.title && (
+                <Button
+                  type={edit ? 'primary' : 'default'}
+                  className="editScheduleButtonStyle"
+                  onClick={onEditClick}
+                >
+                  <EditOutlined />
+                  Edit schedule
+                </Button>
+              )}
+
+              {mentorMode && mode !== DESCRIPTION.title && (
                 <Button
                   onClick={() => setVisibleLessonForm(!visibleLessonForm)}
                 >
                   <EditOutlined />
-                  Add new
+                  Add new event
                 </Button>
               )}
             </Button.Group>
@@ -372,6 +391,7 @@ const App: FunctionComponent = () => {
           task={clickedTask}
           setClickedTask={setClickedTask}
           timezone={timezone}
+          edit={edit}
         />
       )}
     </div>

@@ -1,4 +1,5 @@
 import { IFeedback } from '.'
+import { ICustom } from '.'
 
 export interface ITask {
   comment: string
@@ -19,4 +20,5 @@ export interface ITask {
   photo: string
   isHidden?: boolean
   isHighlighted?: boolean
+  custom?: ICustom[]
 }
