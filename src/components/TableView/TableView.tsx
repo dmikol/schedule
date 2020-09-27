@@ -14,6 +14,7 @@ const typeClassNames: any = {
   'Self education': 'row-self-education',
   'Митап в Минске': 'row-meetup',
   Deadline: 'row-deadline',
+
 }
 
 interface TableRecord {
@@ -28,12 +29,14 @@ interface TableRecord {
   place: string
   descriptionUrl: string
   comment: string
+  operation: string
 }
 
 type TableViewProps = {
   type: string
   onTaskNameClick(task: ITask): void
   timezone: string
+  mentorMode: boolean
 }
 
 type TableViewState = {
@@ -98,7 +101,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
     records: [] as TableRecord[],
     isMessageShown: false,
   }
-
+  
   componentDidMount() {
     API.getEvents().then((events) => {
       this.setState({
@@ -106,7 +109,64 @@ class TableView extends Component<TableViewProps, TableViewState> {
         records: events.map(this.mapEventToTableRecord),
       })
     })
+    let arrayColumns = this.state.columns;
+    if(this.props.mentorMode){
+      arrayColumns.push({
+        title: 'Operation',
+        dataIndex: 'operation',
+        render: (text: string, record: any) => (
+          <span className="delete-row"
+            onClick={() => this.deleteRowClick(record)}
+          >
+            {text}
+          </span>
+        ),
+      })
+      this.setState({columns: arrayColumns})
+    }
   }
+  componentDidUpdate(prevProps: any){
+    let arrayColumns = this.state.columns;
+    if (this.props.mentorMode !== prevProps.mentorMode) {
+      if(this.props.mentorMode){
+        arrayColumns.push({
+          title: 'Operation',
+          dataIndex: 'operation',
+          render: (text: string, record: any) => (
+            <span className="delete-row"
+              onClick={() => this.deleteRowClick(record)}
+            >
+              {text}
+            </span>
+          ),
+        })
+        this.setState({columns: arrayColumns})
+      }else if(this.state.columns.length === 9){
+        arrayColumns.pop()
+        this.setState({columns: arrayColumns})
+      }
+    }
+  }
+
+  deleteRowClick = (record: any) => {
+    API.deleteEvent(record.key).then(() => {
+
+    })
+    this.state.records.forEach((item) => {
+      if (item.key === record.key) {
+        item.title = ""
+        item.date = ""
+        item.time = ""
+        item.organizer = ""
+        item.place = ""
+        item.descriptionUrl = "Пункт удален"
+        item.comment = ""
+        item.type = ""
+        item.operation = ""
+      } 
+    })
+  }
+
 
   getRecordClassName = (record: TableRecord): string => {
     let className = typeClassNames[record.type] || 'row-no-type'
@@ -223,6 +283,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
       place: event.place || '',
       descriptionUrl: event.descriptionUrl || '',
       comment: event.comment || 'No comments yet',
+      operation: 'delete',
     }
   }
 
@@ -235,7 +296,6 @@ class TableView extends Component<TableViewProps, TableViewState> {
     return (
       <div className="table-view">
         <h3>Table view</h3>
-
         <Table
           columns={columns}
           dataSource={filteredRecords}
@@ -245,6 +305,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
           onRow={(row) => ({
             onClick: (evt) => this.handleRowClick(row, evt),
           })}
+          
         />
       </div>
     )
