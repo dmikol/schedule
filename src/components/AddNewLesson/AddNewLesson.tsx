@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Form, Input, DatePicker } from 'antd'
 import { FormInstance } from 'antd/lib/form'
+
 import { ITask } from '../../models'
 import './AddNewLesson.scss'
 
@@ -17,6 +18,7 @@ type NewLesson = {
   visibleLessonForm: boolean
   handleAddNewTask(values: object): void
 }
+
 class AddNewLesson extends Component<NewLesson> {
   private myRefForm: any
   constructor(props: any) {

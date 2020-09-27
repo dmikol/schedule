@@ -233,6 +233,7 @@ const App: FunctionComponent = () => {
   }
 
   const visibleLinksDownload = () => {
+    
     const allLinks: any = document.getElementById('download-links')
 
     allLinks.style.display = !visibleFilesType ? 'block' : 'none'
@@ -346,9 +347,8 @@ const App: FunctionComponent = () => {
       </Row>
 
       <div id="download-links">
-        <a
+        <a id="download"
           href=" "
-          id="download"
           onClick={() => download('schedule.txt', 'txt')}
           download
         >
@@ -387,6 +387,7 @@ const App: FunctionComponent = () => {
       {mode === TABLE.title && !mentorMode && tableView}
 
       {mode === DESCRIPTION.title && clickedTask && (
+
         <TaskDescription
           task={clickedTask}
           setClickedTask={setClickedTask}

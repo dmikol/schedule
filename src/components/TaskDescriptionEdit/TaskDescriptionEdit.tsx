@@ -28,6 +28,7 @@ interface EditableRowProps {
 
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   const [form] = Form.useForm()
+  
   return (
     <Form form={form} component={false}>
       <EditableContext.Provider value={form}>
@@ -82,7 +83,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
   }
 
   let childNode = children
-
   if (editable) {
     childNode = editing ? (
       <Form.Item
@@ -179,6 +179,7 @@ class TaskDescriptionEdit extends React.Component<any, any> {
           ) : null,
       },
     ]
+  
     let taskEntriesIndex: number = -1
 
     const mapDataSource = (data: any) => {
@@ -432,6 +433,7 @@ class TaskDescriptionEdit extends React.Component<any, any> {
         },
       }
     })
+
     return (
       <div>
         <Table

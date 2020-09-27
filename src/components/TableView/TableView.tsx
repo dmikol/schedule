@@ -141,6 +141,7 @@ const TableView: FunctionComponent<TableViewProps> = ({
           onRow={(row) => ({
             onClick: (evt) => handleRowClick(row, evt),
           })}
+          
         />
       </Space>
     </div>

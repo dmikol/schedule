@@ -8,6 +8,8 @@ import FeedbackOnTask from '../FeedbackOnTask'
 import LeaveFeedback from '../LeaveFeedback'
 import TaskDescriptionEdit from '../TaskDescriptionEdit'
 
+import TaskDescriptionEdit from '../TaskDescriptionEdit'
+
 type TaskDescriptionProps = {
   task: ITask
   timezone: string
@@ -124,7 +126,7 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
             </Descriptions.Item>
 
             <Descriptions.Item label="Описание" span={3}>
-              {description || 'Описание отсутствует'}
+              {description || 'Описание Отсутсвует'}
             </Descriptions.Item>
 
             <Descriptions.Item label="Место проведения" span={3}>

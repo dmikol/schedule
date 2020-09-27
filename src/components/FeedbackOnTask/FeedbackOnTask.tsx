@@ -43,7 +43,6 @@ const FeedbackOnTask: FunctionComponent<FeedbackOnTaskProps> = ({
       </div>
     )
   }
-
   return feedbackComponent
 }
 
