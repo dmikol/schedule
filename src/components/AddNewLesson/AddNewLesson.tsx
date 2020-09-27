@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, DatePicker } from 'antd'
 import { API } from '../../api/api'
 import { ITask } from '../../models'
 import './AddNewLesson.scss'
@@ -11,13 +11,11 @@ const layout = {
 
 const validateMessages = {
   required: 'Введите корректное значение',
-  // types: {
-  //   dateTime: 'Введите в формате 19:00 18-09-2020'
-  // }
 }
+let dateTimeNum = ''
+
 type NewLesson = {
   visibleLessonForm: boolean,
-
 }
 class AddNewLesson extends Component<NewLesson> {
   private myRefForm: any;
@@ -47,6 +45,7 @@ class AddNewLesson extends Component<NewLesson> {
     }
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.handleFormChange = this.handleFormChange.bind(this)
+    this.onChangeDate = this.onChangeDate.bind(this)
   }
 
   componentDidUpdate(){
@@ -68,21 +67,32 @@ class AddNewLesson extends Component<NewLesson> {
     const value = target.value
     const name = target.id.slice(14)
     this.setState({
-      [name]: value
+      [name]: value,
+      dateTime: dateTimeNum
     });
   }
+
+onChangeDate (value: any, dateString: string) {
+  dateTimeNum = dateString
+}
+
   render() {
   return (
     <div className="addNewLessonForm" ref={this.myRefForm}>
       <h3>Добавление нового пункта в расписание</h3>
+    <span className="date-time">
+      <span className="red-star">*</span>
+      Date and Time:
+      </span>
+    <DatePicker 
+    showTime 
+    onChange={this.onChangeDate} 
+    format="HH:mm DD-MM-YYYY"
+    />
+  
     <Form {...layout}  className="mentorsForm" name="nest-messages"  validateMessages={validateMessages}
     onFinish={this.handleFormSubmit}
     >
-      <Form.Item name='dateTime' label="Date and Time" rules={[{ required: true }]}>
-        <Input 
-        onChange={this.handleFormChange}
-        />
-      </Form.Item>
       <Form.Item name='type' label="Type" rules={[{ required: true }]}>
         <Input
         onChange={this.handleFormChange}
