@@ -35,12 +35,7 @@ class AddNewLesson extends Component<NewLesson> {
     description: '',
     descriptionUrl: '',
     feedback: {
-      data: [
-        {
-          author: '',
-          text: '',
-        },
-      ],
+      data: [],
       isFeedback: false,
     },
     id: '',
@@ -50,7 +45,7 @@ class AddNewLesson extends Component<NewLesson> {
     type: '',
     timeZone: '',
     week: '',
-    photo: '',
+    photo: 'https://pbs.twimg.com/media/EDO0GXBXYAATMFU.jpg',
   }
 
   componentDidUpdate() {

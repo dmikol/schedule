@@ -133,6 +133,7 @@ const TableView: FunctionComponent<TableViewProps> = ({
         </Space>
 
         <Table
+          loading={loading}
           columns={columns}
           dataSource={filteredRecords}
           rowClassName={setRowClassName}

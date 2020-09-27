@@ -18,6 +18,7 @@ import Sidebar from '../Sidebar'
 import TableView from '../TableView'
 import TaskDescription from '../TaskDescription'
 import AddNewLesson from '../AddNewLesson'
+import Spinner from '../Spinner'
 
 import {
   TYPE_CLASS_NAMES,
@@ -61,6 +62,7 @@ const App: FunctionComponent = () => {
   const [edit, setEdit] = useState<boolean>(false)
   const [visibleFilesType, setVisibleFilesType] = useState(false)
   const [visibleLessonForm, setVisibleLessonForm] = useState(false)
+  const [loading] = useState(false)
 
   useEffect(() => {
     API.getEvents().then((tasksFromApi) => {
@@ -296,7 +298,8 @@ const App: FunctionComponent = () => {
   )
 
   return (
-    <div className="app">
+    <div className={loading ? 'app spinner__wrapper' : 'app'}>
+      {loading && <Spinner />}
       <Header mentorMode={mentorMode} setMentorMode={setMentorMode} />
 
       <Row>

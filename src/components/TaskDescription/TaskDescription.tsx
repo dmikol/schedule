@@ -58,6 +58,7 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
     )
   }
 
+
   let editableTable = null
   if (edit) {
     editableTable = (
