@@ -8,8 +8,6 @@ import FeedbackOnTask from '../FeedbackOnTask'
 import LeaveFeedback from '../LeaveFeedback'
 import TaskDescriptionEdit from '../TaskDescriptionEdit'
 
-import TaskDescriptionEdit from '../TaskDescriptionEdit'
-
 type TaskDescriptionProps = {
   task: ITask
   timezone: string
