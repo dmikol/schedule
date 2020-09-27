@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Table, Input, Button, Popconfirm, Form } from 'antd';
+import { Table, Input, Button, Popconfirm, Form, Checkbox } from 'antd';
 import { API } from '../../api/api'
 import { ICustom } from '../../models'
 
@@ -134,7 +134,7 @@ class TaskDescriptionEdit extends React.Component<any, any> {
         render: (text: string, record: any) =>
           this.state.dataSource.length >= 1 ? (
             <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-              <a>Delete</a>
+              <Button>Delete</Button>
             </Popconfirm>
           ) : null,
       },
@@ -174,6 +174,20 @@ class TaskDescriptionEdit extends React.Component<any, any> {
         editable: true
       }
     }) 
+  }
+
+  onCheckboxChange = (e: any) => {
+    const { task } = this.props
+
+    const taskToUpdate = {
+      ...task,
+      feedback: {
+        isFeedback: e.target.checked,
+        data: task.feedback ? task.feedback.data : []
+      }
+    }
+    this.handleSaveToServer(taskToUpdate)
+    this.props.setClickedTask(taskToUpdate)
   }
 
   handleDelete = (key: any) => {
@@ -295,7 +309,8 @@ class TaskDescriptionEdit extends React.Component<any, any> {
   }
 
   render() {
-    const { dataSource, dataSourceCustom } = this.state;
+    const { dataSource, dataSourceCustom } = this.state
+    const { feedback } = this.props.task
 
     const filteredDataSource = dataSource.filter((item: null) => item !== null)
     const filteredDataSourceCustom = dataSourceCustom.filter((item: null) => item !== null)
@@ -362,9 +377,11 @@ class TaskDescriptionEdit extends React.Component<any, any> {
           dataSource={filteredDataSourceCustom}
           columns={columnsCustom}
         />
+        
         <Button onClick={this.handleAdd} type="dashed" style={{ marginBottom: 16, marginTop: 10 }}>
           Add a row
         </Button>
+        <Checkbox defaultChecked={feedback ? feedback.isFeedback : true} style={{ marginLeft: 10 }} onChange={this.onCheckboxChange}>Разрешить оставлять отзывы</Checkbox>
       </div>
     );
   }

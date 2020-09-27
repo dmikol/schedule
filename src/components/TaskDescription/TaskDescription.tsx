@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import { Col, Descriptions, Row } from 'antd'
 
 import './TaskDescription.scss'
@@ -88,7 +88,7 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
   return (
     <>
       {editableTable}
-      <Row key={1}>
+      <Row key={1} style={{ marginBottom: 10 }}>
         <Col span={20} offset={2}>
           <Descriptions title={name} bordered>
             <Descriptions.Item label="Неделя" span={3}>
