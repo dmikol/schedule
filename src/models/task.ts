@@ -18,5 +18,7 @@ export interface ITask {
   type: string
   week: string
   photo: string
-  custom: ICustom[]
+  isHidden?: boolean
+  isHighlighted?: boolean
+  custom?: ICustom[]
 }

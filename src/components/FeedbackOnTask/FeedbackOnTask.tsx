@@ -8,13 +8,13 @@ import { IFeedback } from '../../models'
 type FeedbackOnTaskProps = {
   feedback: {
     isFeedback: boolean
-    data: IFeedback[] }
+    data: IFeedback[]
+  }
 }
 
 const FeedbackOnTask: FunctionComponent<FeedbackOnTaskProps> = ({
   feedback,
 }) => {
-
   const generateFeedbackCard = (data: IFeedback[]) => {
     return data.map((item, i) => (
       <Card title={item.author} bordered={false} key={i}>
@@ -35,11 +35,14 @@ const FeedbackOnTask: FunctionComponent<FeedbackOnTaskProps> = ({
     feedbackComponent = (
       <div className="site-card-border-less-wrapper feedbackOnTask">
         <h2>Отзывы о задании: </h2>
-        {feedBackContent ? feedBackContent : <h4>Пока еще никто не оставил свой отзыв...</h4>}
+        {feedBackContent ? (
+          feedBackContent
+        ) : (
+          <h4>Пока еще никто не оставил свой отзыв...</h4>
+        )}
       </div>
     )
   }
-  
   return feedbackComponent
 }
 

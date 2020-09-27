@@ -1,24 +1,20 @@
-import React, { FunctionComponent, ReactNode } from 'react'
+import React, { FunctionComponent, ReactNode, createElement } from 'react'
 import { Select, Space, Switch, Button } from 'antd'
-import {
-  CalendarOutlined,
-  GlobalOutlined,
-  TableOutlined,
-  UnorderedListOutlined,
-  RollbackOutlined
-} from '@ant-design/icons'
+import { GlobalOutlined, RollbackOutlined } from '@ant-design/icons'
 
 import './Sidebar.scss'
 
 import Filter from '../Filter'
+import { VIEW_MODES, TIMEZONE_MODES } from '../../utils/constants'
+const { DESCRIPTION } = VIEW_MODES
 
 type SidebarProps = {
   children?: ReactNode
   mode: string
-  onModeChange(mode: string): void
   timezone: string
-  onTimezoneChange(timezone: string): void
   type: string
+  onModeChange(mode: string): void
+  onTimezoneChange(timezone: string): void
   onTypeChange(type: string): void
   onBackToSchedule(): void
 }
@@ -26,92 +22,73 @@ type SidebarProps = {
 const Sidebar: FunctionComponent<SidebarProps> = ({
   children,
   mode,
-  onModeChange,
   timezone,
-  onTimezoneChange,
   type,
+  onModeChange,
+  onTimezoneChange,
   onTypeChange,
-  onBackToSchedule
+  onBackToSchedule,
 }) => {
   const handleHighContrastModeChange = () => {
     document.body.classList.toggle('high-contrast')
   }
 
-const drawBackButtonIfDescMode = (mode: string) => {
-  if (mode === 'description') {
-    return (
-      <Button
-        onClick={() => onBackToSchedule()}
-        className="back-btn">
-        <RollbackOutlined />
+  let modeOptions: ReactNode[] = []
+  for (const mode in VIEW_MODES) {
+    const { title, icon } = VIEW_MODES[mode]
+    if (VIEW_MODES[mode] !== DESCRIPTION) {
+      const name = title.charAt(0).toUpperCase() + title.slice(1)
+
+      const modeOption = (
+        <Select.Option value={title} key={title}>
+          {createElement(icon)} {`${name}`}
+        </Select.Option>
+      )
+      modeOptions.push(modeOption)
+    }
+  }
+
+  let timezoneOptions: ReactNode[] = []
+  for (const mode in TIMEZONE_MODES) {
+    const { zone, name } = TIMEZONE_MODES[mode]
+    const timezoneOption = (
+      <Select.Option value={zone} key={zone}>
+        <GlobalOutlined /> {`${name}`}
+      </Select.Option>
+    )
+    timezoneOptions.push(timezoneOption)
+  }
+
+  const drawBackButtonIfDescMode = (mode: string) => {
+    if (mode === DESCRIPTION.title) {
+      return (
+        <Button onClick={() => onBackToSchedule()} className="back-btn">
+          <RollbackOutlined />
           Back to schedule
         </Button>
-        )
-   } else {
-     return (
-       <>
-        <div>
-          <Select defaultValue={mode} onChange={onModeChange}>
-            <Select.Option value="calendar">
-              <CalendarOutlined /> Calendar
-            </Select.Option>
+      )
+    } else {
+      return (
+        <>
+          <div>
+            <Select defaultValue={mode} onChange={onModeChange}>
+              {modeOptions}
+            </Select>
+          </div>
 
-            <Select.Option value="list">
-              <UnorderedListOutlined /> List
-            </Select.Option>
-
-            <Select.Option value="table">
-              <TableOutlined /> Table
-            </Select.Option>
-          </Select>
-        </div>
-
-        <Filter type={type} onFilterChange={onTypeChange} />
-      </>
-     )
-   } 
-}
+          <Filter type={type} onFilterChange={onTypeChange} />
+        </>
+      )
+    }
+  }
 
   return (
     <div className="sidebar">
       <Space direction="vertical">
-        {
-          drawBackButtonIfDescMode(mode)
-         }
+        {drawBackButtonIfDescMode(mode)}
         <div>
           <Select defaultValue={timezone} onChange={onTimezoneChange}>
-            <Select.Option value="-2London">
-              <GlobalOutlined /> Europe/London
-            </Select.Option>
-
-            <Select.Option value="-1Warsaw">
-              <GlobalOutlined /> Europe/Warsaw
-            </Select.Option>
-
-            <Select.Option value="+0Kiev">
-              <GlobalOutlined /> Europe/Kiev
-            </Select.Option>
-
-            <Select.Option value="+0Minsk">
-              <GlobalOutlined /> Europe/Minsk
-            </Select.Option>
-
-            <Select.Option value="+0Moscow">
-              <GlobalOutlined /> Europe/Moscow
-            </Select.Option>
-
-            <Select.Option value="+1Volgograd">
-              <GlobalOutlined /> Europe/Volgograd
-            </Select.Option>
-
-            <Select.Option value="+1Yekaterinburg">
-              <GlobalOutlined /> Europe/Yekaterinburg
-            </Select.Option>
-
-            <Select.Option value="+2Tashkent">
-              <GlobalOutlined /> Asia/Tashkent
-            </Select.Option>
-
+            {timezoneOptions}
           </Select>
         </div>
 

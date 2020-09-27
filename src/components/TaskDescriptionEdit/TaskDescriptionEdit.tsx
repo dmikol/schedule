@@ -1,41 +1,50 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Table, Input, Button, Popconfirm, Form, Checkbox, DatePicker } from 'antd';
+import React, { useContext, useState, useEffect, useRef } from 'react'
+import {
+  Table,
+  Input,
+  Button,
+  Popconfirm,
+  Form,
+  Checkbox,
+  DatePicker,
+} from 'antd'
 import { API } from '../../api/api'
 import { ICustom } from '../../models'
 
-const EditableContext = React.createContext<any>(null);
+const EditableContext = React.createContext<any>(null)
 
 interface Item {
-  key: string;
-  name: string;
-  age: string;
-  address: string;
+  key: string
+  name: string
+  age: string
+  address: string
   index: string
-  [index: string]: any;
+  [index: string]: any
 }
 
 interface EditableRowProps {
-  index: number;
+  index: number
 }
 
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
+
   return (
     <Form form={form} component={false}>
       <EditableContext.Provider value={form}>
         <tr {...props} />
       </EditableContext.Provider>
     </Form>
-  );
-};
+  )
+}
 
 interface EditableCellProps {
-  title: React.ReactNode;
-  editable: boolean;
-  children: React.ReactNode;
-  dataIndex: string;
-  record: Item;
-  handleSave: (record: Item) => void;
+  title: React.ReactNode
+  editable: boolean
+  children: React.ReactNode
+  dataIndex: string
+  record: Item
+  handleSave: (record: Item) => void
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -47,34 +56,33 @@ const EditableCell: React.FC<EditableCellProps> = ({
   handleSave,
   ...restProps
 }) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef = useRef<any>();
-  const form = useContext(EditableContext);
+  const [editing, setEditing] = useState(false)
+  const inputRef = useRef<any>()
+  const form = useContext(EditableContext)
 
   useEffect(() => {
     if (editing) {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [editing]);
+  }, [editing])
 
   const toggleEdit = () => {
-    setEditing(!editing);
-    form.setFieldsValue({ [dataIndex]: record[dataIndex] });
-  };
+    setEditing(!editing)
+    form.setFieldsValue({ [dataIndex]: record[dataIndex] })
+  }
 
-  const save = async() => {
+  const save = async () => {
     try {
-      const values = await form.validateFields();
+      const values = await form.validateFields()
 
-      toggleEdit();
-      handleSave({ ...record, ...values });
+      toggleEdit()
+      handleSave({ ...record, ...values })
     } catch (errInfo) {
-      console.log('Save failed:', errInfo);
+      console.log('Save failed:', errInfo)
     }
-  };
+  }
 
-  let childNode = children;
-
+  let childNode = children
   if (editable) {
     childNode = editing ? (
       <Form.Item
@@ -90,20 +98,49 @@ const EditableCell: React.FC<EditableCellProps> = ({
         <Input ref={inputRef} onPressEnter={save} onBlur={save} />
       </Form.Item>
     ) : (
-      <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={toggleEdit}>
+      <div
+        className="editable-cell-value-wrap"
+        style={{ paddingRight: 24 }}
+        onClick={toggleEdit}
+      >
         {children}
       </div>
-    );
+    )
   }
 
-  return <td {...restProps}>{childNode}</td>;
-};
+  return <td {...restProps}>{childNode}</td>
+}
 
 class TaskDescriptionEdit extends React.Component<any, any> {
-  columns: ({ key: string; title: string; dataIndex: string; width: string; editable: boolean; render?: undefined; } | { key: string; title: string; dataIndex: string; width?: undefined; editable?: undefined; render?: undefined; } | { key: string; title: string; dataIndex: string; render: (text: string, record: any) => JSX.Element | null; width?: undefined; editable?: undefined; })[];
-  columnsCustom: any[];
+  columns: (
+    | {
+        key: string
+        title: string
+        dataIndex: string
+        width: string
+        editable: boolean
+        render?: undefined
+      }
+    | {
+        key: string
+        title: string
+        dataIndex: string
+        width?: undefined
+        editable?: undefined
+        render?: undefined
+      }
+    | {
+        key: string
+        title: string
+        dataIndex: string
+        render: (text: string, record: any) => JSX.Element | null
+        width?: undefined
+        editable?: undefined
+      }
+  )[]
+  columnsCustom: any[]
   constructor(props: any) {
-    super(props);
+    super(props)
     this.columns = [
       {
         key: '0',
@@ -118,81 +155,95 @@ class TaskDescriptionEdit extends React.Component<any, any> {
         dataIndex: 'info',
         width: '70%',
         editable: true,
-      }
-    ];
+      },
+    ]
     this.columnsCustom = [
       {
         ...this.columns[0],
         editable: true,
       },
       {
-        ...this.columns[1]
+        ...this.columns[1],
       },
       {
         title: 'operation',
         dataIndex: 'operation',
         render: (text: string, record: any) =>
           this.state.dataSource.length >= 1 ? (
-            <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={() => this.handleDelete(record.key)}
+            >
               <Button>Delete</Button>
             </Popconfirm>
           ) : null,
       },
     ]
-    let taskEntriesIndex: number = -1;
+
+    let taskEntriesIndex: number = -1
 
     const mapDataSource = (data: any) => {
-      return Object.entries(data).map(([ key, value ]) => {
+      return Object.entries(data).map(([key, value]) => {
         if (['custom', 'feedback', 'id'].includes(key)) return null
         taskEntriesIndex += 1
         return {
           key: taskEntriesIndex,
           point: key,
-          info: key === 'dateTime' ? 
-            <DatePicker 
-            showTime 
-            onChange={this.onChangeDate} 
-            format="HH:mm DD-MM-YYYY"
-            /> : (value ? value : 'Отсутствует'),
-          editable: key === 'dateTime' ? false : true
+          info:
+            key === 'dateTime' ? (
+              <DatePicker
+                showTime
+                onChange={this.onChangeDate}
+                format="HH:mm DD-MM-YYYY"
+              />
+            ) : value ? (
+              value
+            ) : (
+              'Отсутствует'
+            ),
+          editable: key === 'dateTime' ? false : true,
         }
       })
     }
-    
+
     this.state = {
-      dataSource: mapDataSource(this.props.task).filter((item) => item !== null),
+      dataSource: mapDataSource(this.props.task).filter(
+        (item) => item !== null,
+      ),
       count: Object.keys(props.task).length,
-      dataSourceCustom: this.props.task.custom ? this.mapCustomDataSource(this.props.task.custom) : [],
+      dataSourceCustom: this.props.task.custom
+        ? this.mapCustomDataSource(this.props.task.custom)
+        : [],
       countCustom: this.props.task.custom ? this.props.task.custom.length : 0,
       task: props.task,
-      loading: false
-    };
+      loading: false,
+    }
   }
 
   onChangeDate = (value: any, dateString: string) => {
     const { task } = this.props
-    console.log('no change -------------------');
-    
+    console.log('no change -------------------')
+
     const taskToUpdate = {
       ...task,
-      dateTime: dateString
+      dateTime: dateString,
     }
 
     this.handleSaveToServer(taskToUpdate)
     this.props.setClickedTask(taskToUpdate)
   }
 
-  mapCustomDataSource(array: any[]) {   
-    return array.map((item : ICustom, i: number) => {
+  mapCustomDataSource(array: any[]) {
+    return array.map((item: ICustom, i: number) => {
       const key = Object.keys(item)[0]
       const value = Object.values(item)[0]
       return {
         key: i,
         point: key ? key : 'Отсутствует',
         info: value ? value : 'Отсутствует',
-        editable: true
+        editable: true,
       }
-    }) 
+    })
   }
 
   onCheckboxChange = (e: any) => {
@@ -202,62 +253,65 @@ class TaskDescriptionEdit extends React.Component<any, any> {
       ...task,
       feedback: {
         isFeedback: e.target.checked,
-        data: task.feedback ? task.feedback.data : []
-      }
+        data: task.feedback ? task.feedback.data : [],
+      },
     }
     this.handleSaveToServer(taskToUpdate)
     this.props.setClickedTask(taskToUpdate)
   }
 
   handleDelete = (key: any) => {
-    const dataSourceCustom = [...this.state.dataSourceCustom];
-    this.setState({ dataSourceCustom: dataSourceCustom.filter(item => item.key !== key) });
-    const mappedData = this.mapSavedTaskCustom((dataSourceCustom.filter(item => item.key !== key)))
+    const dataSourceCustom = [...this.state.dataSourceCustom]
+    this.setState({
+      dataSourceCustom: dataSourceCustom.filter((item) => item.key !== key),
+    })
+    const mappedData = this.mapSavedTaskCustom(
+      dataSourceCustom.filter((item) => item.key !== key),
+    )
     this.handleSaveToServer(mappedData)
     this.props.setClickedTask(mappedData)
-  };
+  }
 
   handleAdd = () => {
-    const { countCustom, dataSourceCustom } = this.state;
+    const { countCustom, dataSourceCustom } = this.state
     const newData = {
       key: countCustom,
       point: `Пункт задания`,
       info: 'Описание пункта задания',
-      editable: true
-    };
+      editable: true,
+    }
     const mappedTask = this.mapNewAddedTask(newData)
     this.setState({
       dataSourceCustom: [...dataSourceCustom, newData],
       countCustom: countCustom + 1,
-      task: mappedTask
-    });
-    this.handleSaveToServer(mappedTask)
+      task: mappedTask,
+    })
+    API.updateEvent(mappedTask.id, mappedTask)
     this.props.setClickedTask(mappedTask)
-  };
+  }
 
   mapNewAddedTask(item: any) {
     const { task } = this.state
     const { point, info } = item
     let tempCustom
 
-    if(task.custom) {
-      tempCustom = [
-        ...task.custom,
-        { [point]: info}
-      ]
+    if (task.custom) {
+      tempCustom = [...task.custom, { [point]: info }]
     } else {
-      tempCustom = [{[point]: info}]
+      tempCustom = [{ [point]: info }]
     }
-    
+
     return {
       ...task,
-      custom: tempCustom
+      custom: tempCustom,
     }
   }
 
   handleSave = (row: any) => {
-    const data = [...this.state.dataSource];
-    const filterdFromDatePickerData = data.filter((item) => item.point !== 'dateTime')
+    const data = [...this.state.dataSource]
+    const filterdFromDatePickerData = data.filter(
+      (item) => item.point !== 'dateTime',
+    )
     const dataPickerItem = data.find((item) => item.point === 'dateTime')
 
     const newDataToBeMapped = [
@@ -266,47 +320,49 @@ class TaskDescriptionEdit extends React.Component<any, any> {
         key: dataPickerItem.key,
         info: this.props.task.dateTime,
         point: dataPickerItem.point,
-        editable: dataPickerItem.editable
-      }
+        editable: dataPickerItem.editable,
+      },
     ]
     const dataToState = [
       ...filterdFromDatePickerData,
       {
         key: dataPickerItem.key,
-        info:  <DatePicker 
-                showTime 
-                onChange={this.onChangeDate} 
-                format="HH:mm DD-MM-YYYY"
-                /> ,
+        info: (
+          <DatePicker
+            showTime
+            onChange={this.onChangeDate}
+            format="HH:mm DD-MM-YYYY"
+          />
+        ),
         point: dataPickerItem.point,
-        editable: dataPickerItem.editable
-      }
+        editable: dataPickerItem.editable,
+      },
     ]
-    const index = dataToState.findIndex(item => row.key === item.key);
-    const item = dataToState[index];
+    const index = dataToState.findIndex((item) => row.key === item.key)
+    const item = dataToState[index]
     dataToState.splice(index, 1, {
       ...item,
       ...row,
-    });
-    this.setState({ dataSource: dataToState });
+    })
+    this.setState({ dataSource: dataToState })
     const mappedData = this.mapSavedTask(newDataToBeMapped)
-    this.handleSaveToServer(mappedData);
+    this.handleSaveToServer(mappedData)
     this.props.setClickedTask(mappedData)
-  };
+  }
 
   handleSaveCustom = (row: any) => {
-    const newData = [...this.state.dataSourceCustom];
-    const index = newData.findIndex(item => row.key === item.key);
-    const item = newData[index];
+    const newData = [...this.state.dataSourceCustom]
+    const index = newData.findIndex((item) => row.key === item.key)
+    const item = newData[index]
     newData.splice(index, 1, {
       ...item,
       ...row,
-    });
-    this.setState({ dataSourceCustom: newData });
+    })
+    this.setState({ dataSourceCustom: newData })
     const mappedData = this.mapSavedTaskCustom(newData)
-    this.handleSaveToServer(mappedData);
+    this.handleSaveToServer(mappedData)
     this.props.setClickedTask(mappedData)
-  };
+  }
 
   handleSaveToServer(data: any) {
     this.setState({ loading: true })
@@ -316,41 +372,46 @@ class TaskDescriptionEdit extends React.Component<any, any> {
   mapSavedTaskCustom(data: any) {
     return {
       ...this.props.task,
-      custom: [...data.map(({ point, info } : { point: string; info: string }) => ({
-        [point]: info
-      }))]
+      custom: [
+        ...data.map(({ point, info }: { point: string; info: string }) => ({
+          [point]: info,
+        })),
+      ],
     }
   }
 
   mapSavedTask(data: any) {
     return {
       ...this.props.task,
-      ...data.reduce((acc: any, { point, info } : { point: string; info: string }) => ({
-        ...acc,
-        [point]: info
-      }), {})
+      ...data.reduce(
+        (acc: any, { point, info }: { point: string; info: string }) => ({
+          ...acc,
+          [point]: info,
+        }),
+        {},
+      ),
     }
   }
 
   mapColumnsForTable(array: any[]): any {
-    array.map(col => {
+    array.map((col) => {
       if (!col.editable) {
-        return col;
+        return col
       }
-       
+
       return {
         ...col,
         onCell: (record: any) => {
-        
           return {
-          record,
-          editable: record.editable,
-          dataIndex: col.dataIndex,
-          title: col.title,
-          handleSave: this.handleSave,
-        }}
-      };
-    });
+            record,
+            editable: record.editable,
+            dataIndex: col.dataIndex,
+            title: col.title,
+            handleSave: this.handleSave,
+          }
+        },
+      }
+    })
   }
 
   render() {
@@ -358,50 +419,53 @@ class TaskDescriptionEdit extends React.Component<any, any> {
     const { feedback } = this.props.task
 
     const filteredDataSource = dataSource.filter((item: null) => item !== null)
-    const filteredDataSourceCustom = dataSourceCustom.filter((item: null) => item !== null)
+    const filteredDataSourceCustom = dataSourceCustom.filter(
+      (item: null) => item !== null,
+    )
 
     const components = {
       body: {
         row: EditableRow,
         cell: EditableCell,
       },
-    };
-    const columns = this.columns.map(col => {
+    }
+    const columns = this.columns.map((col) => {
       if (!col.editable) {
-        return col;
+        return col
       }
-       
+
       return {
         ...col,
         onCell: (record: any) => {
-        
           return {
-          record,
-          editable: record.editable,
-          dataIndex: col.dataIndex,
-          title: col.title,
-          handleSave: this.handleSave,
-        }}
-      };
-    });
-    const columnsCustom = this.columnsCustom.map(col => {
-      if (!col.editable) {
-        return col;
+            record,
+            editable: record.editable,
+            dataIndex: col.dataIndex,
+            title: col.title,
+            handleSave: this.handleSave,
+          }
+        },
       }
-       
+    })
+    const columnsCustom = this.columnsCustom.map((col) => {
+      if (!col.editable) {
+        return col
+      }
+
       return {
         ...col,
         onCell: (record: any) => {
-        
           return {
-          record,
-          editable: record.editable,
-          dataIndex: col.dataIndex,
-          title: col.title,
-          handleSave: this.handleSaveCustom,
-        }}
-      };
-    });
+            record,
+            editable: record.editable,
+            dataIndex: col.dataIndex,
+            title: col.title,
+            handleSave: this.handleSaveCustom,
+          }
+        },
+      }
+    })
+
     return (
       <div>
         <Table
@@ -424,14 +488,26 @@ class TaskDescriptionEdit extends React.Component<any, any> {
           dataSource={filteredDataSourceCustom}
           columns={columnsCustom}
         />
-        
-        <Button disabled={loading} onClick={this.handleAdd} type="dashed" style={{ marginBottom: 16, marginTop: 10 }}>
+
+        <Button
+          disabled={loading}
+          onClick={this.handleAdd}
+          type="dashed"
+          style={{ marginBottom: 16, marginTop: 10 }}
+        >
           Add a row
         </Button>
-        <Checkbox disabled={loading} defaultChecked={feedback ? feedback.isFeedback : true} style={{ marginLeft: 10 }} onChange={this.onCheckboxChange}>Разрешить оставлять отзывы</Checkbox>
+        <Checkbox
+          disabled={loading}
+          defaultChecked={feedback ? feedback.isFeedback : true}
+          style={{ marginLeft: 10 }}
+          onChange={this.onCheckboxChange}
+        >
+          Разрешить оставлять отзывы
+        </Checkbox>
       </div>
-    );
+    )
   }
 }
 
-export default TaskDescriptionEdit;
+export default TaskDescriptionEdit

@@ -1,11 +1,9 @@
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react'
 import { Badge, Button, Calendar, Popover } from 'antd'
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons'
-import Spinner from '../Spinner'
 
 import './CalendarView.scss'
 
-import { API } from '../../api/api'
 import { ITask } from '../../models'
 
 const eventsColors: any = {
@@ -20,24 +18,17 @@ const eventsColors: any = {
 type CalendarViewProps = {
   timezone: string
   type: string
-  onTaskNameClick(task: ITask): void
+  events: ITask[]
+  handleTaskNameClick(clickedRowKey: string): void
 }
 
 const CalendarView: FunctionComponent<CalendarViewProps> = ({
   timezone,
   type,
-  onTaskNameClick,
+  events,
+  handleTaskNameClick,
 }) => {
-  const [events, setEvents] = useState<ITask[]>([])
   const [eventsFiltered, setEventsFiltered] = useState<ITask[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-
-  useEffect(() => {
-    API.getEvents().then((events) => {
-      setEvents(events)
-      setLoading(false)
-    })
-  }, [])
 
   useEffect(() => {
     setEventsFiltered((prevEvents) =>
@@ -62,7 +53,7 @@ const CalendarView: FunctionComponent<CalendarViewProps> = ({
         {eventsToRender.map((event) => {
           const popover = (
             <>
-              <p>
+              <div>
                 <div>
                   <CalendarOutlined /> {event.dateTime.slice(6)}
                 </div>
@@ -70,7 +61,7 @@ const CalendarView: FunctionComponent<CalendarViewProps> = ({
                 <div>
                   <ClockCircleOutlined /> {event.dateTime.slice(0, 5)}
                 </div>
-              </p>
+              </div>
 
               <p>{event.description}</p>
 
@@ -78,7 +69,7 @@ const CalendarView: FunctionComponent<CalendarViewProps> = ({
                 block
                 size="small"
                 type="primary"
-                onClick={() => onTaskNameClick(event)}
+                onClick={() => handleTaskNameClick(event.id)}
               >
                 Details
               </Button>
@@ -120,12 +111,11 @@ const CalendarView: FunctionComponent<CalendarViewProps> = ({
   return (
     <div className="calendar-view">
       <h3>Calendar view</h3>
-      {loading ? 
-      <Spinner /> : 
       <Calendar
         dateCellRender={dateCellRender}
         monthCellRender={monthCellRender}
-      />}
+      />
+      )
     </div>
   )
 }

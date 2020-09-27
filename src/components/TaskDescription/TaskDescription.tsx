@@ -6,21 +6,20 @@ import './TaskDescription.scss'
 import { ITask } from '../../models'
 import FeedbackOnTask from '../FeedbackOnTask'
 import LeaveFeedback from '../LeaveFeedback'
-
 import TaskDescriptionEdit from '../TaskDescriptionEdit'
 
 type TaskDescriptionProps = {
   task: ITask
-  setClickedTask(task: ITask): void
   timezone: string
   edit: boolean
+  setClickedTask(task: ITask): void
 }
 
 const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
   task,
-  setClickedTask,
   timezone,
-  edit
+  edit,
+  setClickedTask,
 }) => {
   const {
     name,
@@ -30,7 +29,7 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
     descriptionUrl,
     place,
     week,
-    photo
+    photo,
   } = task
 
   let link
@@ -48,10 +47,13 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
       <Descriptions.Item label="Карта" span={3}>
         <iframe
           title={place}
-          src={"https://www.google.com/maps/embed/v1/place?key=AIzaSyBP9llkXgAKBFCb-Q_r6bggoz964zqNuXM&q=" + place}
+          src={
+            'https://www.google.com/maps/embed/v1/place?key=AIzaSyBP9llkXgAKBFCb-Q_r6bggoz964zqNuXM&q=' +
+            place
+          }
           className="map__iframe"
-          frameBorder="0">
-        </iframe>
+          frameBorder="0"
+        ></iframe>
       </Descriptions.Item>
     )
   }
@@ -59,32 +61,34 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
 
   let editableTable = null
   if (edit) {
-    editableTable = (<Row key={0}>
-      <Col span={20} offset={2}>
-        <TaskDescriptionEdit
-          task={task}
-          edit={edit}
-          setClickedTask={setClickedTask}/>
-      </Col>
-    </Row>)
+    editableTable = (
+      <Row key={0}>
+        <Col span={20} offset={2}>
+          <TaskDescriptionEdit
+            task={task}
+            edit={edit}
+            setClickedTask={setClickedTask}
+          />
+        </Col>
+      </Row>
+    )
   }
 
   let customTaskFields = null
 
-  if(task.custom) {
+  if (task.custom) {
     customTaskFields = task.custom.map((item, i) => {
       const key = Object.keys(item)[0]
       const value = Object.values(item)[0]
       return (
         <React.Fragment key={i}>
-            <Descriptions.Item label={key} span={3}>
-              {value || 'Описание отсутствует'}
-            </Descriptions.Item>
+          <Descriptions.Item label={key} span={3}>
+            {value || 'Описание отсутствует'}
+          </Descriptions.Item>
         </React.Fragment>
       )
     })
   }
-  
 
   return (
     <>
@@ -93,10 +97,14 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
         <Col span={20} offset={2}>
           <Descriptions title={name} bordered>
             <Descriptions.Item label="Неделя" span={3}>
-              {week || 'Описание отсутствует'}
+              {week || 'Описание тсутствует'}
             </Descriptions.Item>
 
-            <Descriptions.Item label="Время и дата" span={3} className="task-desc__highlight">
+            <Descriptions.Item
+              label="Время и дата"
+              span={3}
+              className="task-desc__highlight"
+            >
               {dateTime
                 ? `${
                     +dateTime.slice(0, 2) + Number(timezone.slice(0, 2))
@@ -105,10 +113,14 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
             </Descriptions.Item>
 
             <Descriptions.Item label="Тип" span={3}>
-              {type || 'Отсутсвует'}
+              {type || 'Отсутствует'}
             </Descriptions.Item>
 
-            <Descriptions.Item label="Cсылка" span={3} className="task-desc__highlight">
+            <Descriptions.Item
+              label="Cсылка"
+              span={3}
+              className="task-desc__highlight"
+            >
               {descriptionUrl ? link : 'Описание отсутствует'}
             </Descriptions.Item>
 
@@ -121,29 +133,36 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
             </Descriptions.Item>
 
             <Descriptions.Item label="Фото" span={3}>
-              {photo ? 
-              <img className="task-desc__photo" src={photo} alt={name}/> 
-              : `Фото отсутствует`}
+              {photo ? (
+                <img className="task-desc__photo" src={photo} alt={name} />
+              ) : (
+                `Фото отсутствует`
+              )}
             </Descriptions.Item>
 
             <Descriptions.Item label="Видео" span={3}>
-              {place === 'youtube' ? 
-              <iframe 
-                width="500"
-                height="300" 
-                title={name}
-                src={"https://youtube.com/embed/" + descriptionUrl.slice(descriptionUrl.indexOf('=') + 1)} 
-                frameBorder="0" 
-                allowFullScreen>
-              </iframe>
-              : `Видео отсутствует`}
+              {place === 'youtube' ? (
+                <iframe
+                  width="500"
+                  height="300"
+                  title={name}
+                  src={
+                    'https://youtube.com/embed/' +
+                    descriptionUrl.slice(descriptionUrl.indexOf('=') + 1)
+                  }
+                  frameBorder="0"
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                'Видео отсутствует'
+              )}
             </Descriptions.Item>
             {map}
             {customTaskFields}
-            </Descriptions>
+          </Descriptions>
         </Col>
       </Row>
-      
+
       <Row key={2}>
         <Col span={20} offset={2}>
           <FeedbackOnTask feedback={task.feedback} />

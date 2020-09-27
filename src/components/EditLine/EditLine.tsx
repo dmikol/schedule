@@ -1,28 +1,26 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import { Typography } from 'antd'
 
-const { Text } = Typography;
+const { Text } = Typography
 
 type TaskDescriptionProps = {
   isEdit: boolean
   text: string
 }
 
-const onChange = () => {
-  console.log();
-}
-
-const EditLine: FunctionComponent<TaskDescriptionProps> = ({ isEdit, text }) => {
-
+const EditLine: FunctionComponent<TaskDescriptionProps> = ({
+  isEdit,
+  text,
+}) => {
   if (isEdit) {
     return (
-      <Text editable={{ tooltip: false, onChange: onChange }} >{text || 'Описание отсутствует'}</Text>
+      <Text editable={{ tooltip: false }}>
+        {text || 'Описание отсутствует'}
+      </Text>
     )
   } else {
-    return (
-      <Text>{text || 'Описание отсутствует'}</Text>
-    )
+    return <Text>{text || 'Описание отсутствует'}</Text>
   }
 }
 
-export default EditLine;
+export default EditLine
