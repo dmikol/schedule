@@ -25,7 +25,7 @@ const App: FunctionComponent = () => {
   const [edit, setEdit] = useState(false)
   const [visibleFilesType, setVisibleFilesType] = useState(false)
   const [visibleLessonForm, setVisibleLessonForm] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const handleModeChange = (selectedMode: string) => {
     setMode(selectedMode)
@@ -64,6 +64,10 @@ const App: FunctionComponent = () => {
 
   }
 
+  const onLoadingChange = (loading: boolean) => {
+    setLoading(loading)
+  }
+
   API.getEvents().then((response) => {
     response.forEach((event) => {
       arrayTasksToFile.push(` Name: ${event.name}, Date: ${event.dateTime}, 
@@ -91,8 +95,8 @@ const App: FunctionComponent = () => {
     mentorMode={mentorMode}
   />
   return (
-    <div className={isLoading ? 'app spinner__wrapper' : 'app'}>
-      {isLoading && <Spinner />}
+    <div className={loading ? 'app spinner__wrapper' : 'app'}>
+      {loading && <Spinner />}
       <Header mentorMode={mentorMode} setMentorMode={setMentorMode} />
 
       <Row>
@@ -186,6 +190,7 @@ const App: FunctionComponent = () => {
         <TaskDescription
           task={clickedTask}
           setClickedTask={setClickedTask}
+          setLoading={setLoading}
           timezone={timezone}
           edit={edit}
         />

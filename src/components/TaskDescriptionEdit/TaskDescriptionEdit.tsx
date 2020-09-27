@@ -170,7 +170,8 @@ class TaskDescriptionEdit extends React.Component<any, any> {
 
   onChangeDate = (value: any, dateString: string) => {
     const { task } = this.props
-
+    console.log('no change -------------------');
+    
     const taskToUpdate = {
       ...task,
       dateTime: dateString
@@ -254,15 +255,40 @@ class TaskDescriptionEdit extends React.Component<any, any> {
   }
 
   handleSave = (row: any) => {
-    const newData = [...this.state.dataSource];
-    const index = newData.findIndex(item => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, {
+    const data = [...this.state.dataSource];
+    const filterdFromDatePickerData = data.filter((item) => item.point !== 'dateTime')
+    const dataPickerItem = data.find((item) => item.point === 'dateTime')
+
+    const newDataToBeMapped = [
+      ...filterdFromDatePickerData,
+      {
+        key: dataPickerItem.key,
+        info: this.props.task.dateTime,
+        point: dataPickerItem.point,
+        editable: dataPickerItem.editable
+      }
+    ]
+    const dataToState = [
+      ...filterdFromDatePickerData,
+      {
+        key: dataPickerItem.key,
+        info:  <DatePicker 
+                showTime 
+                onChange={this.onChangeDate} 
+                format="HH:mm DD-MM-YYYY"
+                /> ,
+        point: dataPickerItem.point,
+        editable: dataPickerItem.editable
+      }
+    ]
+    const index = dataToState.findIndex(item => row.key === item.key);
+    const item = dataToState[index];
+    dataToState.splice(index, 1, {
       ...item,
       ...row,
     });
-    this.setState({ dataSource: newData });
-    const mappedData = this.mapSavedTask(newData)
+    this.setState({ dataSource: dataToState });
+    const mappedData = this.mapSavedTask(newDataToBeMapped)
     this.handleSaveToServer(mappedData);
     this.props.setClickedTask(mappedData)
   };
@@ -282,7 +308,8 @@ class TaskDescriptionEdit extends React.Component<any, any> {
   };
 
   handleSaveToServer(data: any) {
-    API.updateEvent(data.id, data)
+    this.props.setLoading(true)
+    API.updateEvent(data.id, data).then(() => this.props.setLoading(false))
   }
 
   mapSavedTaskCustom(data: any) {
