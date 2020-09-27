@@ -25,7 +25,7 @@ const App: FunctionComponent = () => {
   const [edit, setEdit] = useState(false)
   const [visibleFilesType, setVisibleFilesType] = useState(false)
   const [visibleLessonForm, setVisibleLessonForm] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loading] = useState(false)
 
   const handleModeChange = (selectedMode: string) => {
     setMode(selectedMode)
