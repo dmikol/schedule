@@ -38,6 +38,7 @@ type ListViewState = {
   events: ITask[]
   records: ListRecord[]
   isMessageShown: boolean
+  loading: boolean
 }
 
 class ListView extends Component<ListViewProps, ListViewState> {
@@ -45,6 +46,7 @@ class ListView extends Component<ListViewProps, ListViewState> {
     events: [] as ITask[],
     records: [] as ListRecord[],
     isMessageShown: false,
+    loading: true
   }
 
   componentDidMount() {
@@ -52,6 +54,7 @@ class ListView extends Component<ListViewProps, ListViewState> {
       this.setState({
         events,
         records: events.map(this.mapEventToListRecord),
+        loading: false
       })
     })
   }
@@ -186,7 +189,7 @@ class ListView extends Component<ListViewProps, ListViewState> {
 
   render() {
     const { type } = this.props
-    const { records } = this.state
+    const { records, loading } = this.state
     const filteredRecords =
       type === 'All' ? records : records.filter((item) => item.type === type)
 
@@ -195,6 +198,7 @@ class ListView extends Component<ListViewProps, ListViewState> {
         <h3>List view</h3>
 
         <List
+          loading={loading}
           itemLayout="horizontal"
           dataSource={filteredRecords}
           renderItem={this.renderItem}

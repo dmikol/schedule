@@ -1,6 +1,7 @@
 import React, { Component, MouseEvent } from 'react'
 import { Table, Button, message } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
+import Spinner from '../Spinner'
 
 import './TableView.scss'
 
@@ -44,6 +45,7 @@ type TableViewState = {
   events: ITask[]
   records: TableRecord[]
   isMessageShown: boolean
+  loading: boolean
 }
 
 class TableView extends Component<TableViewProps, TableViewState> {
@@ -100,6 +102,7 @@ class TableView extends Component<TableViewProps, TableViewState> {
     events: [] as ITask[],
     records: [] as TableRecord[],
     isMessageShown: false,
+    loading: true
   }
   
   componentDidMount() {
@@ -107,7 +110,9 @@ class TableView extends Component<TableViewProps, TableViewState> {
       this.setState({
         events,
         records: events.map(this.mapEventToTableRecord),
+        loading: false
       })
+      console.log(this.state.events);
     })
     let arrayColumns = this.state.columns;
     if(this.props.mentorMode){
@@ -122,8 +127,12 @@ class TableView extends Component<TableViewProps, TableViewState> {
           </span>
         ),
       })
-      this.setState({columns: arrayColumns})
+      this.setState({
+        columns: arrayColumns,
+      })
     }
+
+    
   }
   componentDidUpdate(prevProps: any){
     let arrayColumns = this.state.columns;
@@ -149,8 +158,9 @@ class TableView extends Component<TableViewProps, TableViewState> {
   }
 
   deleteRowClick = (record: any) => {
+    this.setState({ loading: true })
     API.deleteEvent(record.key).then(() => {
-
+      this.setState({ loading: false })
     })
     this.state.records.forEach((item) => {
       if (item.key === record.key) {
@@ -290,14 +300,17 @@ class TableView extends Component<TableViewProps, TableViewState> {
 
   render() {
     const { type } = this.props
-    const { columns, records } = this.state
+    const { columns, records, loading } = this.state
     const filteredRecords =
       type === 'All' ? records : records.filter((item) => item.type === type)
+
+
 
     return (
       <div className="table-view">
         <h3>Table view</h3>
         <Table
+          loading={loading}
           columns={columns}
           dataSource={filteredRecords}
           rowClassName={this.getRecordClassName}
