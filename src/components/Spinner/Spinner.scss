@@ -1,0 +1,17 @@
+.spinner__wrapper {
+  position: absolute;
+  pointer-events: none;
+  right: 0;
+  left:0;
+  top:0;
+  bottom: 0;
+  z-index: 2;
+  opacity: 0.7;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+}

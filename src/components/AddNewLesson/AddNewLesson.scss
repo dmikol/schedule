@@ -1,0 +1,25 @@
+.addNewLessonForm {
+  display: none;
+  max-width: 800px;
+  margin: 0px auto;
+
+  h3 {
+    text-align: center;
+  }
+}
+
+.red-star {
+  padding-right: 5px;
+  font-size: 10px;
+  color: red;
+}
+
+.date-time {
+  margin-left: 17px;
+  font-size: 14px;
+}
+
+// .ant-picker {
+//   margin-left: 8px;
+//   margin-bottom: 25px;
+// }

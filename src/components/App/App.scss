@@ -1,0 +1,59 @@
+@import '../../styles/variables.scss';
+
+.editScheduleButtonStyle {
+  margin-right: 23px;
+}
+
+$rows: (
+  'facultative': $danger-bg,
+  'youtube-live': $primary-dark-bg,
+  'task': $warning-dark-bg,
+  'self-education': $success-bg,
+  'meetup': $warning-bg,
+  'deadline': $danger-dark-bg,
+  'no-type': $primary-bg,
+);
+
+@each $type, $color in $rows {
+  .row-#{$type} {
+    background-color: $color;
+    transition: $def-transition;
+  }
+
+  .ant-table-tbody > .row-#{$type} {
+    & > td {
+      border-top: $border-width solid $color;
+      border-bottom: $border-width solid $default-bg;
+      transition: $def-transition;
+    }
+
+    & > td:first-child {
+      border-left: $border-width solid $color;
+    }
+
+    & > td:last-child {
+      border-right: $border-width solid $color;
+    }
+  }
+
+  .ant-list-items .row-#{$type} {
+    border: $border-width solid $color;
+    border-bottom: $border-width solid $default-bg;
+  }
+
+  .ant-table-tbody > tr.row-#{$type} {
+    &:hover > td {
+      background-color: $default-bg;
+      border-color: $default-bg;
+    }
+  }
+}
+
+#download-links {
+  display: none;
+  margin-top: 15px;
+
+  & a {
+    margin-left: 6px;
+  }
+}
