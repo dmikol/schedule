@@ -133,7 +133,6 @@ const TableView: FunctionComponent<TableViewProps> = ({
         </Space>
 
         <Table
-          loading={loading}
           columns={columns}
           dataSource={filteredRecords}
           rowClassName={setRowClassName}
@@ -142,7 +141,6 @@ const TableView: FunctionComponent<TableViewProps> = ({
           onRow={(row) => ({
             onClick: (evt) => handleRowClick(row, evt),
           })}
-          
         />
       </Space>
     </div>

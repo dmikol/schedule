@@ -28,7 +28,7 @@ interface EditableRowProps {
 
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   const [form] = Form.useForm()
-  
+
   return (
     <Form form={form} component={false}>
       <EditableContext.Provider value={form}>
@@ -179,7 +179,7 @@ class TaskDescriptionEdit extends React.Component<any, any> {
           ) : null,
       },
     ]
-  
+
     let taskEntriesIndex: number = -1
 
     const mapDataSource = (data: any) => {
@@ -216,14 +216,14 @@ class TaskDescriptionEdit extends React.Component<any, any> {
         : [],
       countCustom: this.props.task.custom ? this.props.task.custom.length : 0,
       task: props.task,
-      loading: false
+      loading: false,
     }
   }
 
   onChangeDate = (value: any, dateString: string) => {
     const { task } = this.props
-    console.log('no change -------------------');
-    
+    console.log('no change -------------------')
+
     const taskToUpdate = {
       ...task,
       dateTime: dateString,
@@ -284,7 +284,7 @@ class TaskDescriptionEdit extends React.Component<any, any> {
     this.setState({
       dataSourceCustom: [...dataSourceCustom, newData],
       countCustom: countCustom + 1,
-      task: mappedTask
+      task: mappedTask,
     })
     this.handleSaveToServer(mappedTask)
     this.props.setClickedTask(mappedTask)
@@ -308,8 +308,10 @@ class TaskDescriptionEdit extends React.Component<any, any> {
   }
 
   handleSave = (row: any) => {
-    const data = [...this.state.dataSource];
-    const filterdFromDatePickerData = data.filter((item) => item.point !== 'dateTime')
+    const data = [...this.state.dataSource]
+    const filterdFromDatePickerData = data.filter(
+      (item) => item.point !== 'dateTime',
+    )
     const dataPickerItem = data.find((item) => item.point === 'dateTime')
 
     const newDataToBeMapped = [
@@ -318,31 +320,33 @@ class TaskDescriptionEdit extends React.Component<any, any> {
         key: dataPickerItem.key,
         info: this.props.task.dateTime,
         point: dataPickerItem.point,
-        editable: dataPickerItem.editable
-      }
+        editable: dataPickerItem.editable,
+      },
     ]
     const dataToState = [
       ...filterdFromDatePickerData,
       {
         key: dataPickerItem.key,
-        info:  <DatePicker 
-                showTime 
-                onChange={this.onChangeDate} 
-                format="HH:mm DD-MM-YYYY"
-                /> ,
+        info: (
+          <DatePicker
+            showTime
+            onChange={this.onChangeDate}
+            format="HH:mm DD-MM-YYYY"
+          />
+        ),
         point: dataPickerItem.point,
-        editable: dataPickerItem.editable
-      }
+        editable: dataPickerItem.editable,
+      },
     ]
-    const index = dataToState.findIndex(item => row.key === item.key);
-    const item = dataToState[index];
+    const index = dataToState.findIndex((item) => row.key === item.key)
+    const item = dataToState[index]
     dataToState.splice(index, 1, {
       ...item,
       ...row,
-    });
-    this.setState({ dataSource: dataToState });
+    })
+    this.setState({ dataSource: dataToState })
     const mappedData = this.mapSavedTask(newDataToBeMapped)
-    this.handleSaveToServer(mappedData);
+    this.handleSaveToServer(mappedData)
     this.props.setClickedTask(mappedData)
   }
 
@@ -484,11 +488,23 @@ class TaskDescriptionEdit extends React.Component<any, any> {
           dataSource={filteredDataSourceCustom}
           columns={columnsCustom}
         />
-        
-        <Button disabled={loading} onClick={this.handleAdd} type="dashed" style={{ marginBottom: 16, marginTop: 10 }}>
+
+        <Button
+          disabled={loading}
+          onClick={this.handleAdd}
+          type="dashed"
+          style={{ marginBottom: 16, marginTop: 10 }}
+        >
           Add a row
         </Button>
-        <Checkbox disabled={loading} defaultChecked={feedback ? feedback.isFeedback : true} style={{ marginLeft: 10 }} onChange={this.onCheckboxChange}>Разрешить оставлять отзывы</Checkbox>
+        <Checkbox
+          disabled={loading}
+          defaultChecked={feedback ? feedback.isFeedback : true}
+          style={{ marginLeft: 10 }}
+          onChange={this.onCheckboxChange}
+        >
+          Разрешить оставлять отзывы
+        </Checkbox>
       </div>
     )
   }

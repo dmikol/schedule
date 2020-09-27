@@ -1,7 +1,6 @@
 import React, { FunctionComponent, ReactNode, useEffect, useState } from 'react'
 import { Badge, Button, Calendar, Popover } from 'antd'
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons'
-import Spinner from '../Spinner'
 
 import './CalendarView.scss'
 
@@ -30,7 +29,6 @@ const CalendarView: FunctionComponent<CalendarViewProps> = ({
   handleTaskNameClick,
 }) => {
   const [eventsFiltered, setEventsFiltered] = useState<ITask[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     setEventsFiltered((prevEvents) =>
@@ -113,12 +111,11 @@ const CalendarView: FunctionComponent<CalendarViewProps> = ({
   return (
     <div className="calendar-view">
       <h3>Calendar view</h3>
-      {loading ? 
-      <Spinner /> : 
       <Calendar
         dateCellRender={dateCellRender}
         monthCellRender={monthCellRender}
-      />}
+      />
+      )
     </div>
   )
 }

@@ -62,22 +62,26 @@ const App: FunctionComponent = () => {
   const [edit, setEdit] = useState<boolean>(false)
   const [visibleFilesType, setVisibleFilesType] = useState(false)
   const [visibleLessonForm, setVisibleLessonForm] = useState(false)
-  const [loading] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    setLoading(true)
     API.getEvents().then((tasksFromApi) => {
       const rows = tasksFromApi.map((task) => CONVERT_TASK_TO_ROW(task))
 
       setTaskData(tasksFromApi)
       setRowData((state) => ({ ...state, rows }))
+      setLoading(false)
     })
   }, [])
 
   useEffect(() => {
+    setLoading(true)
     API.getEvents().then((tasksFromApi) => {
       const rows = tasksFromApi.map((task) => CONVERT_TASK_TO_ROW(task))
 
       setRowData((state) => ({ ...state, rows }))
+      setLoading(false)
     })
   }, [taskData])
 
@@ -207,6 +211,7 @@ const App: FunctionComponent = () => {
   }
 
   const handleDeleteRowClick = (deletedRowKey: string) => {
+    setLoading(true)
     const newRows: IRow[] = rowData.rows.map((row) => {
       if (row.key === deletedRowKey) {
         row.title = ''
@@ -222,7 +227,7 @@ const App: FunctionComponent = () => {
       return row
     })
     setRowData((state) => ({ ...state, newRows }))
-    API.deleteEvent(deletedRowKey)
+    API.deleteEvent(deletedRowKey).then(() => setLoading(false))
   }
 
   const onBackToSchedule = () => {
@@ -235,7 +240,6 @@ const App: FunctionComponent = () => {
   }
 
   const visibleLinksDownload = () => {
-    
     const allLinks: any = document.getElementById('download-links')
 
     allLinks.style.display = !visibleFilesType ? 'block' : 'none'
@@ -350,7 +354,8 @@ const App: FunctionComponent = () => {
       </Row>
 
       <div id="download-links">
-        <a id="download"
+        <a
+          id="download"
           href=" "
           onClick={() => download('schedule.txt', 'txt')}
           download
@@ -366,7 +371,6 @@ const App: FunctionComponent = () => {
         />
       )}
 
-      {/* {mode === CALENDAR.title && <CalendarView />} */}
       {mode === CALENDAR.title && (
         <CalendarView
           type={type}
@@ -390,7 +394,6 @@ const App: FunctionComponent = () => {
       {mode === TABLE.title && !mentorMode && tableView}
 
       {mode === DESCRIPTION.title && clickedTask && (
-
         <TaskDescription
           task={clickedTask}
           setClickedTask={setClickedTask}
