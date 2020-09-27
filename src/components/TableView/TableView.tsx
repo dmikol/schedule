@@ -1,7 +1,6 @@
 import React, { Component, MouseEvent } from 'react'
 import { Table, Button, message } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
-import Spinner from '../Spinner'
 
 import './TableView.scss'
 

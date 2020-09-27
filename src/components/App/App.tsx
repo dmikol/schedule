@@ -64,10 +64,6 @@ const App: FunctionComponent = () => {
 
   }
 
-  const onLoadingChange = (loading: boolean) => {
-    setLoading(loading)
-  }
-
   API.getEvents().then((response) => {
     response.forEach((event) => {
       arrayTasksToFile.push(` Name: ${event.name}, Date: ${event.dateTime}, 
@@ -190,7 +186,6 @@ const App: FunctionComponent = () => {
         <TaskDescription
           task={clickedTask}
           setClickedTask={setClickedTask}
-          setLoading={setLoading}
           timezone={timezone}
           edit={edit}
         />

@@ -164,7 +164,8 @@ class TaskDescriptionEdit extends React.Component<any, any> {
       count: Object.keys(props.task).length,
       dataSourceCustom: this.props.task.custom ? this.mapCustomDataSource(this.props.task.custom) : [],
       countCustom: this.props.task.custom ? this.props.task.custom.length : 0,
-      task: props.task
+      task: props.task,
+      loading: false
     };
   }
 
@@ -230,7 +231,7 @@ class TaskDescriptionEdit extends React.Component<any, any> {
       countCustom: countCustom + 1,
       task: mappedTask
     });
-    API.updateEvent(mappedTask.id, mappedTask)
+    this.handleSaveToServer(mappedTask)
     this.props.setClickedTask(mappedTask)
   };
 
@@ -308,8 +309,8 @@ class TaskDescriptionEdit extends React.Component<any, any> {
   };
 
   handleSaveToServer(data: any) {
-    this.props.setLoading(true)
-    API.updateEvent(data.id, data).then(() => this.props.setLoading(false))
+    this.setState({ loading: true })
+    API.updateEvent(data.id, data).then(() => this.setState({ loading: false }))
   }
 
   mapSavedTaskCustom(data: any) {
@@ -353,7 +354,7 @@ class TaskDescriptionEdit extends React.Component<any, any> {
   }
 
   render() {
-    const { dataSource, dataSourceCustom } = this.state
+    const { dataSource, dataSourceCustom, loading } = this.state
     const { feedback } = this.props.task
 
     const filteredDataSource = dataSource.filter((item: null) => item !== null)
@@ -404,6 +405,7 @@ class TaskDescriptionEdit extends React.Component<any, any> {
     return (
       <div>
         <Table
+          loading={loading}
           title={() => 'Обязательные поля'}
           pagination={false}
           components={components}
@@ -413,6 +415,7 @@ class TaskDescriptionEdit extends React.Component<any, any> {
           columns={columns}
         />
         <Table
+          loading={loading}
           title={() => 'Кастомные поля'}
           pagination={false}
           components={components}
@@ -422,10 +425,10 @@ class TaskDescriptionEdit extends React.Component<any, any> {
           columns={columnsCustom}
         />
         
-        <Button onClick={this.handleAdd} type="dashed" style={{ marginBottom: 16, marginTop: 10 }}>
+        <Button disabled={loading} onClick={this.handleAdd} type="dashed" style={{ marginBottom: 16, marginTop: 10 }}>
           Add a row
         </Button>
-        <Checkbox defaultChecked={feedback ? feedback.isFeedback : true} style={{ marginLeft: 10 }} onChange={this.onCheckboxChange}>Разрешить оставлять отзывы</Checkbox>
+        <Checkbox disabled={loading} defaultChecked={feedback ? feedback.isFeedback : true} style={{ marginLeft: 10 }} onChange={this.onCheckboxChange}>Разрешить оставлять отзывы</Checkbox>
       </div>
     );
   }

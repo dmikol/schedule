@@ -11,7 +11,6 @@ import TaskDescriptionEdit from '../TaskDescriptionEdit'
 
 type TaskDescriptionProps = {
   task: ITask
-  setLoading(loading: boolean): void
   setClickedTask(task: ITask): void
   timezone: string
   edit: boolean
@@ -19,7 +18,6 @@ type TaskDescriptionProps = {
 
 const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
   task,
-  setLoading,
   setClickedTask,
   timezone,
   edit
@@ -66,8 +64,7 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
         <TaskDescriptionEdit
           task={task}
           edit={edit}
-          setClickedTask={setClickedTask}
-          setLoading={setLoading}/>
+          setClickedTask={setClickedTask}/>
       </Col>
     </Row>)
   }
