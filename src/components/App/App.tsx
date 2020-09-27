@@ -21,6 +21,7 @@ const App: FunctionComponent = () => {
   const [mode, setMode] = useState('table')
   const [timezone, setTimezone] = useState('+0Minsk')
   const [type, setTypeSelected] = useState('All')
+  const [edit, setEdit] = useState(false)
   const [visibleFilesType, setVisibleFilesType] = useState(false)
   const [visibleLessonForm, setVisibleLessonForm] = useState(false)
 
@@ -37,12 +38,18 @@ const App: FunctionComponent = () => {
   }
 
   const handleTaskNameClick = (task: ITask) => {
+    visibleLessonForm && setVisibleLessonForm(false) 
     setMode('description')
     setClickedTask(task)
   }
   
   const onBackToSchedule = () => {
     setMode('table')
+    setEdit(false)
+  }
+
+  const onEditClick = () => {
+    setEdit(!edit)
   }
   const visibleLinksDownload = () => {
     
@@ -112,9 +119,18 @@ const App: FunctionComponent = () => {
               >
               Download</Button>
 
-              {mentorMode && (
-                <Button 
-                onClick={() => setVisibleLessonForm(!visibleLessonForm)}>
+              {(mentorMode && mode === 'description') && (
+                <Button
+                  type={edit ? "primary" : "default"}
+                  className="editScheduleButtonStyle"
+                  onClick={onEditClick}>
+                  <EditOutlined />
+                  Edit schedule
+                </Button>
+              )}
+              {(mentorMode && mode !== 'description') && (
+               <Button
+                  onClick={() => setVisibleLessonForm(!visibleLessonForm)}>
                   <EditOutlined />
                   Add new
                 </Button>
@@ -168,6 +184,7 @@ const App: FunctionComponent = () => {
           task={clickedTask}
           setClickedTask={setClickedTask}
           timezone={timezone}
+          edit={edit}
         />
       )}
     </div>

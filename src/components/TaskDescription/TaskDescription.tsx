@@ -7,16 +7,20 @@ import { ITask } from '../../models'
 import FeedbackOnTask from '../FeedbackOnTask'
 import LeaveFeedback from '../LeaveFeedback'
 
+import TaskDescriptionEdit from '../TaskDescriptionEdit'
+
 type TaskDescriptionProps = {
   task: ITask
   setClickedTask(task: ITask): void
   timezone: string
+  edit: boolean
 }
 
 const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
   task,
   setClickedTask,
   timezone,
+  edit
 }) => {
   const {
     name,
@@ -28,6 +32,7 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
     week,
     photo
   } = task
+
   let link
   if (descriptionUrl) {
     link = (
@@ -36,7 +41,6 @@ const TaskDescription: FunctionComponent<TaskDescriptionProps> = ({
       </a>
     )
   }
-console.log('place = ', place);
 
   let map = null
   if (type === 'Митап' || type === 'Митап в Минске') {
@@ -52,9 +56,39 @@ console.log('place = ', place);
     )
   }
 
+  let editableTable = null
+  if (edit) {
+    editableTable = (<Row key={0}>
+      <Col span={20} offset={2}>
+        <TaskDescriptionEdit
+          task={task}
+          edit={edit}
+          setClickedTask={setClickedTask}/>
+      </Col>
+    </Row>)
+  }
+
+  let customTaskFields = null
+
+  if(task.custom) {
+    customTaskFields = task.custom.map((item, i) => {
+      const key = Object.keys(item)[0]
+      const value = Object.values(item)[0]
+      return (
+        <React.Fragment key={i}>
+            <Descriptions.Item label={key} span={3}>
+              {value || 'Описание отсутствует'}
+            </Descriptions.Item>
+        </React.Fragment>
+      )
+    })
+  }
+  
+
   return (
     <>
-      <Row>
+      {editableTable}
+      <Row key={1} style={{ marginBottom: 10 }}>
         <Col span={20} offset={2}>
           <Descriptions title={name} bordered>
             <Descriptions.Item label="Неделя" span={3}>
@@ -70,7 +104,7 @@ console.log('place = ', place);
             </Descriptions.Item>
 
             <Descriptions.Item label="Тип" span={3}>
-              {type || 'Описание отсутствует'}
+              {type || 'Отсутсвует'}
             </Descriptions.Item>
 
             <Descriptions.Item label="Cсылка" span={3} className="task-desc__highlight">
@@ -78,7 +112,7 @@ console.log('place = ', place);
             </Descriptions.Item>
 
             <Descriptions.Item label="Описание" span={3}>
-              {description || 'Описание отсутствует'}
+              {description || 'Описание Отсутсвует'}
             </Descriptions.Item>
 
             <Descriptions.Item label="Место проведения" span={3}>
@@ -104,17 +138,18 @@ console.log('place = ', place);
               : `Видео отсутствует`}
             </Descriptions.Item>
             {map}
+            {customTaskFields}
             </Descriptions>
         </Col>
       </Row>
-
-      <Row>
+      
+      <Row key={2}>
         <Col span={20} offset={2}>
           <FeedbackOnTask feedback={task.feedback} />
         </Col>
       </Row>
 
-      <Row>
+      <Row key={3}>
         <Col span={20} offset={2}>
           {((task.feedback && task.feedback.isFeedback) || !task.feedback) && (
             <LeaveFeedback task={task} setClickedTask={setClickedTask} />

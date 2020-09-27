@@ -1,4 +1,5 @@
 import { IFeedback } from '.'
+import { ICustom } from '.'
 
 export interface ITask {
   comment: string
@@ -17,4 +18,5 @@ export interface ITask {
   type: string
   week: string
   photo: string
+  custom: ICustom[]
 }
