@@ -2,6 +2,10 @@
 
 This project is an improved version of the timetable for RS School.
 
+## Deploy
+
+[Schedule](https://schedule-team49.netlify.app)
+
 ## Getting Started
 
 To start with a project, you should first install the required dependencies. Do this by executing the following command in the terminal:
